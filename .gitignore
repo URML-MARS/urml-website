@@ -1,0 +1,16 @@
+# MkDocs build output
+site/
+
+# Local dev environment
+.venv/
+__pycache__/
+*.pyc
+
+# Core repo checkout used by sync_from_core.py during CI
+urml-core/
+
+# Editor / OS junk
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

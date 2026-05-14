@@ -1,0 +1,56 @@
+site_name: URML
+site_description: An open draft specification for natural-language robot control across ROS 2, PX4, and other substrates.
+site_url: https://urml.dev/
+
+# No `repo_url:` on purpose. Setting it makes Material's JS call
+# api.github.com on every page load to fetch stars and latest release.
+# Those calls violate the "zero third-party network requests at runtime"
+# constraint in the plan §A9. The GitHub link lives in the page content
+# instead (see docs/index.md).
+#
+# No analytics, no telemetry, no third-party trackers.
+# The site is a rendering layer for canonical content in URML-MARS/URML.
+# See README.md in this repository for the design constraint.
+
+theme:
+  name: material
+  language: en
+  font: false              # do not load Google Fonts; use system sans-serif
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: black
+      accent: black
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: black
+      accent: black
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - content.code.copy
+    - toc.follow
+
+plugins:
+  - search
+
+markdown_extensions:
+  - admonition
+  - tables
+  - toc:
+      permalink: true
+  - pymdownx.superfences
+
+nav:
+  - Home: index.md
+  - Compatible Runtimes: compatible-runtimes.md
+  - Submit your runtime: submit.md
+  - Spec: spec.md
+  - Manifesto: manifesto.md
+  - Trademark: trademark.md
