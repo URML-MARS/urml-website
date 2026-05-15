@@ -4,10 +4,18 @@
 # Every push to the default branch triggers the build below. Netlify only
 # checks out THIS repo, so the build clones the core URML repo (public, no
 # auth needed) to pull canonical content via scripts/sync_from_core.py.
+#
+# The leading `rm -rf urml-core` is load-bearing. Netlify does not do a clean
+# checkout between builds; it reuses the repo dir with git fetch + checkout.
+# Because urml-core/ is gitignored, git does not remove it on checkout, so it
+# survives from the previous build and `git clone` then fails with
+# "destination path 'urml-core' already exists". Removing it first makes the
+# build idempotent and also guarantees the latest core content every run.
 
 [build]
   publish = "site"
   command = """
+    rm -rf urml-core && \
     git clone --depth 1 https://github.com/URML-MARS/URML.git urml-core && \
     pip install 'mkdocs==1.6.*' 'mkdocs-material==9.7.*' && \
     python scripts/sync_from_core.py urml-core && \
