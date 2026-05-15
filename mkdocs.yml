@@ -42,6 +42,12 @@ theme:
     - content.code.copy
     - toc.follow
 
+extra:
+  # Remove the "Made with Material for MkDocs" generator notice from the
+  # footer. The standard's official site should not carry a third-party
+  # tooling credit. Supported flag, no theme override needed.
+  generator: false
+
 plugins:
   - search
 
