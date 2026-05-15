@@ -38,17 +38,21 @@ mkdocs serve
 
 ## Build pipeline
 
-`.github/workflows/deploy.yml` runs on:
+Netlify is connected to this GitHub repository. Every push to the default branch triggers a build defined in `netlify.toml`:
 
-- Push to `main` of this repo
-- `repository_dispatch` events of type `core-content-changed` sent by the core repo
-- Manual `workflow_dispatch`
+1. Clone the public core repo (`URML-MARS/URML`) into `urml-core/`.
+2. Install MkDocs + Material.
+3. Run `scripts/sync_from_core.py urml-core` to pull and link-rewrite canonical content.
+4. `mkdocs build --strict` into `site/`.
+5. Netlify publishes `site/`.
 
-It checks out the core URML repo, runs `scripts/sync_from_core.py` to pull and rewrite content, runs `mkdocs build --strict`, and deploys to GitHub Pages.
+When canonical content changes in the core repo (registry, trademark policy), the website does not rebuild automatically yet. Trigger a rebuild by pushing to this repo, or wire a Netlify build hook to the core repo (follow-up; see the core repo's `.github/workflows/dispatch-to-website.yml`).
+
+`netlify.toml` also sets a strict Content-Security-Policy that blocks any third-party origin at the browser level, enforcing the no-trackers design constraint.
 
 ## Domain
 
-The CNAME file pins `urml.dev`. DNS is managed outside this repo. If the domain changes, update CNAME and the `site_url` in `mkdocs.yml` together.
+`urml.dev` is configured in the Netlify dashboard (Domain management), not via a repo file. DNS is at the registrar. If the domain changes, update it in Netlify and update `site_url` in `mkdocs.yml`.
 
 ## License
 

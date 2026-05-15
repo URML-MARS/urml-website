@@ -1,15 +1,21 @@
 # Netlify configuration for the URML website (urml.dev).
 #
-# Deploy model: built locally, static directory uploaded via the Netlify CLI
-# (`netlify deploy --prod --dir=site`). The [build] block below only runs if
-# the site is later connected to a git repo for CI builds; the laptop-deploy
-# path does not use it.
+# Deploy model: Netlify is connected to the GitHub repo URML-MARS/urml-website.
+# Every push to the default branch triggers the build below. Netlify only
+# checks out THIS repo, so the build clones the core URML repo (public, no
+# auth needed) to pull canonical content via scripts/sync_from_core.py.
 
 [build]
   publish = "site"
-  # Used only if Netlify ever builds this from a connected repo. Assumes the
-  # core URML repo is checked out as a sibling named "URML".
-  command = "pip install 'mkdocs==1.6.*' 'mkdocs-material==9.7.*' && python scripts/sync_from_core.py ../URML && mkdocs build --strict"
+  command = """
+    git clone --depth 1 https://github.com/URML-MARS/URML.git urml-core && \
+    pip install 'mkdocs==1.6.*' 'mkdocs-material==9.7.*' && \
+    python scripts/sync_from_core.py urml-core && \
+    mkdocs build --strict
+  """
+
+[build.environment]
+  PYTHON_VERSION = "3.11"
 
 # Enforce the "no third-party network calls" property at the browser level.
 # If any future change tries to pull a font, script, or tracker from another
