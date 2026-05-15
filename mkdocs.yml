@@ -2,6 +2,11 @@ site_name: URML
 site_description: An open draft specification for natural-language robot control across ROS 2, PX4, and other substrates.
 site_url: https://urml.dev/
 
+# Discreet footer credit. URML is the face; MARS is acknowledged as the
+# Phase 0 steward without coupling the standard to the entity. Plain text,
+# no link, reversible. Kept deliberately small per the Phase 0 branding call.
+copyright: "URML is an open specification under Apache 2.0. Stewarded by MARS during Phase 0."
+
 # No `repo_url:` on purpose. Setting it makes Material's JS call
 # api.github.com on every page load to fetch stars and latest release.
 # Those calls violate the "zero third-party network requests at runtime"
@@ -54,3 +59,4 @@ nav:
   - Spec: spec.md
   - Manifesto: manifesto.md
   - Trademark: trademark.md
+  - Privacy: privacy.md
