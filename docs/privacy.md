@@ -16,7 +16,7 @@ The [contact page](contact.md) has a form. It is the only place on this site tha
 
 If you submit it, the form sends what you typed (your message, the email address you provide for a reply, and an optional name) to Netlify, which hosts this site. Netlify stores the submission in the project's Netlify dashboard and notifies the maintainer so you get a reply. That is the entire data flow. The form uses no third-party service, sets no cookies, and loads no tracker. Spam is filtered with a hidden honeypot field, not a third-party CAPTCHA.
 
-If you would rather not use the form, the same contact page lists a GitHub issue tracker and an email address that reach the same person.
+If you would rather not use the form, the same contact page links a GitHub issue tracker for anything that can be public.
 
 ## The hosting caveat
 

@@ -8,11 +8,11 @@ For anything code, spec, conformance, or registry related, open an issue. It is 
 
 [github.com/URML-MARS/URML/issues](https://github.com/URML-MARS/URML/issues)
 
-## Email
+## Anything else
 
-For everything else (partnership, press, procurement, runtime listing questions): **contact@urml.dev**
+For partnership, press, procurement, or runtime-listing questions, use the form below. It reaches the maintainer directly.
 
-## Or send a message here
+## Send a message here
 
 This form posts to Netlify, the host of this site. It is not a third-party widget and it sets no cookies or trackers. What you type below (your message, and the email you give for a reply) is sent to Netlify, stored in the project's Netlify dashboard, and delivered to the maintainer. Nothing more is collected. See the [privacy page](privacy.md) for the full statement.
 
@@ -38,4 +38,4 @@ This form posts to Netlify, the host of this site. It is not a third-party widge
   </p>
 </form>
 
-If the form does not suit you, the GitHub issue tracker and the email address above both work.
+If the form does not suit you, the GitHub issue tracker above works for anything that can be public.
