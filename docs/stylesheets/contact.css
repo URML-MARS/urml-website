@@ -1,0 +1,110 @@
+/* Contact form styling.
+ *
+ * Same-origin stylesheet, loaded via extra_css. CSP `style-src 'self'`
+ * permits it; no policy change needed. Colors use Material's own CSS
+ * custom properties so the form tracks light/dark automatically.
+ *
+ * No JavaScript. Validation is native HTML5 (required, type=email,
+ * minlength). The :user-invalid rules only flag a field after the
+ * visitor has interacted with it, so nothing is red on first paint.
+ */
+
+.urml-contact-form {
+  max-width: 38rem;
+  margin: 1.5rem 0 0.5rem;
+}
+
+.urml-contact-form .field {
+  margin-bottom: 1.25rem;
+}
+
+.urml-contact-form label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.35rem;
+  color: var(--md-default-fg-color);
+}
+
+.urml-contact-form .opt {
+  font-weight: 400;
+  color: var(--md-default-fg-color--light);
+}
+
+.urml-contact-form .req {
+  color: #d32f2f;
+  font-weight: 700;
+}
+
+.urml-contact-form input[type="text"],
+.urml-contact-form input[type="email"],
+.urml-contact-form textarea {
+  width: 100%;
+  box-sizing: border-box;
+  font: inherit;
+  color: var(--md-default-fg-color);
+  background: var(--md-default-bg-color);
+  border: 1px solid var(--md-default-fg-color--lighter);
+  border-radius: 0.2rem;
+  padding: 0.6rem 0.7rem;
+  transition: border-color 120ms ease, box-shadow 120ms ease;
+}
+
+.urml-contact-form textarea {
+  resize: vertical;
+  min-height: 8rem;
+}
+
+.urml-contact-form input:focus,
+.urml-contact-form textarea:focus {
+  outline: none;
+  border-color: var(--md-accent-fg-color);
+  box-shadow: 0 0 0 2px var(--md-accent-fg-color--transparent, rgba(0, 0, 0, 0.15));
+}
+
+.urml-contact-form input:user-invalid,
+.urml-contact-form textarea:user-invalid {
+  border-color: #d32f2f;
+}
+
+.urml-contact-form .hint {
+  display: block;
+  margin-top: 0.3rem;
+  font-size: 0.78rem;
+  color: var(--md-default-fg-color--light);
+}
+
+.urml-contact-form button[type="submit"] {
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  color: var(--md-primary-bg-color);
+  background: var(--md-primary-fg-color);
+  border: none;
+  border-radius: 0.2rem;
+  padding: 0.65rem 1.4rem;
+  transition: filter 120ms ease;
+}
+
+.urml-contact-form button[type="submit"]:hover {
+  filter: brightness(1.25);
+}
+
+.urml-contact-form button[type="submit"]:focus-visible {
+  outline: 2px solid var(--md-accent-fg-color);
+  outline-offset: 2px;
+}
+
+.urml-contact-form .urml-form-foot {
+  margin-top: 0.9rem;
+  font-size: 0.78rem;
+  color: var(--md-default-fg-color--light);
+}
+
+/* Honeypot: keep it out of layout and off-screen for humans, present for bots. */
+.urml-contact-form .urml-hp {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}

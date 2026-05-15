@@ -54,9 +54,15 @@ plugins:
 markdown_extensions:
   - admonition
   - tables
+  - attr_list          # enables the { .md-button } link styling on the sent page
   - toc:
       permalink: true
   - pymdownx.superfences
+
+# Same-origin stylesheet for the contact form. CSP style-src 'self' allows
+# it; no policy change needed. Material's CSS variables keep it light/dark.
+extra_css:
+  - stylesheets/contact.css
 
 nav:
   - Home: index.md
@@ -67,3 +73,9 @@ nav:
   - Contact: contact.md
   - Trademark: trademark.md
   - Privacy: privacy.md
+
+# contact-sent.md is the post-submit landing for the Netlify form. It is
+# intentionally not a nav entry. Listing it here keeps `mkdocs build
+# --strict` from failing on the "not in nav" warning.
+not_in_nav: |
+  /contact-sent.md
