@@ -95,7 +95,24 @@ def sync(core_root: Path, website_docs: Path) -> None:
         source = core_root / relative_source
         target = website_docs / relative_target
         if not source.is_file():
-            sys.exit(f"sync_from_core: source missing: {source}")
+            # The website is a rendering layer. If the core repo has not
+            # published this file yet (e.g. it lives only on a feature
+            # branch, or the registry work hasn't been merged to the default
+            # branch), fall back to the committed snapshot already in this
+            # repo rather than failing the whole deploy. The snapshot is the
+            # last-known-good link-rewritten copy. When core publishes the
+            # file on the branch this script clones, it supersedes the
+            # snapshot automatically on the next build.
+            if target.is_file():
+                print(
+                    f"  WARN source missing in core ({source}); "
+                    f"keeping committed snapshot {target}"
+                )
+                continue
+            sys.exit(
+                f"sync_from_core: source missing in core AND no snapshot "
+                f"present: {target}. Cannot render this page."
+            )
         text = source.read_text(encoding="utf-8")
         text = rewrite_links(text)
         target.write_text(text, encoding="utf-8")
