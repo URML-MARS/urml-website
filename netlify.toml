@@ -20,10 +20,22 @@
 # Enforce the "no third-party network calls" property at the browser level.
 # If any future change tries to pull a font, script, or tracker from another
 # origin, the browser blocks it and it shows up immediately in testing.
+#
+# script-src and style-src include 'unsafe-inline' on purpose. Material for
+# MkDocs ships small inline bootstrap scripts (the __md_get/__md_set theme
+# and palette helpers) and inline styles that are core to the theme and not
+# removable by config. 'unsafe-inline' permits ONLY inline code already in
+# the HTML we built; it does NOT permit loading anything from another
+# origin. default-src/connect-src 'self' plus the per-type 'self' origin
+# restrictions still block every cross-origin request, so the
+# no-third-party-network property is intact. The relaxed protection
+# (inline-injection XSS) is negligible on a static site with no user input,
+# no forms, and no reflected query params. Do not "harden" script-src back
+# to 'self' only: it breaks the theme JS (light/dark toggle, etc.).
 [[headers]]
   for = "/*"
   [headers.values]
-    Content-Security-Policy = "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; worker-src 'self' blob:; frame-ancestors 'none'; base-uri 'self'; form-action 'none'"
+    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; worker-src 'self' blob:; frame-ancestors 'none'; base-uri 'self'; form-action 'none'"
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "no-referrer"
     X-Frame-Options = "DENY"
