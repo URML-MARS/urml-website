@@ -7,6 +7,17 @@ URML sits above existing robot operating systems. A URML program describes *what
 !!! warning "Phase 0, pre-stable"
     URML is in Phase 0. The artifact under review is the specification itself and the v0.1 reference implementation. There are no production runtimes yet. No part of this site should be read as a production-readiness claim, and the URML-Certified mark is reserved for a future Phase 4 program ([details](trademark.md)).
 
+## Who URML is for
+
+- **Developers and roboticists.** Write what a robot should do once, in one vocabulary, instead of learning each substrate's API. The same program runs anywhere a URML-compatible runtime exists.
+- **AI and LLM builders.** URML is the safe target for natural-language robot control. The prompt contract plus the validator mean a model's output is checked against the robot's real capabilities and active safety envelope before anything moves.
+- **Robot manufacturers.** Implement one URML runtime for your hardware and your product plugs into every URML tool, LLM bridge, and program already written. Adoption you do not have to build yourself.
+- **Component and peripheral makers.** Sensors, arms, grippers, cameras: declare what your part can do in a capability manifest and it becomes usable by any URML runtime, without bespoke integration per customer.
+- **System integrators.** Write a deployment's intent once and retarget it across whatever hardware each client runs. Less per-customer rework.
+- **Startups.** Build the product, not the plumbing. Start on an open intent layer instead of reimplementing the stack between language and motors.
+- **Governments and public-sector buyers.** The compliance pass enforces procurement provenance rules (NDAA Section 889, the FCC Covered List, EO 14307) as a static check before execution, not a paperwork promise after it.
+- **Researchers and educators.** A stable, substrate-neutral vocabulary you can cite by version, teach without committing to one stack, and reproduce.
+
 ## What works today
 
 - The five-pass validator (argument typing, capability check, safety envelope, variable bindings, compliance policy).
