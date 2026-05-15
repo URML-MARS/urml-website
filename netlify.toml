@@ -1,0 +1,24 @@
+# Netlify configuration for the URML website (urml.dev).
+#
+# Deploy model: built locally, static directory uploaded via the Netlify CLI
+# (`netlify deploy --prod --dir=site`). The [build] block below only runs if
+# the site is later connected to a git repo for CI builds; the laptop-deploy
+# path does not use it.
+
+[build]
+  publish = "site"
+  # Used only if Netlify ever builds this from a connected repo. Assumes the
+  # core URML repo is checked out as a sibling named "URML".
+  command = "pip install 'mkdocs==1.6.*' 'mkdocs-material==9.7.*' && python scripts/sync_from_core.py ../URML && mkdocs build --strict"
+
+# Enforce the "no third-party network calls" property at the browser level.
+# If any future change tries to pull a font, script, or tracker from another
+# origin, the browser blocks it and it shows up immediately in testing.
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Content-Security-Policy = "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; worker-src 'self' blob:; frame-ancestors 'none'; base-uri 'self'; form-action 'none'"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "no-referrer"
+    X-Frame-Options = "DENY"
+    Permissions-Policy = "geolocation=(), microphone=(), camera=(), interest-cohort=()"
