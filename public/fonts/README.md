@@ -1,33 +1,40 @@
 # Self-hosted fonts
 
 This repo enforces **zero third-party network requests at runtime**
-(see `mkdocs.yml` and the `Content-Security-Policy` in `netlify.toml`:
+(`mkdocs.yml` history + the `Content-Security-Policy` in `netlify.toml`:
 `font-src 'self'`). The design handoff specified Google Fonts; that is
-incompatible with that rule, so the three brand faces are **self-hosted**
-here instead. Both families are SIL Open Font License 1.1, which permits
-redistribution and self-hosting.
+incompatible with that rule, so the three brand faces are **self-hosted
+here**, present in this directory:
 
-Drop these `.woff2` files in this directory (filenames must match the
-`@font-face` rules in `src/styles/global.css` exactly):
+| File | Family / weight |
+|---|---|
+| `InstrumentSerif-Regular.woff2` | Instrument Serif 400 |
+| `IBMPlexSans-Regular.woff2` | IBM Plex Sans 400 |
+| `IBMPlexSans-Medium.woff2` | IBM Plex Sans 500 |
+| `IBMPlexMono-Regular.woff2` | IBM Plex Mono 400 |
+| `IBMPlexMono-Medium.woff2` | IBM Plex Mono 500 |
 
-| File | Family / weight | Source (OFL 1.1) |
-|---|---|---|
-| `InstrumentSerif-Regular.woff2` | Instrument Serif 400 | https://github.com/google/fonts/tree/main/ofl/instrumentserif |
-| `IBMPlexSans-Regular.woff2` | IBM Plex Sans 400 | https://github.com/IBM/plex |
-| `IBMPlexSans-Medium.woff2` | IBM Plex Sans 500 | https://github.com/IBM/plex |
-| `IBMPlexMono-Regular.woff2` | IBM Plex Mono 400 | https://github.com/IBM/plex |
-| `IBMPlexMono-Medium.woff2` | IBM Plex Mono 500 | https://github.com/IBM/plex |
+The `@font-face` rules in `src/styles/global.css` reference these exact
+filenames.
 
-Convert TTF→WOFF2 with `woff2_compress` (or `fonttools`) if a source
-only ships TTF. Subsetting to Latin is encouraged to keep payload small;
-not required for correctness.
+## Provenance & license
 
-Until the files are present the site still builds and renders: the
-`--serif/--sans/--mono` stacks fall back to Source Serif/Georgia,
-system-ui, and ui-monospace respectively. The layout is metric-tuned
-for the real faces, so add them before any visual-fidelity review.
+Both families are **SIL Open Font License 1.1**, which explicitly
+permits redistribution and bundling. They are sourced reproducibly from
+[Fontsource](https://fontsource.org) (latin subset, woff2), pinned as
+devDependencies in `package.json` / `package-lock.json`:
 
-These binaries are intentionally **not committed by the migration
-branch** (licensing/provenance should be a deliberate, reviewed commit,
-and binary fonts do not belong in an automated change). Adding them is a
-one-step, explicitly-tracked follow-up.
+- `@fontsource/instrument-serif` → Instrument Serif (OFL-1.1, Google Fonts)
+- `@fontsource/ibm-plex-sans` → IBM Plex Sans (OFL-1.1, IBM)
+- `@fontsource/ibm-plex-mono` → IBM Plex Mono (OFL-1.1, IBM)
+
+To refresh: `npm i` then copy
+`node_modules/@fontsource/<family>/files/<family>-latin-<weight>-normal.woff2`
+over the matching file here.
+
+> An earlier revision of this note said the binaries were deliberately
+> left out for a "reviewed licensing commit." That was over-cautious:
+> OFL-1.1 is a redistribution license, self-hosting OFL fonts is the
+> standard practice, and the source is now reproducible and pinned via
+> Fontsource. So the binaries are committed. The latin-subset woff2 are
+> ~15–24 KB each.
