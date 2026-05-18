@@ -70,6 +70,11 @@ nav:
   - Compatible Runtimes: compatible-runtimes.md
   - Integrations: integrations.md
   - Submit your runtime: submit.md
+  - Manufacturers:
+    - Overview: manufacturers.md
+    - Product directory: manufacturer-directory.md
+    - List your product: list-your-product.md
+    - Federal-validation self-report: manufacturer-federal-validation.md
   - Spec: spec.md
   - Manifesto: manifesto.md
   - Contact: contact.md

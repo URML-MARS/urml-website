@@ -21,10 +21,21 @@ import sys
 from pathlib import Path
 
 # (source_in_core_repo, destination_in_website_docs)
+#
+# The manufacturer pages are flattened to docs-root filenames (not kept in a
+# manufacturers/ subdir) on purpose: the link-rewrite rules below resolve
+# relative paths assuming every rendered page sits at the docs root, exactly
+# as submit.md does. Keeping these at the root means the existing
+# ../../TRADEMARK.md and ../compatible-runtimes.md rules keep working for them
+# without per-file path math.
 FILES: list[tuple[str, str]] = [
     ("docs/compatible-runtimes.md", "compatible-runtimes.md"),
     ("docs/registry/SUBMISSION.md", "submit.md"),
     ("TRADEMARK.md", "trademark.md"),
+    ("docs/manufacturers/README.md", "manufacturers.md"),
+    ("docs/manufacturers/directory.md", "manufacturer-directory.md"),
+    ("docs/manufacturers/SUBMISSION.md", "list-your-product.md"),
+    ("docs/manufacturers/FEDERAL-VALIDATION-SELF-REPORT.md", "manufacturer-federal-validation.md"),
 ]
 
 # Link rewrites: each (pattern, replacement) is applied with str.replace.
@@ -65,6 +76,10 @@ LINK_REWRITES: list[tuple[str, str]] = [
     ("(GOVERNANCE.md)", "(https://github.com/URML-MARS/URML/blob/main/GOVERNANCE.md)"),
 
     # CORE_COMMITMENT, MANIFESTO, CONTRIBUTING.
+    # The ../../ form (used by the manufacturer pages, which live one level
+    # deeper in core) must precede the ../ form, or str.replace would leave a
+    # dangling "../" prefix in front of the rewritten GitHub URL.
+    ("../../CORE_COMMITMENT.md", "https://github.com/URML-MARS/URML/blob/main/CORE_COMMITMENT.md"),
     ("../CORE_COMMITMENT.md", "https://github.com/URML-MARS/URML/blob/main/CORE_COMMITMENT.md"),
     ("(CORE_COMMITMENT.md)", "(https://github.com/URML-MARS/URML/blob/main/CORE_COMMITMENT.md)"),
     ("../MANIFESTO.md", "manifesto.md"),
@@ -76,6 +91,25 @@ LINK_REWRITES: list[tuple[str, str]] = [
     ("../../docs/rfcs/0001-rfc-process.md", "https://github.com/URML-MARS/URML/blob/main/docs/rfcs/0001-rfc-process.md"),
     ("../docs/rfcs/0001-rfc-process.md", "https://github.com/URML-MARS/URML/blob/main/docs/rfcs/0001-rfc-process.md"),
     ("(docs/rfcs/0001-rfc-process.md)", "(https://github.com/URML-MARS/URML/blob/main/docs/rfcs/0001-rfc-process.md)"),
+
+    # Manufacturer pages. Inbound links (trademark.md uses docs/manufacturers/;
+    # compatible-runtimes.md uses manufacturers/), sibling links among the four
+    # flattened pages, and the core-only paths they reference. Most-qualified
+    # forms first so a shorter pattern never pre-empts a longer one.
+    ("(docs/manufacturers/directory.md)", "(manufacturer-directory.md)"),
+    ("(docs/manufacturers/SUBMISSION.md)", "(list-your-product.md)"),
+    ("(docs/manufacturers/FEDERAL-VALIDATION-SELF-REPORT.md)", "(manufacturer-federal-validation.md)"),
+    ("(manufacturers/directory.md)", "(manufacturer-directory.md)"),
+    ("(FEDERAL-VALIDATION-SELF-REPORT.md)", "(manufacturer-federal-validation.md)"),
+    ("(directory.md)", "(manufacturer-directory.md)"),
+    ("(SUBMISSION.md)", "(list-your-product.md)"),
+    ("(README.md)", "(manufacturers.md)"),
+    ("../../examples/", "https://github.com/URML-MARS/URML/tree/main/examples/"),
+    ("../../reference/validator/src/urml_validator/policies/us_federal_default.yaml", "https://github.com/URML-MARS/URML/blob/main/reference/validator/src/urml_validator/policies/us_federal_default.yaml"),
+    ("../../reference/validator/", "https://github.com/URML-MARS/URML/tree/main/reference/validator/"),
+    ("../rfcs/0005-hbom-parsing.md", "https://github.com/URML-MARS/URML/blob/main/docs/rfcs/0005-hbom-parsing.md"),
+    ("../tutorials/01-getting-started.md", "https://github.com/URML-MARS/URML/blob/main/docs/tutorials/01-getting-started.md"),
+    ("../tutorials/04-writing-your-own-manifest.md", "https://github.com/URML-MARS/URML/blob/main/docs/tutorials/04-writing-your-own-manifest.md"),
 ]
 
 
