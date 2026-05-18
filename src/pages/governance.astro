@@ -1,0 +1,213 @@
+---
+import Base from "../layouts/Base.astro";
+import Icon from "../components/Icon.astro";
+// Governance — design shell from hifi-governance.jsx, reconciled with
+// reality: real RFC index (0001-0012, not the prototype's wrong list);
+// no fabricated WG-waitlist counts (measure-first); no fake charter
+// PDF or subscribe backend; Phase-1 line drops the dropped-PyPI claim.
+
+const phases = [
+  { n: "0", t: "Pre-public draft", date: "now", desc: "Solo author in public. Spec + reference implementation under review. Discussions open.", active: true },
+  { n: "1", t: "Public draft", date: "next", desc: "Direct code contributions open. CONTRIBUTING.md in force; DCO enforced in CI.", active: false },
+  { n: "2", t: "Working group formed", date: "later", desc: "Charter ratified. WG chairs seated. First externally-authored RFC merged.", active: false },
+  { n: "3", t: "v1.0 spec frozen", date: "later", desc: "Breaking changes require RFC + WG supermajority. Conformance suite frozen with the spec.", active: false },
+  { n: "4", t: "Certification program", date: "later", desc: "“URML-Certified” mark introduced. Independent labs run conformance. Trademark policy ratified.", active: false },
+];
+
+const wgs = [
+  { name: "Primitives WG", scope: "Add / deprecate intent verbs. Profile extensions." },
+  { name: "Compliance WG", scope: "Policy DSL · regulator liaison · jurisdictional overrides." },
+  { name: "Substrate WG", scope: "Reference adapters: ROS 2 · PX4 · OPC UA · vendor SDKs." },
+  { name: "Profiles WG", scope: "home · drone · industrial · educational · research." },
+];
+
+const rfcs = [
+  { id: "RFC-0001", t: "RFC process", st: "accepted" },
+  { id: "RFC-0002", t: "Initial primitive vocabulary", st: "accepted" },
+  { id: "RFC-0003", t: "US federal alignment as the default", st: "accepted" },
+  { id: "RFC-0004", t: "Compliance policy as a DSL", st: "accepted" },
+  { id: "RFC-0005", t: "HBOM parsing", st: "accepted" },
+  { id: "RFC-0006", t: "Connectivity & link-loss", st: "accepted" },
+  { id: "RFC-0007", t: "Manufacturer go-to-market", st: "accepted" },
+  { id: "RFC-0008", t: "Community discussions", st: "accepted" },
+  { id: "RFC-0009", t: "Legged & humanoid mobility", st: "accepted" },
+  { id: "RFC-0010", t: "Whole-body / bimanual manipulation", st: "draft" },
+  { id: "RFC-0011", t: "Educational profile", st: "draft" },
+  { id: "RFC-0012", t: "Research profile", st: "draft" },
+];
+---
+
+<Base
+  title="URML governance — an open standard, governed in public"
+  description="URML moves through five public phases from a single-author draft to a fully-governed standard. The spec, RFCs, decision log, and charter are public from day one. No mark is in use until Phase 4."
+  active="Governance"
+>
+  <section class="hi-section" style="padding:72px 56px 56px">
+    <div class="eyebrow" style="margin-bottom:24px">↳ Governance · charter · process</div>
+    <div style="display:grid;grid-template-columns:1.4fr 1fr;gap:56px;align-items:end">
+      <div>
+        <h1 class="s" style="max-width:800px">An open standard, governed in public, on a published roadmap.</h1>
+        <p class="lead" style="margin-top:24px;max-width:620px">
+          URML moves through five phases from a single-author draft to a fully-governed public
+          standard. The spec, the RFCs, the decision history, and the charter are public from day
+          one. The mark is not in use, and will not be until Phase 4.
+        </p>
+        <div style="display:flex;gap:12px;margin-top:28px;flex-wrap:wrap">
+          <a class="hi-btn primary" href="https://github.com/URML-MARS/URML/blob/main/GOVERNANCE.md" rel="noopener noreferrer">Read GOVERNANCE.md ↗</a>
+          <a class="hi-btn outline" href="https://github.com/URML-MARS/URML/blob/main/CORE_COMMITMENT.md" rel="noopener noreferrer">CORE_COMMITMENT.md ↗</a>
+        </div>
+      </div>
+      <div class="hi-card tint" style="padding:24px">
+        <div class="eyebrow" style="margin-bottom:14px">Where we are</div>
+        <div style="display:flex;align-items:baseline;gap:16px;margin-bottom:14px">
+          <span style="font-size:56px;font-family:var(--serif);color:var(--accent);line-height:1">0</span>
+          <div>
+            <div style="font-weight:500;font-size:18px">Pre-public draft</div>
+            <div class="mono" style="font-size:12px;color:var(--ink-soft)">ACTIVE</div>
+          </div>
+        </div>
+        <hr class="hi-rule" style="margin:12px 0" />
+        <div class="body-sm" style="color:var(--ink-2)">Single-author spec + reference implementation under public review. WG chairs and direct code contributions open in Phase 1.</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="hi-section tint">
+    <div class="head">
+      <div class="eyebrow">§1 · Roadmap</div>
+      <h2 class="s" style="max-width:880px">Five phases. Boundaries are explicit; gates are public.</h2>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:0;border:1px solid var(--rule);border-radius:6px;overflow:hidden">
+      {phases.map((p, i) => (
+        <div style={"padding:28px 24px;" + (p.active ? "background:var(--ink);color:var(--bone);" : "background:var(--bone);color:var(--ink);") + (i < 4 ? "border-right:1px solid " + (p.active ? "var(--ink)" : "var(--rule)") + ";" : "")}>
+          <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:18px">
+            <span class="mono" style={"font-size:11px;letter-spacing:0.12em;color:" + (p.active ? "rgba(250,247,241,0.5)" : "var(--ink-faint)")}>PHASE {p.n}</span>
+            {p.active && <span class="hi-chip" style="background:var(--accent);color:var(--bone);border-color:var(--accent);padding:2px 8px;font-size:10px">NOW</span>}
+          </div>
+          <h3 style="font-size:24px;line-height:1.1;color:inherit;margin-bottom:8px">{p.t}</h3>
+          <div class="mono" style={"font-size:11px;margin-bottom:16px;letter-spacing:0.06em;color:" + (p.active ? "rgba(250,247,241,0.6)" : "var(--accent)")}>{p.date}</div>
+          <p style={"font-size:13px;line-height:1.55;margin:0;color:" + (p.active ? "rgba(250,247,241,0.8)" : "var(--ink-2)")}>{p.desc}</p>
+        </div>
+      ))}
+    </div>
+    <div class="caption" style="margin-top:16px;color:var(--ink-faint)">GATE CRITERIA FOR EACH PHASE TRANSITION ARE PUBLISHED IN GOVERNANCE.MD</div>
+  </section>
+
+  <section class="hi-section">
+    <div class="head">
+      <div class="eyebrow">§2 · Working groups</div>
+      <div style="display:grid;grid-template-columns:1.5fr 1fr;gap:40px;align-items:end">
+        <h2 class="s" style="max-width:720px">Four working groups. Four chair seats open.</h2>
+        <p class="body-sm" style="max-width:460px">Chairs are seated from organizations actively building or governing robots. Applications open at end of Phase 0, via GitHub Discussions.</p>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+      {wgs.map((w) => (
+        <div class="hi-card" style="padding:28px">
+          <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:12px">
+            <h3 style="font-size:26px">{w.name}</h3>
+            <span class="hi-chip" style="border-color:var(--accent);color:var(--accent);padding:3px 10px">CHAIR SEAT OPEN</span>
+          </div>
+          <p class="body" style="margin-bottom:20px">{w.scope}</p>
+          <div style="padding-top:16px;border-top:1px dashed var(--rule)">
+            <a class="hi-btn outline" href="https://github.com/URML-MARS/URML/discussions" rel="noopener noreferrer" style="font-size:13px">Express interest via Discussions →</a>
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="hi-section tint">
+    <div class="head">
+      <div class="eyebrow">§3 · RFC index</div>
+      <div style="display:grid;grid-template-columns:1.5fr 1fr;gap:40px;align-items:end">
+        <h2 class="s">Every decision, in the open, with rationale.</h2>
+        <p class="body-sm" style="max-width:460px">Nine RFCs accepted, three under active drafting. Every RFC has an author, a state, and a public comment period.</p>
+      </div>
+    </div>
+    <div class="hi-card" style="padding:0;overflow:hidden">
+      <div style="display:grid;grid-template-columns:110px 1fr 120px;gap:16px;padding:14px 24px;background:var(--bone-2);border-bottom:1px solid var(--rule);font-family:var(--mono);font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-soft);font-weight:500">
+        <span>Number</span><span>Title</span><span style="text-align:right">Status</span>
+      </div>
+      {rfcs.map((r) => (
+        <a href="https://github.com/URML-MARS/URML/tree/main/docs/rfcs" rel="noopener noreferrer" style="display:grid;grid-template-columns:110px 1fr 120px;gap:16px;padding:18px 24px;border-bottom:1px solid var(--rule);text-decoration:none;color:inherit;align-items:center">
+          <span class="mono" style="font-size:13px;color:var(--accent);font-weight:600">{r.id}</span>
+          <span style="font-weight:500;font-size:15px">{r.t}</span>
+          <span class="hi-chip" style={"font-size:10px;padding:3px 10px;width:fit-content;justify-self:end;color:" + (r.st === "accepted" ? "var(--accent)" : "var(--ink-faint)") + ";border-color:" + (r.st === "accepted" ? "var(--accent)" : "var(--ink-faint)") + ";background:" + (r.st === "accepted" ? "var(--accent-soft)" : "var(--bone)")}>{r.st}</span>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <section class="hi-section">
+    <div class="head">
+      <div class="eyebrow">§4 · Process</div>
+      <h2 class="s" style="max-width:720px">How an RFC actually passes.</h2>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-bottom:40px">
+      {[["Idea","GitHub Discussions"],["Proposal issue","Tagged proposal"],["RFC draft","PR to docs/rfcs/"],["WG review","Reviewer + chair"],["Public comment","7 days min"],["Vote","WG supermajority"]].map(([t, sub], i) => (
+        <div class="hi-card" style="padding:18px">
+          <div class="caption" style="color:var(--accent);margin-bottom:8px">STEP {i + 1}</div>
+          <div style="font-weight:500;font-size:15px;margin-bottom:4px;line-height:1.2">{t}</div>
+          <div class="mono" style="font-size:10px;color:var(--ink-faint)">{sub}</div>
+        </div>
+      ))}
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px">
+      <div class="hi-card" style="padding:28px">
+        <div class="eyebrow" style="color:var(--accent);margin-bottom:12px">VOTING RULES</div>
+        <h3 style="font-size:24px;margin-bottom:14px">Supermajority of seated chairs.</h3>
+        <ul style="list-style:none;padding:0;margin:0;display:grid;gap:10px">
+          {[["Quorum","3 of 4 WG chairs present."],["Threshold","75% of present chairs approve."],["Veto","Any chair vetoes with a written objection; opens a 14-day re-vote."],["Tie","Phase 0/1: maintainer breaks tie. Phase 2+: rejected by default."]].map(([t, d]) => (
+            <li style="display:grid;grid-template-columns:110px 1fr;gap:14px;font-size:14px;align-items:baseline">
+              <span class="mono" style="font-size:12px;color:var(--accent);letter-spacing:0.06em">{t}</span>
+              <span class="body-sm" style="color:var(--ink-2)">{d}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+      <div class="hi-card" style="padding:28px">
+        <div class="eyebrow" style="color:var(--accent);margin-bottom:12px">CONFLICT OF INTEREST</div>
+        <h3 style="font-size:24px;margin-bottom:14px">Disclosed, not avoided.</h3>
+        <p class="body" style="margin-bottom:14px">Chairs disclose any material interest in an RFC outcome — employment, equity, contracts, government affiliation — before the vote, publicly in the RFC PR thread.</p>
+        <p class="body-sm" style="color:var(--ink-2)">Any decision affected by an undisclosed conflict is voided. DCO sign-off (not a CLA) keeps contribution provenance clean for a future entity split.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="hi-section tint">
+    <div class="head">
+      <div class="eyebrow">§5 · Marks &amp; commitments</div>
+      <h2 class="s" style="max-width:720px">No mark in use. That's a feature.</h2>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px">
+      <div class="hi-card" style="padding:32px">
+        <h3 style="font-size:26px;margin-bottom:14px">Trademark posture</h3>
+        <p class="body" style="margin-bottom:12px">Through Phase 3, a registry listing does <em>not</em> grant any mark, badge, or right to claim certification. A federal-validation self-report is a reproducible factual artifact, not a third-party mark.</p>
+        <p class="body">The <em>"URML-Certified"</em> mark is reserved for Phase 4, when independent labs run conformance and trademark policy is ratified.</p>
+        <a class="hi-btn ghost" href="https://github.com/URML-MARS/URML/blob/main/TRADEMARK.md" rel="noopener noreferrer" style="padding:0;margin-top:14px;font-size:13px">Read TRADEMARK.md ↗</a>
+      </div>
+      <div class="hi-card" style="padding:32px">
+        <div class="caption" style="margin-bottom:16px">CORE COMMITMENTS · IMMUTABLE</div>
+        <ul style="list-style:none;padding:0;margin:0;display:grid;gap:14px">
+          {[["Spec stays Apache-2.0","Forever. See CORE_COMMITMENT.md."],["Conformance stays free","Anyone can run it, no cost, no gate."],["No vendor lock-in","Substrate-agnostic by construction."]].map(([t, d]) => (
+            <li style="display:flex;align-items:start;gap:10px">
+              <Icon name="check" size={18} stroke="var(--accent)" />
+              <span><strong style="font-size:15px">{t}</strong><br /><span class="body-sm">{d}</span></span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="hi-section dark" style="padding:72px 56px">
+    <div style="display:grid;grid-template-columns:1.4fr 1fr;gap:56px;align-items:center">
+      <h2 style="color:var(--bone)">Help govern the standard.</h2>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <a class="hi-btn primary lg" href="https://github.com/URML-MARS/URML/discussions" rel="noopener noreferrer" style="justify-content:center">Express interest in a WG chair seat →</a>
+        <a class="hi-btn outline-on-dark lg" href="https://github.com/URML-MARS/URML/tree/main/docs/rfcs" rel="noopener noreferrer" style="justify-content:center">Open an RFC</a>
+      </div>
+    </div>
+  </section>
+</Base>

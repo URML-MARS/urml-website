@@ -1,0 +1,130 @@
+---
+import Base from "../layouts/Base.astro";
+import Icon from "../components/Icon.astro";
+// Join — design shell from hifi-join.jsx. The application form is a
+// faithful visual PREVIEW (the handoff itself renders only step 1 and
+// says the real form needs a decided backend). Phase 0 has no
+// application backend; CTAs route to the real Phase-0 channels
+// (Discussions, the conformance kit, the registry PR flow). No fake
+// submit / autosave / multi-step is wired.
+
+const tracks = [
+  { t: "Adopter", s: "Use URML in your product. Publish a federal-validation self-report; list in the public directory.", icon: "shield", who: "Robot manufacturers · integrators", href: "/compliance", featured: false },
+  { t: "Runtime author", s: "Build an adapter against the ROSAdapter Protocol. Self-report the conformance suite.", icon: "cpu", who: "ROS / PX4 / vendor SDK authors", href: "/compliance", featured: false },
+  { t: "Working group", s: "A future WG chair seat: RFC vote, spec direction. Seats open at end of Phase 0.", icon: "stamp", who: "Express interest via Discussions", href: "https://github.com/URML-MARS/URML/discussions", featured: true },
+  { t: "Observer", s: "Read RFCs, follow Discussions, watch the repo. No application.", icon: "eye", who: "Anyone · no application", href: "https://github.com/URML-MARS/URML", featured: false },
+];
+
+const review = [
+  ["Day 0", "You engage", "Open a Discussion or a registry PR. ~10 minutes."],
+  ["Day 1–3", "Triage", "A maintainer reads, asks questions, or routes it to public comment."],
+  ["Day 4–10", "Public comment", "Opens for 7 days on GitHub Discussions. Anyone can chime in."],
+  ["Day 11–14", "Decision", "Accept, accept with conditions, defer, or decline — with written rationale."],
+];
+---
+
+<Base
+  title="Join URML — pick the track that fits your role"
+  description="Adopter, runtime author, working-group chair, or observer. Every track is free; the spec stays Apache-2.0 forever. Phase 0 engagement is via GitHub Discussions and the public registry."
+  active="Join"
+>
+  <section class="hi-section" style="padding:72px 56px 56px">
+    <div class="eyebrow" style="margin-bottom:24px">↳ Get involved · Phase 0</div>
+    <div style="display:grid;grid-template-columns:1.3fr 1fr;gap:80px;align-items:end">
+      <h1 class="s" style="max-width:740px">Join the working group shaping the&nbsp;robot economy.</h1>
+      <p class="lead" style="max-width:460px">Pick the track that fits your role. Every track is free. The spec stays Apache-2.0 forever, and no mark is in use until Phase 4.</p>
+    </div>
+  </section>
+
+  <section class="hi-section s" style="padding-top:0">
+    <div class="caption" style="margin-bottom:18px">SELECT A TRACK</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:16px">
+      {tracks.map((t) => (
+        <a href={t.href} rel={t.href.startsWith("http") ? "noopener noreferrer" : null} class="hi-card" style={"padding:28px;text-decoration:none;display:block;" + (t.featured ? "background:var(--ink);color:var(--bone);border-color:var(--ink);" : "color:var(--ink);")}>
+          {t.featured && <div class="caption" style="color:var(--accent);margin-bottom:14px">RECOMMENDED</div>}
+          <div style={"width:44px;height:44px;border-radius:6px;display:flex;align-items:center;justify-content:center;margin-bottom:22px;color:var(--accent);" + (t.featured ? "background:rgba(255,255,255,0.08)" : "background:var(--accent-tint)")}>
+            <Icon name={t.icon} size={22} stroke="currentColor" />
+          </div>
+          <h3 style="font-size:28px;margin-bottom:10px;color:inherit">{t.t}</h3>
+          <p style={"font-size:14px;line-height:1.5;margin-bottom:16px;color:" + (t.featured ? "rgba(250,247,241,0.75)" : "var(--ink-2)")}>{t.s}</p>
+          <div class="mono" style={"font-size:11px;letter-spacing:0.08em;text-transform:uppercase;padding-top:14px;border-top:1px dashed " + (t.featured ? "rgba(255,255,255,0.15)" : "var(--rule)") + ";color:" + (t.featured ? "rgba(250,247,241,0.5)" : "var(--ink-faint)")}>{t.who}</div>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <section class="hi-section tint">
+    <div class="head">
+      <div class="eyebrow">Application · preview</div>
+      <h2 class="s" style="max-width:780px">What the structured application will look like.</h2>
+    </div>
+    <div style="display:grid;grid-template-columns:1.4fr 1fr;gap:56px;align-items:start">
+      <div class="hi-card" style="padding:40px">
+        <div class="hi-field">
+          <div class="lab"><span class="name">Organization name</span><span class="hint">Public on listing</span></div>
+          <div class="input"><span style="color:var(--ink-faint)">Acme Robotics, Inc.</span></div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px">
+          <div class="hi-field"><div class="lab"><span class="name">Primary contact</span></div><div class="input"><span style="color:var(--ink-faint)">Jane Engineer</span></div></div>
+          <div class="hi-field"><div class="lab"><span class="name">Email</span></div><div class="input"><span style="color:var(--ink-faint)">jane@acme-robotics.com</span></div></div>
+        </div>
+        <div class="hi-field">
+          <div class="lab"><span class="name">Your robots / runtimes</span><span class="hint">Models, ROS packages, SKUs — one per line</span></div>
+          <div class="input area"><span style="color:var(--ink-faint)">Acme Mover X1 · ROS 2 · Nav2 / MoveIt 2&#10;Acme Drone D2 · PX4 · pymavlink</span></div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:14px;margin:8px 0 24px">
+          {["I agree to sign commits with the Developer Certificate of Origin (DCO).","I will publish my conformance results publicly when reviewed."].map((t) => (
+            <span style="display:flex;gap:12px;align-items:flex-start;font-size:14px;color:var(--ink-2)">
+              <span style="width:18px;height:18px;border:1.5px solid var(--accent);border-radius:3px;background:var(--accent);color:var(--bone);display:flex;align-items:center;justify-content:center;margin-top:1px;flex-shrink:0"><Icon name="check" size={12} stroke="currentColor" /></span>
+              <span>{t}</span>
+            </span>
+          ))}
+        </div>
+        <hr class="hi-rule" style="margin:0 0 24px" />
+        <a class="hi-btn primary lg" href="https://github.com/URML-MARS/URML/discussions" rel="noopener noreferrer" style="width:100%;justify-content:center">Engage via GitHub Discussions →</a>
+        <div class="caption" style="margin-top:14px;color:var(--ink-faint)">PREVIEW — THE STRUCTURED APPLICATION OPENS IN PHASE 1. UNTIL THEN, ENGAGE VIA DISCUSSIONS OR A REGISTRY PR.</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:24px;position:sticky;top:24px">
+        <div class="hi-card" style="padding:24px">
+          <div class="eyebrow" style="margin-bottom:14px">Progress (Phase 1)</div>
+          {["Application","Conformance results","Manifest review","Decision"].map((l, i) => (
+            <div style={"display:flex;align-items:center;gap:12px;padding:10px 0;" + (i < 3 ? "border-bottom:1px dashed var(--rule)" : "")}>
+              <div style={"width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:11px;border:1.5px solid " + (i === 0 ? "var(--accent);background:var(--accent);color:var(--bone)" : "var(--ink-faint);color:var(--ink-faint)")}>{i === 0 ? "1" : i + 1}</div>
+              <div style={"font-size:14px;" + (i === 0 ? "color:var(--ink);font-weight:500" : "color:var(--ink-faint)")}>{l}</div>
+            </div>
+          ))}
+        </div>
+        <div class="hi-card" style="padding:24px;background:var(--ink);color:var(--bone);border-color:var(--ink)">
+          <div class="caption" style="color:rgba(250,247,241,0.5);margin-bottom:10px">What happens next</div>
+          <p style="font-size:14px;line-height:1.55;color:rgba(250,247,241,0.85)">Decisions are public; private back-channels are for security only. There is no fee and no account.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="hi-section">
+    <div class="head">
+      <div class="eyebrow">Review process</div>
+      <h2 class="s" style="max-width:720px">Public, time-bound, and not adversarial.</h2>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:0;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule)">
+      {review.map(([when, t, d], i) => (
+        <div style={"padding:32px 28px;" + (i < 3 ? "border-right:1px solid var(--rule)" : "")}>
+          <div class="caption" style="color:var(--accent);margin-bottom:14px">{when}</div>
+          <h3 style="font-size:24px;margin-bottom:10px">{t}</h3>
+          <p class="body-sm">{d}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="hi-section dark" style="padding:72px 56px">
+    <div style="display:grid;grid-template-columns:1.4fr 1fr;gap:56px;align-items:center">
+      <h2 style="color:var(--bone)">Help write the standard.</h2>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <a class="hi-btn primary lg" href="https://github.com/URML-MARS/URML/discussions" rel="noopener noreferrer" style="justify-content:center">Start in Discussions →</a>
+        <a class="hi-btn outline-on-dark lg" href="/compliance" style="justify-content:center">Read the compliance path</a>
+      </div>
+    </div>
+  </section>
+</Base>

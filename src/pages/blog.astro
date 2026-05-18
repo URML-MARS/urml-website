@@ -1,0 +1,127 @@
+---
+import Base from "../layouts/Base.astro";
+// Blog — design shell from hifi-blog.jsx, but NO fabricated posts,
+// authors, dates, subscriber counts, archive numbers, or feed
+// backends. There is no blog content yet. The "notes" below are real,
+// factual links to actual repo artifacts (RFCs, conformance kit,
+// changelog), tagged by category so the filter island is genuinely
+// functional. Honest empty state when a category has nothing.
+// The fake "~1,200 subscribers" / weekly-digest ESP is replaced with
+// a real "follow the repo / Discussions" pointer (measure-first).
+
+const cats = [
+  ["all", "All"],
+  ["rfc", "RFC"],
+  ["governance", "Governance"],
+  ["compliance", "Compliance"],
+  ["engineering", "Engineering"],
+  ["release", "Releases"],
+];
+
+const notes = [
+  { cat: "rfc", catL: "RFC", t: "RFC-0009 — Legged & humanoid mobility (accepted)", sub: "Adds quadruped/biped drive types; unblocks Spot, ANYmal, Digit, and the manifest-only humanoids.", href: "https://github.com/URML-MARS/URML/tree/main/docs/rfcs" },
+  { cat: "rfc", catL: "RFC", t: "RFC-0010/0011/0012 — open drafts", sub: "Whole-body manipulation; educational profile; research profile. Draft, open for comment.", href: "https://github.com/URML-MARS/URML/tree/main/docs/rfcs" },
+  { cat: "compliance", catL: "COMPLIANCE", t: "Conformance bring-your-own-adapter kit", sub: "Run the suite against any runtime: python -m urml_conformance --adapter your_pkg:YourAdapter.", href: "https://github.com/URML-MARS/URML/blob/main/conformance/CONFORMANCE_KIT.md" },
+  { cat: "engineering", catL: "ENGINEERING", t: "Reference runtimes across six substrate families", sub: "ros2 / px4 / industrial-arm / legged / humanoid / marine — all passing the hermetic suite.", href: "https://github.com/URML-MARS/URML/tree/main/reference" },
+  { cat: "release", catL: "RELEASE", t: "Changelog", sub: "Every notable change, in the open, in git.", href: "https://github.com/URML-MARS/URML/blob/main/CHANGELOG.md" },
+  { cat: "governance", catL: "GOVERNANCE", t: "GOVERNANCE.md & the RFC process", sub: "How decisions are made, who can advance an RFC, the phase gates.", href: "https://github.com/URML-MARS/URML/blob/main/GOVERNANCE.md" },
+];
+---
+
+<Base
+  title="URML field notes — written in the open"
+  description="RFC retrospectives, compliance walkthroughs, and engineering notes. Long-form posts arrive as the working group writes them; until then, the canonical record is the repo, its RFCs, and its changelog."
+  active="Blog"
+>
+  <section class="hi-section" style="padding:72px 56px 48px">
+    <div class="eyebrow" style="margin-bottom:24px">↳ Field notes · written in the open</div>
+    <div style="display:grid;grid-template-columns:1.4fr 1fr;gap:56px;align-items:end">
+      <div>
+        <h1 class="s" style="max-width:800px">Notes from the working group.</h1>
+        <p class="lead" style="margin-top:20px;max-width:580px">
+          Long-form RFC retrospectives, compliance walkthroughs, and engineering notes will land
+          here as they are written. The cadence target is one post per accepted RFC. Until the
+          archive fills, the canonical record is the repository itself.
+        </p>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <a class="hi-btn outline" href="https://github.com/URML-MARS/URML/releases" rel="noopener noreferrer">Watch releases ↗</a>
+        <a class="hi-btn ghost" href="https://github.com/URML-MARS/URML/discussions" rel="noopener noreferrer">Follow Discussions ↗</a>
+      </div>
+    </div>
+  </section>
+
+  <section style="padding:0 56px 16px;border-bottom:1px solid var(--rule)">
+    <div id="bfilter" style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+      <span class="caption" style="margin-right:8px">FILTER</span>
+      {cats.map(([k, l], i) => (
+        <button type="button" data-bcat={k} class="hi-chip" style={"cursor:pointer;padding:5px 14px;" + (i === 0 ? "background:var(--ink);color:var(--bone);border-color:var(--ink)" : "")}>{l}</button>
+      ))}
+    </div>
+  </section>
+
+  <section style="padding:40px 56px 64px">
+    <div class="caption" style="margin-bottom:16px">REPOSITORY NOTES · the authored archive opens as posts are written</div>
+    <div style="border-top:1px solid var(--ink)">
+      {notes.map((p) => (
+        <a href={p.href} rel="noopener noreferrer" data-bcat-row={p.cat} style="display:grid;grid-template-columns:160px 1fr 24px;gap:24px;padding:22px 4px;border-bottom:1px solid var(--rule);text-decoration:none;color:inherit;align-items:center">
+          <div class="mono" style="font-size:12px;color:var(--accent);font-weight:600;letter-spacing:0.06em">{p.catL}</div>
+          <div>
+            <div style="font-size:18px;font-weight:500;margin-bottom:4px;color:var(--ink)">{p.t}</div>
+            <div class="body-sm">{p.sub}</div>
+          </div>
+          <span style="color:var(--ink-faint);text-align:right">↗</span>
+        </a>
+      ))}
+    </div>
+    <div data-bempty style="display:none;padding:48px 4px;color:var(--ink-faint);font-family:var(--mono);font-size:13px">No notes in this category yet — the authored archive is still being written.</div>
+  </section>
+
+  <section class="hi-section tint">
+    <div style="display:grid;grid-template-columns:1.4fr 1fr;gap:56px;align-items:center">
+      <div>
+        <div class="caption" style="margin-bottom:16px">FOLLOW ALONG</div>
+        <h2 class="s" style="margin-bottom:16px">No newsletter yet. No tracking, ever.</h2>
+        <p class="body" style="max-width:520px">There is no email list and no subscriber claim to make until there is one to measure. The complete, canonical update stream is the repository: watch GitHub releases for versioned changes and follow Discussions for everything else. Same content, no tracking pixels, no third-party requests.</p>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <a class="hi-btn primary lg" href="https://github.com/URML-MARS/URML/releases" rel="noopener noreferrer" style="justify-content:center">Watch releases →</a>
+        <a class="hi-btn outline lg" href="https://github.com/URML-MARS/URML/discussions" rel="noopener noreferrer" style="justify-content:center">Follow Discussions →</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="hi-section dark" style="padding:72px 56px">
+    <div style="display:grid;grid-template-columns:1.4fr 1fr;gap:56px;align-items:center">
+      <h2 style="color:var(--bone)">Write the post you wish existed.</h2>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <a class="hi-btn primary lg" href="https://github.com/URML-MARS/URML/discussions" rel="noopener noreferrer" style="justify-content:center">Pitch a post →</a>
+        <a class="hi-btn outline-on-dark lg" href="https://github.com/URML-MARS/URML" rel="noopener noreferrer" style="justify-content:center">Read the repo</a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<script>
+  // Blog category-filter island (Astro-bundled, CSP-safe). Functional
+  // and ready for when authored posts exist; honest empty state now.
+  const chips = document.querySelectorAll<HTMLButtonElement>("#bfilter button[data-bcat]");
+  const rows = document.querySelectorAll<HTMLElement>("[data-bcat-row]");
+  const empty = document.querySelector<HTMLElement>("[data-bempty]");
+  chips.forEach((c) => c.addEventListener("click", () => {
+    const want = c.dataset.bcat;
+    chips.forEach((x) => {
+      const on = x === c;
+      x.style.background = on ? "var(--ink)" : "var(--bone)";
+      x.style.color = on ? "var(--bone)" : "var(--ink-soft)";
+      x.style.borderColor = on ? "var(--ink)" : "var(--rule)";
+    });
+    let shown = 0;
+    rows.forEach((r) => {
+      const vis = want === "all" || r.dataset.bcatRow === want;
+      r.style.display = vis ? "" : "none";
+      if (vis) shown++;
+    });
+    if (empty) empty.style.display = shown === 0 ? "" : "none";
+  }));
+</script>
