@@ -1,0 +1,81 @@
+---
+import Logo from "./Logo.astro";
+// Dark footer. Every item is a real link: internal where the page
+// exists, the canonical GitHub artifact otherwise. No dead links.
+// External links carry rel=noopener; same-origin links keep CSP tight.
+// MARS Phase-0 steward credit preserved (small/plain/reversible).
+const GH = "https://github.com/URML-MARS/URML";
+const cols = [
+  {
+    h: "Spec",
+    l: [
+      ["v0.1 draft", "/spec"],
+      ["Changelog", `${GH}/blob/main/CHANGELOG.md`],
+      ["RFCs (12)", `${GH}/tree/main/docs/rfcs`],
+      ["Conformance suite", `${GH}/blob/main/conformance/CONFORMANCE_KIT.md`],
+      ["Glossary", "/spec#glossary"],
+    ],
+  },
+  {
+    h: "Adopt",
+    l: [
+      ["Quickstart", "/spec"],
+      ["Compliance review", "/compliance"],
+      ["Conformance results", "/partners"],
+      ["Manufacturer guide", "/compliance"],
+    ],
+  },
+  {
+    h: "Community",
+    l: [
+      ["Working groups", "/governance"],
+      ["GitHub Discussions", `${GH}/discussions`],
+      ["Blog", "/blog"],
+      ["Newsletter", "/blog"],
+    ],
+  },
+  {
+    h: "About",
+    l: [
+      ["Governance", "/governance"],
+      ["Core commitments", `${GH}/blob/main/CORE_COMMITMENT.md`],
+      ["Trademark", `${GH}/blob/main/TRADEMARK.md`],
+      ["Security", `${GH}/blob/main/SECURITY.md`],
+      ["Contact", "/contact"],
+    ],
+  },
+];
+---
+
+<footer class="hi-footer">
+  <div class="grid">
+    <div>
+      <Logo tone="bone" />
+      <p style="margin-top:16px;font-size:14px;color:rgba(250,247,241,0.7);max-width:320px;line-height:1.55">
+        The Universal Robot Language — a public, open standard for describing
+        robot intent. Apache-2.0. Phase 0.
+      </p>
+    </div>
+    {cols.map((c) => (
+      <div>
+        <h4>{c.h}</h4>
+        <ul>
+          {c.l.map(([label, href]) => {
+            const ext = href.startsWith("http");
+            return (
+              <li>
+                <a href={href} rel={ext ? "noopener noreferrer" : null}>
+                  {label}{ext ? " ↗" : ""}
+                </a>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+    ))}
+  </div>
+  <div class="legal">
+    <span>© 2026 URML Working Group · Apache License 2.0 · Stewarded by MARS during Phase 0</span>
+    <a href="https://github.com/URML-MARS/URML" rel="noopener noreferrer">github.com/URML-MARS/URML</a>
+  </div>
+</footer>

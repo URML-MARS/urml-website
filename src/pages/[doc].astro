@@ -1,0 +1,30 @@
+---
+import { getCollection } from "astro:content";
+import Base from "../layouts/Base.astro";
+
+// Renders each canonical doc synced from core (the "rendering layer"
+// property) at its own route, inside the design shell. Slug = the
+// src/content/core/<slug>.md filename = the route.
+export async function getStaticPaths() {
+  const entries = await getCollection("core");
+  return entries.map((entry) => ({
+    params: { doc: entry.slug },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await entry.render();
+const desc = `${entry.data.title} — canonical content rendered from the URML core repository.`;
+---
+
+<Base title={`${entry.data.title} — URML`} description={desc} active="">
+  <section class="hi-section" style="padding:64px 56px">
+    <div class="hi-prose">
+      <div class="caption" style="margin-bottom:20px">
+        ↳ Rendered from <a href="https://github.com/URML-MARS/URML" rel="noopener noreferrer" style="color:var(--accent)">URML-MARS/URML</a> · canonical source of truth
+      </div>
+      <Content />
+    </div>
+  </section>
+</Base>

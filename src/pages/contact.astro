@@ -1,0 +1,74 @@
+---
+import Base from "../layouts/Base.astro";
+// Contact — restores parity with the live MkDocs contact page, as a
+// real Netlify form. Netlify detects the form in the static HTML
+// (name + data-netlify + hidden form-name + honeypot); no client JS,
+// posts same-origin to /submitted (CSP form-action 'self' satisfied).
+// Security/conduct deliberately routed to the private SECURITY.md
+// process, never this public form.
+---
+
+<Base
+  title="Contact the URML working group"
+  description="Reach the URML working group. General questions, partnership, and press. Security and conduct concerns use the private process in SECURITY.md, never this form."
+  active=""
+>
+  <section class="hi-section" style="padding:72px 56px 56px">
+    <div class="eyebrow" style="margin-bottom:24px">↳ Contact</div>
+    <div style="display:grid;grid-template-columns:1.1fr 1fr;gap:64px;align-items:start">
+      <div>
+        <h1 class="s" style="max-width:560px">Reach the working group.</h1>
+        <p class="lead" style="margin-top:24px;max-width:520px">
+          General questions, partnership, press. Decisions and most discussion happen in the open
+          on <a href="https://github.com/URML-MARS/URML/discussions" rel="noopener noreferrer" style="color:var(--accent)">GitHub Discussions</a> — that is usually faster than this form.
+        </p>
+        <div class="hi-card tint" style="padding:20px;margin-top:28px">
+          <div class="eyebrow" style="margin-bottom:10px">Security &amp; conduct</div>
+          <p class="body-sm" style="color:var(--ink-2)">
+            Vulnerability reports and code-of-conduct concerns must use the private process in
+            <span class="mono">SECURITY.md</span>, never this public form and never a public thread.
+          </p>
+        </div>
+      </div>
+
+      <div class="hi-card" style="padding:36px">
+        <form name="contact" method="POST" data-netlify="true" data-netlify-honeypot="bot-field" action="/submitted">
+          <input type="hidden" name="form-name" value="contact" />
+          <p class="hi-hp">
+            <label>Leave this empty if you're human: <input name="bot-field" /></label>
+          </p>
+          <div class="hi-field">
+            <label class="lab" for="c-name"><span class="name">Name</span></label>
+            <input class="input" id="c-name" name="name" type="text" required autocomplete="name" placeholder="Jane Engineer" />
+          </div>
+          <div class="hi-form-row">
+            <div class="hi-field">
+              <label class="lab" for="c-email"><span class="name">Email</span></label>
+              <input class="input" id="c-email" name="email" type="email" required autocomplete="email" placeholder="jane@org.com" />
+            </div>
+            <div class="hi-field">
+              <label class="lab" for="c-org"><span class="name">Organization</span><span class="hint">optional</span></label>
+              <input class="input" id="c-org" name="organization" type="text" autocomplete="organization" placeholder="Acme Robotics" />
+            </div>
+          </div>
+          <div class="hi-field">
+            <label class="lab" for="c-topic"><span class="name">Topic</span></label>
+            <select class="input" id="c-topic" name="topic">
+              <option>General question</option>
+              <option>Partnership / adoption</option>
+              <option>Press</option>
+              <option>Registry / listing</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div class="hi-field">
+            <label class="lab" for="c-msg"><span class="name">Message</span></label>
+            <textarea class="input" id="c-msg" name="message" required placeholder="How can the working group help?"></textarea>
+          </div>
+          <button type="submit" class="hi-btn primary lg" style="width:100%;justify-content:center">Send →</button>
+          <div class="caption" style="margin-top:14px;color:var(--ink-faint)">NO ACCOUNT · NO TRACKING · SAME-ORIGIN ONLY</div>
+        </form>
+      </div>
+    </div>
+  </section>
+</Base>

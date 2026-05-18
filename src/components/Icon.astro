@@ -1,0 +1,40 @@
+---
+// Geometric stroke-only icon set, 24px viewbox. Ported verbatim from
+// the design handoff (source/hifi-shell.jsx HiIcon).
+interface Props {
+  name: string;
+  size?: number;
+  stroke?: string;
+}
+const { name, size = 24, stroke = "currentColor" } = Astro.props;
+
+const paths: Record<string, string> = {
+  shield: '<path d="M12 3l8 3v6c0 4.5-3.5 8-8 9-4.5-1-8-4.5-8-9V6z" />',
+  spec: '<rect x="5" y="3" width="14" height="18" rx="1.5" /><path d="M9 8h6M9 12h6M9 16h4" />',
+  radio: '<circle cx="12" cy="12" r="2" /><path d="M8.5 8.5a5 5 0 0 0 0 7" /><path d="M15.5 8.5a5 5 0 0 1 0 7" /><path d="M5.6 5.6a9 9 0 0 0 0 12.8" /><path d="M18.4 5.6a9 9 0 0 1 0 12.8" />',
+  stamp: '<path d="M12 3v6" /><circle cx="12" cy="11" r="2.5" /><path d="M5 17h14M5 17l1.5-3h11L19 17M5 21h14" />',
+  drone: '<circle cx="6" cy="6" r="2.5" /><circle cx="18" cy="6" r="2.5" /><circle cx="6" cy="18" r="2.5" /><circle cx="18" cy="18" r="2.5" /><rect x="9.5" y="9.5" width="5" height="5" rx="0.5" /><path d="M7.5 7.5l2 2M16.5 7.5l-2 2M7.5 16.5l2-2M16.5 16.5l-2-2" />',
+  book: '<path d="M4 4h7v16H5a1 1 0 0 1-1-1zM20 4h-7v16h6a1 1 0 0 0 1-1z" />',
+  badge: '<circle cx="12" cy="9" r="5" /><path d="M9 13l-2 7 5-3 5 3-2-7" />',
+  list: '<path d="M3 6h4v4H3zM3 14h4v4H3zM10 7h11M10 9h7M10 15h11M10 17h7" />',
+  check: '<path d="M5 12.5l4 4 10-10" />',
+  arrow: '<path d="M5 12h14M13 6l6 6-6 6" />',
+  plus: '<path d="M12 5v14M5 12h14" />',
+  git: '<circle cx="6" cy="6" r="2" /><circle cx="6" cy="18" r="2" /><circle cx="18" cy="12" r="2" /><path d="M6 8v8M8 6h6a4 4 0 0 1 4 4v0" />',
+  cpu: '<rect x="6" y="6" width="12" height="12" rx="1" /><rect x="9" y="9" width="6" height="6" rx="0.5" /><path d="M9 2v2M12 2v2M15 2v2M9 20v2M12 20v2M15 20v2M2 9h2M2 12h2M2 15h2M20 9h2M20 12h2M20 15h2" />',
+  eye: '<path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z" /><circle cx="12" cy="12" r="3" />',
+};
+const inner = paths[name] ?? paths.plus;
+---
+
+<svg
+  width={size}
+  height={size}
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke={stroke}
+  stroke-width="1.5"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  aria-hidden="true"
+><Fragment set:html={inner} /></svg>

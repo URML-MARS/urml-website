@@ -1,0 +1,37 @@
+---
+import Logo from "./Logo.astro";
+// Top navigation. Ported from the handoff (HiNav). Links now point at
+// real routes; pages other than Home land in follow-up passes.
+interface Props {
+  active?: string;
+}
+const { active = "Home" } = Astro.props;
+const items: [string, string][] = [
+  ["What is URML", "/what"],
+  ["Spec", "/spec"],
+  ["Compliance", "/compliance"],
+  ["Partners", "/partners"],
+  ["Governance", "/governance"],
+  ["Blog", "/blog"],
+];
+---
+
+<header class="hi-nav">
+  <div class="left">
+    <Logo animate />
+    <nav class="hi-nav-links" aria-label="Primary">
+      {items.map(([label, href]) => (
+        <a href={href} class={active === label ? "active" : ""}>{label}</a>
+      ))}
+    </nav>
+  </div>
+  <div class="right">
+    <span class="hi-chip"><span class="dot"></span>v0.1 · Draft</span>
+    <a
+      href="https://github.com/URML-MARS/URML"
+      class="hi-btn ghost"
+      rel="noopener noreferrer"
+    >GitHub ↗</a>
+    <a href="/join" class="hi-btn primary">Apply for review →</a>
+  </div>
+</header>

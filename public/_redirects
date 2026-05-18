@@ -1,0 +1,10 @@
+# Live-URL parity. The seven canonical docs (compatible-runtimes,
+# submit, trademark, manufacturers, manufacturer-directory,
+# list-your-product, manufacturer-federal-validation) are now REAL
+# pages rendered from core by scripts/sync-from-core.mjs, so they are
+# NOT redirected. Only the URLs with no core source / folded into the
+# designed pages keep a 301. Netlify normalizes the trailing slash, so
+# `/foo` also matches the MkDocs `/foo/` form.
+/integrations    /partners    301
+/manifesto       /what        301
+/contact-sent    /submitted   301

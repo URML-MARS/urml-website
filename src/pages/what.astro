@@ -1,0 +1,227 @@
+---
+import Base from "../layouts/Base.astro";
+import Icon from "../components/Icon.astro";
+// What is URML — ported from the handoff (source/hifi-what.jsx).
+// HiChrome dropped; Nav/Footer in Base.
+
+const audience = [
+  { who: "DEVELOPERS", t: "Write once, target any substrate.", d: "Stop translating intent into ROS topics, MAVLink commands, and vendor APIs. URML is one language above all of them.", bullets: ["17 intent primitives", "ROS 2 + PX4 adapters", "LLM bridge included"], cta: "Quickstart →", href: "/spec" },
+  { who: "MANUFACTURERS", t: "A self-served path to federal readiness.", d: "Run the conformance suite, publish a manifest, get listed. Free, opt-in, de-listable any time.", bullets: ["32 conformance fixtures", "Public directory", "Provenance schema"], cta: "Compliance path →", href: "/compliance" },
+  { who: "GOVERNMENTS & REGULATORS", t: "A machine-checkable lens on policy.", d: "The validator's policy pass is a regulation-neutral mechanism with a US-federal default. Add your jurisdiction's file.", bullets: ["NDAA · FCC · EO 14307", "Policy DSL (YAML)", "Override per deployment"], cta: "Read the policy spec →", href: "/spec" },
+];
+
+const layers = [
+  { tag: "L4", name: "Natural language", sub: "An LLM turns English into URML. URML stays the contract.", in: true },
+  { tag: "L3", name: "Behavior composition", sub: "sequence · branch · parallel · retry · on_error", in: true },
+  { tag: "L2", name: "Intent primitives", sub: "17 verbs · move_to · grasp · detect · scan · …", in: true },
+  { tag: "L1", name: "Hardware abstraction", sub: "capability manifest · provenance · safety envelope", in: true },
+  { tag: "L0", name: "Substrate", sub: "ROS 2 · PX4 · OPC UA · KUKA · ABB · IEC 61131-3", in: false },
+];
+
+const passes = [
+  { n: "1", t: "Argument typing", d: "Are the verb's arguments well-typed against the spec?" },
+  { n: "2", t: "Capability check", d: "Does the manifest declare the capability the program uses?" },
+  { n: "3", t: "Safety envelope", d: "Geofence, altitude bands, people-occupancy, exclusion zones." },
+  { n: "4", t: "Variable bindings", d: "Are referenced bindings produced, with the right types?" },
+  { n: "5", t: "Compliance policy", d: "Does the manifest pass the active jurisdiction's policy?" },
+];
+
+const next = [
+  { t: "Read the spec", d: "v0.1 normative reference. Mirrors the GitHub source of truth.", href: "/spec", icon: "spec" },
+  { t: "Run the demo", d: "Three commands, hermetic, no robot needed. URML in your terminal.", href: "/spec", icon: "cpu" },
+  { t: "Get compliant", d: "If you make robots — the 5-step path to a public listing.", href: "/compliance", icon: "shield" },
+];
+
+const rejectCode = `<span class="c"># attempt-1.urml.yaml</span>
+<span class="k">sequence</span><span class="p">:</span>
+  - <span class="k">take_off</span><span class="p">:</span>     { altitude: 120 }
+  - <span class="k">move_to</span><span class="p">:</span>      { lat: 37.79, lon: -122.40, alt: 120 }
+  - <span class="k">hover</span><span class="p">:</span>        { duration: 300 }
+  - <span class="k">return_to_home</span><span class="p">:</span> {}`;
+
+const acceptCode = `<span class="c"># attempt-2.urml.yaml</span>
+<span class="k">sequence</span><span class="p">:</span>
+  - <span class="k">take_off</span><span class="p">:</span>     { altitude: 85 }
+  - <span class="k">move_to</span><span class="p">:</span>      { lat: 37.79, lon: -122.40, alt: 85 }
+  - <span class="k">hover</span><span class="p">:</span>        { duration: 300 }
+  - <span class="k">return_to_home</span><span class="p">:</span> {}`;
+---
+
+<Base
+  title="What is URML — one vocabulary humans, LLMs, and robots can agree on"
+  description="URML is a small, public spec for describing what a robot should do, independent of the motors, joints, or frames that carry it out. Every program is statically verified before any actuator moves."
+  active="What is URML"
+>
+  <section class="hi-section" style="padding:88px 56px 72px">
+    <div class="eyebrow" style="margin-bottom:28px">↳ The explainer · 4 min read</div>
+    <h1 style="max-width:980px">One vocabulary humans, LLMs, and robots can agree on.</h1>
+    <p class="lead" style="max-width:720px;margin-top:32px">
+      URML is a small, public spec for describing what a robot should do — independent of which
+      motors, joints, or frames carry it out. It's a draft today (v0.1, phase 0), and the working
+      group is open. Every program is statically verified against the robot's declared
+      capabilities, the active safety envelope, and a compliance policy
+      <em> before a single actuator moves.</em>
+    </p>
+    <div style="display:flex;gap:12px;margin-top:36px;flex-wrap:wrap">
+      <a class="hi-btn primary" href="/spec">Read the spec →</a>
+      <a class="hi-btn outline" href="/spec">See the demo</a>
+      <a class="hi-btn ghost" href="https://github.com/URML-MARS/URML" rel="noopener noreferrer">Why URML exists →</a>
+    </div>
+  </section>
+
+  <section class="hi-section tint">
+    <div class="head">
+      <div class="eyebrow">Who URML is for</div>
+      <h2 class="s" style="max-width:780px">The same spec serves three audiences, each for a different reason.</h2>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:var(--rule);border:1px solid var(--rule)">
+      {audience.map((c) => (
+        <div style="background:var(--bone);padding:36px">
+          <div class="caption" style="color:var(--accent);margin-bottom:14px">{c.who}</div>
+          <h3 style="margin-bottom:14px;max-width:360px">{c.t}</h3>
+          <p class="body" style="margin-bottom:22px">{c.d}</p>
+          <ul style="list-style:none;padding:0;margin:0 0 22px;display:grid;gap:8px">
+            {c.bullets.map((b) => (
+              <li style="display:flex;gap:10px;align-items:center;font-size:14px;color:var(--ink-2)">
+                <Icon name="check" size={14} stroke="var(--accent)" /><span>{b}</span>
+              </li>
+            ))}
+          </ul>
+          <a class="hi-btn ghost" href={c.href} style="padding:0">{c.cta}</a>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="hi-section">
+    <div class="head">
+      <div class="eyebrow">The architecture</div>
+      <h2 style="max-width:920px">Five layers. URML defines the top four.</h2>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:start">
+      <div>
+        {layers.map((l) => (
+          <div class={"hi-layer " + (l.in ? "" : "l0")}>
+            <div class="tag">{l.tag}</div>
+            <div>
+              <div class="name">{l.name}</div>
+              <div class="sub">{l.sub}</div>
+            </div>
+            <div class="badge" style={l.in ? "color:var(--accent)" : "color:var(--ink-faint)"}>
+              {l.in ? "URML" : "NOT URML"}
+            </div>
+          </div>
+        ))}
+      </div>
+      <div>
+        <h3 style="font-size:32px;margin-bottom:18px">The boundary matters.</h3>
+        <p class="body" style="margin-bottom:16px">
+          URML is intentionally <em>not</em> a robot operating system. It sits above whatever you
+          already run — ROS 2, PX4, OPC UA, a vendor SDK — and gives those substrates one consistent
+          vocabulary for intent.
+        </p>
+        <p class="body" style="margin-bottom:24px">
+          That means adopting URML is additive, not migratory. Your existing stack stays. URML adds
+          a layer of portable intent above it.
+        </p>
+        <div class="hi-card tint" style="padding:20px">
+          <div class="eyebrow" style="margin-bottom:10px">What URML is not</div>
+          <ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px;font-size:14px;color:var(--ink-2)">
+            <li>— Not a robot operating system</li>
+            <li>— Not a low-level motion controller</li>
+            <li>— Not a certification mark (yet — that's Phase 4)</li>
+            <li>— Not a replacement for ROS, PX4, or OPC UA</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="hi-section tint">
+    <div class="head">
+      <div class="eyebrow">The point of the validator</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:end">
+        <h2 style="max-width:600px">An LLM writes an unsafe program. URML refuses it.</h2>
+        <p class="body-sm" style="max-width:460px">
+          Same English prompt, same robot, same LLM. The first attempt is statically rejected
+          before takeoff. The revision loop produces an accepted version. No actuator moves in between.
+        </p>
+      </div>
+    </div>
+    <div class="caption" style="margin-bottom:16px">
+      PROMPT &nbsp;·&nbsp; <span style="color:var(--ink)">"Fly the drone to the rooftop and hold position for 5 minutes."</span>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+      <div class="hi-card" style="padding:0;overflow:hidden;border-color:#a64321;border-width:1.5px">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 22px;background:#fde2cf;border-bottom:1.5px solid #a64321">
+          <div class="caption" style="color:#7a2e10">ATTEMPT 1 · LLM OUTPUT</div>
+          <div class="mono" style="font-size:12px;color:#7a2e10;font-weight:600">✕ REJECTED · PASS 3 FAILED</div>
+        </div>
+        <div class="hi-code" style="border-radius:0"><Fragment set:html={rejectCode} /></div>
+        <div style="padding:22px;border-top:1px dashed var(--rule)">
+          <div class="caption" style="color:#a64321;margin-bottom:8px">VALIDATOR · PASS 3 · SAFETY ENVELOPE</div>
+          <p class="body-sm" style="color:var(--ink-2)">
+            Target altitude <span class="mono">120m</span> exceeds the active envelope's ceiling of
+            <span class="mono"> 90m</span> over zoned-residential geofence
+            <span class="mono"> SF-RES-04</span>. <strong style="color:var(--ink)">No actuator engaged.</strong>
+          </p>
+        </div>
+      </div>
+      <div class="hi-card" style="padding:0;overflow:hidden;border-color:var(--accent);border-width:1.5px">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 22px;background:var(--accent-tint);border-bottom:1.5px solid var(--accent)">
+          <div class="caption" style="color:var(--accent)">ATTEMPT 2 · LLM REVISION</div>
+          <div class="mono" style="font-size:12px;color:var(--accent);font-weight:600">✓ ACCEPTED · ALL 5 PASSES</div>
+        </div>
+        <div class="hi-code" style="border-radius:0"><Fragment set:html={acceptCode} /></div>
+        <div style="padding:22px;border-top:1px dashed var(--rule)">
+          <div class="caption" style="color:var(--accent);margin-bottom:8px">VALIDATOR · ALL PASSES</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px 16px;font-size:13px;color:var(--ink-2)">
+            <span><Icon name="check" size={12} stroke="var(--accent)" /> args typed</span>
+            <span><Icon name="check" size={12} stroke="var(--accent)" /> caps declared</span>
+            <span><Icon name="check" size={12} stroke="var(--accent)" /> envelope OK (85m &lt; 90m)</span>
+            <span><Icon name="check" size={12} stroke="var(--accent)" /> bindings resolve</span>
+            <span><Icon name="check" size={12} stroke="var(--accent)" /> policy clear</span>
+            <span><Icon name="check" size={12} stroke="var(--accent)" /> executor engaged</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="body-sm" style="margin-top:24px;color:var(--ink-faint);max-width:820px">
+      The LLM revision loop is part of the spec, not an afterthought — policy errors short-circuit
+      back to the model with a structured reason, and the prompt contract is what the model is
+      allowed to assume.
+    </div>
+  </section>
+
+  <section class="hi-section">
+    <div class="head">
+      <div class="eyebrow">The five validation passes</div>
+      <h2 class="s" style="max-width:880px">Each pass is small, independent, and fails fast.</h2>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:16px">
+      {passes.map((p) => (
+        <div class="hi-card" style="padding:22px">
+          <div class="caption" style="color:var(--accent);margin-bottom:12px">PASS {p.n}</div>
+          <h3 style="font-size:22px;line-height:1.15;margin-bottom:8px">{p.t}</h3>
+          <p class="body-sm">{p.d}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="hi-section tint s">
+    <div class="caption" style="margin-bottom:24px">WHERE TO GO NEXT</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px">
+      {next.map((c) => (
+        <a href={c.href} class="hi-card" style="padding:28px;text-decoration:none;color:inherit;display:block">
+          <div style="width:40px;height:40px;border-radius:4px;background:var(--accent-tint);color:var(--accent);display:flex;align-items:center;justify-content:center;margin-bottom:18px">
+            <Icon name={c.icon} size={20} />
+          </div>
+          <h3 style="font-size:24px;margin-bottom:6px">{c.t}</h3>
+          <p class="body-sm" style="margin-bottom:14px">{c.d}</p>
+          <span class="hi-btn ghost" style="padding:0;font-size:13px">Read <span class="arrow">→</span></span>
+        </a>
+      ))}
+    </div>
+  </section>
+</Base>

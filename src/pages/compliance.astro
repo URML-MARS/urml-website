@@ -1,0 +1,186 @@
+---
+import Base from "../layouts/Base.astro";
+import Icon from "../components/Icon.astro";
+// Compliance — design shell from hifi-compliance.jsx, but the COPY is
+// reconciled with the live docs/manufacturer-federal-validation.md
+// legal boundary (must-not-regress). It is a *self-report*, not a
+// certification/audit/endorsement; the mandatory disclaimer from the
+// bundled policy header is reproduced verbatim; no "URML COMPLIANT"
+// badge claim (the live page forbids that phrasing).
+
+const steps = [
+  { n: "1", t: "Run the conformance suite", d: "Clone the repo, run the suite on your runtime via the bring-your-own-adapter kit. Output one machine-readable results file.", s: "~10 min on CI" },
+  { n: "2", t: "Author the capability manifest", d: "Declare what your robot can do — mobility, manipulation, perception, frames, safety envelope.", s: "~2 hours · template provided" },
+  { n: "3", t: "Add the provenance block", d: "Where every covered component comes from. Required for a federal-validation self-report.", s: "~1 hour" },
+  { n: "4", t: "Validate against the bundled default policy", d: "Run urml validate with no --policy and no --no-policy. The bundled US-federal default must be the one in effect. Pin the URML commit.", s: "Automated" },
+  { n: "5", t: "Submit a PR to the registry", d: "Open a PR to docs/compatible-runtimes.md (runtimes) or the manufacturer directory (robots/parts).", s: "WG reviews in <2 weeks" },
+];
+
+const policy = [
+  { code: "NDAA §889 & FY26 NDAA", t: "Procurement restrictions on covered foreign entities" },
+  { code: "FCC Covered List", t: "Effective 2025-12-23 — DJI, Autel, Hesai, Unitree, et al." },
+  { code: "Executive Order 14307", t: "\"Unleashing American Drone Dominance\"" },
+  { code: "ASRA (pending)", t: "American Security Robotics Act — tracked, activates on enactment" },
+];
+
+const faq = [
+  ["Does this cost money?", "No. The spec, the conformance suite, the registry, and the review are all free. There is no paid tier."],
+  ["Is there a URML-Certified mark?", "No. Certification is a separate, future, paid program (Phase 4, not in use today). A listing is a self-reported result, not a mark, not a certification."],
+  ["Can I de-list later?", "Yes, any time. Open a PR removing your row; it is gone within a day and the removal is recorded in git history."],
+  ["What if I'm not US-based?", "Use urml validate --policy to swap in your jurisdiction's policy file, or --no-policy to skip the compliance pass entirely. The mechanism is the same; only the rules change."],
+  ["Does the WG see my source?", "No. You submit a manifest and a conformance result. Your implementation stays yours."],
+  ["What does a passing result mean?", "Only that the named manifest validates clean under the bundled US-federal default policy at a pinned URML commit. It is not a compliance determination. See the disclaimer below."],
+];
+---
+
+<Base
+  title="URML compliance — a free, self-reported federal-validation path"
+  description="Run the conformance suite, author a manifest, validate against the bundled US-federal default policy, submit a PR. Free, opt-in, self-reported. Not a certification, audit, endorsement, or legal advice."
+  active="Compliance"
+>
+  <section class="hi-section" style="padding:72px 56px 64px">
+    <div class="eyebrow" style="margin-bottom:24px">↳ For manufacturers · runtime authors · system integrators</div>
+    <div style="display:grid;grid-template-columns:1.4fr 1fr;gap:80px;align-items:end">
+      <h1 class="s" style="max-width:880px">Publish a reproducible URML federal-validation self-report.</h1>
+      <p class="lead" style="max-width:460px">
+        Free, opt-in, self-reported. You run the conformance suite, you publish the result, the
+        working group reviews the submission for completeness. URML hosts nothing on your behalf
+        and certifies nothing.
+      </p>
+    </div>
+    <div style="display:flex;gap:24px;margin-top:40px;align-items:center;flex-wrap:wrap">
+      <a class="hi-btn primary lg" href="/join">Start application →</a>
+      <a class="hi-btn outline lg" href="https://github.com/URML-MARS/URML/blob/main/conformance/CONFORMANCE_KIT.md" rel="noopener noreferrer">Read the conformance kit</a>
+      <div class="caption" style="color:var(--ink-faint);margin-left:12px">REVIEWED WITHIN 14 DAYS · NO COST</div>
+    </div>
+  </section>
+
+  <section class="hi-section tint">
+    <div class="head">
+      <div class="eyebrow">The path</div>
+      <h2 class="s" style="max-width:760px">Five steps. About a fortnight of calendar time. Most of it yours.</h2>
+    </div>
+    <div class="hi-stepper" style="max-width:980px">
+      {steps.map((s, i) => (
+        <div class={"hi-step " + (i === 0 ? "active" : "")} style="padding:32px 0">
+          <div class="num">{s.n}</div>
+          <div>
+            <div class="title">{s.t}</div>
+            <div class="desc" style="margin-top:8px;max-width:600px">{s.d}</div>
+            <div class="mono" style="font-size:12px;color:var(--ink-faint);margin-top:12px">{s.s}</div>
+          </div>
+          <div class="meta" style="align-self:center">STEP {i + 1} OF 5</div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="hi-section">
+    <div class="head">
+      <div class="eyebrow">Default validator policy</div>
+      <div style="display:grid;grid-template-columns:1.2fr 1fr;gap:40px;align-items:end">
+        <h2 class="s">Aligned to current US federal robotics &amp; uncrewed-systems regulation.</h2>
+        <p class="body-sm">The bundled default policy is regulation-neutral by construction. Deployments outside the US swap in their own file; the mechanism is the same, only the rules change.</p>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px">
+      {policy.map((r) => (
+        <div class="hi-card" style="display:grid;grid-template-columns:auto 1fr;gap:24px;align-items:center;padding:24px">
+          <div style="width:56px;height:56px;border-radius:4px;border:1px solid var(--accent);color:var(--accent);display:flex;align-items:center;justify-content:center">
+            <Icon name="stamp" size={26} />
+          </div>
+          <div>
+            <div class="caption" style="color:var(--accent);margin-bottom:6px">{r.code}</div>
+            <div class="body" style="font-weight:500;color:var(--ink)">{r.t}</div>
+          </div>
+        </div>
+      ))}
+    </div>
+    <div class="hi-card" style="margin-top:24px;padding:24px;background:var(--bone-2);display:flex;gap:18px;align-items:center">
+      <Icon name="eye" size={22} />
+      <div class="body-sm" style="color:var(--ink-2)">
+        <strong style="color:var(--ink)">Override path:</strong> Non-US deployments use
+        <span class="mono" style="background:var(--bone);padding:2px 6px;border-radius:3px"> urml validate --policy file.yaml</span>
+        or disable the compliance pass entirely with
+        <span class="mono" style="background:var(--bone);padding:2px 6px;border-radius:3px"> --no-policy</span>.
+      </div>
+    </div>
+  </section>
+
+  <section class="hi-section tint">
+    <div class="head">
+      <div class="eyebrow">When you're listed</div>
+      <h2 class="s">A reproducible self-report you can link from your product page.</h2>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px">
+      <div class="hi-card" style="padding:0;overflow:hidden">
+        <div style="padding:40px;background:var(--bone);display:flex;align-items:center;justify-content:center;border-bottom:1px solid var(--rule)">
+          <div style="background:var(--ink);color:var(--bone);border-radius:6px;padding:14px 18px;display:flex;align-items:center;gap:14px;min-width:320px">
+            <div style="display:flex;flex-direction:column;gap:3px">
+              <div style="width:36px;height:4px;background:#cc6b1f"></div>
+              <div style="width:36px;height:4px;background:var(--bone)"></div>
+              <div style="width:36px;height:4px;background:var(--bone);opacity:0.7"></div>
+              <div style="width:36px;height:4px;background:var(--bone);opacity:0.45"></div>
+              <div style="width:28px;height:3px;background:var(--bone);opacity:0.25"></div>
+            </div>
+            <div style="flex:1">
+              <div class="mono" style="font-size:10px;letter-spacing:0.15em;color:rgba(250,247,241,0.6)">FEDERAL-VALIDATION SELF-REPORT</div>
+              <div class="mono" style="font-size:14px;font-weight:500;margin-top:2px">validates clean · pinned commit</div>
+            </div>
+            <Icon name="check" size={20} stroke="#cc6b1f" />
+          </div>
+        </div>
+        <div style="padding:24px">
+          <h3 style="margin-bottom:8px">A self-report, not a badge of certification</h3>
+          <p class="body">A `URML-FEDERAL-VALIDATION.md` at the root of your own repo, pinned to a URML commit. URML hosts nothing; anyone can reproduce it because the default policy is Apache-2.0 and public.</p>
+        </div>
+      </div>
+      <div class="hi-card" style="padding:0;overflow:hidden">
+        <div style="padding:24px;background:var(--bone);border-bottom:1px solid var(--rule)">
+          <div class="caption" style="margin-bottom:12px">REGISTRY · SELF-REPORTED · NO ENTRIES YET</div>
+          <p class="body-sm" style="color:var(--ink-2)">The public registry is open and currently empty. URML does not certify, audit, or endorse listed entries; a listing reflects only that the maintainer ran the suite and submitted the result.</p>
+        </div>
+        <div style="padding:24px">
+          <h3 style="margin-bottom:8px">Directory listing</h3>
+          <p class="body">Public, queryable, free, opt-in, de-listable any time. Runtime authors and robot/parts makers have parallel directories.</p>
+        </div>
+      </div>
+    </div>
+    <div class="hi-card" style="margin-top:24px;padding:24px;border-color:#a64321">
+      <div class="caption" style="color:#a64321;margin-bottom:10px">MANDATORY DISCLAIMER — REPRODUCED FROM THE BUNDLED POLICY HEADER</div>
+      <p class="body-sm" style="color:var(--ink-2)">
+        THIS IS NOT LEGAL ADVICE. A policy file passing the validator is not a legal compliance
+        determination. Deployers must consult counsel for any binding compliance determination.
+        Audited and certified policy files carrying third-party legal attestation are a separate
+        commercial surface. A robot whose validation passes under the bundled default is not
+        automatically "URML-Certified" or "NDAA compliant"; certification is a separate, future,
+        paid program (Phase 4).
+      </p>
+    </div>
+  </section>
+
+  <section class="hi-section">
+    <div class="head">
+      <div class="eyebrow">Frequently asked</div>
+      <h2 class="s" style="max-width:760px">What manufacturers want to know first.</h2>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:0;border-top:1px solid var(--rule)">
+      {faq.map(([q, a], i) => (
+        <div style={"padding:32px 32px 32px 0;border-bottom:1px solid var(--rule);" + (i % 2 === 0 ? "border-right:1px solid var(--rule);" : "padding-left:32px;")}>
+          <h3 style="font-size:22px;margin-bottom:10px">{q}</h3>
+          <p class="body">{a}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="hi-section dark" style="padding:80px 56px">
+    <div style="display:grid;grid-template-columns:1.5fr 1fr;gap:56px;align-items:center">
+      <h2 style="color:var(--bone)">Ready when you are.</h2>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <a class="hi-btn primary lg" href="/join" style="justify-content:center">Start the application →</a>
+        <a class="hi-btn outline-on-dark lg" href="/governance" style="justify-content:center">Email the working group</a>
+      </div>
+    </div>
+  </section>
+</Base>

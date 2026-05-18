@@ -1,0 +1,14 @@
+{
+  "name": "URML.dev",
+  "short_name": "URML",
+  "description": "The Universal Robot Language — a public, open standard for describing robot intent.",
+  "start_url": "/",
+  "display": "standalone",
+  "theme_color": "#181715",
+  "background_color": "#faf7f1",
+  "icons": [
+    { "src": "/favicon-32.png", "sizes": "32x32", "type": "image/png" },
+    { "src": "/favicon-48.png", "sizes": "48x48", "type": "image/png" },
+    { "src": "/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
