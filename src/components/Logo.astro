@@ -5,13 +5,14 @@
 interface Props {
   tone?: "ink" | "bone";
   href?: string;
+  animate?: boolean;
 }
-const { tone = "ink", href = "/" } = Astro.props;
+const { tone = "ink", href = "/", animate = false } = Astro.props;
 const fg = tone === "ink" ? "#181715" : "#faf7f1";
 const accent = "#cc6b1f";
 ---
 
-<a class="hi-logo" href={href} aria-label="URML.dev home">
+<a class={"hi-logo" + (animate ? " animate" : "")} href={href} aria-label="URML.dev home">
   <svg class="mark" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
     <rect x="1" y="3" width="24" height="3" fill={accent} />
     <rect x="1" y="8" width="24" height="3" fill={fg} />

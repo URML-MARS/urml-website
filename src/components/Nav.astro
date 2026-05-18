@@ -18,7 +18,7 @@ const items: [string, string][] = [
 
 <header class="hi-nav">
   <div class="left">
-    <Logo />
+    <Logo animate />
     <nav class="hi-nav-links" aria-label="Primary">
       {items.map(([label, href]) => (
         <a href={href} class={active === label ? "active" : ""}>{label}</a>

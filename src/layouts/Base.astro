@@ -26,15 +26,19 @@ const {
     <title>{title}</title>
     <meta name="description" content={description} />
     <meta name="theme-color" content="#181715" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="mask-icon" href="/favicon.svg" color="#cc6b1f" />
     <link rel="canonical" href={new URL(Astro.url.pathname, Astro.site).href} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
+    <meta property="og:url" content={new URL(Astro.url.pathname, Astro.site).href} />
     <meta name="robots" content="index, follow" />
   </head>
   <body>
+    <a href="#main" class="hi-skip">Skip to content</a>
     <Nav active={active} />
-    <main>
+    <main id="main">
       <slot />
     </main>
     <Footer />
