@@ -80,13 +80,25 @@ const notes = [
   <section class="hi-section tint">
     <div style="display:grid;grid-template-columns:1.4fr 1fr;gap:56px;align-items:center">
       <div>
-        <div class="caption" style="margin-bottom:16px">FOLLOW ALONG</div>
-        <h2 class="s" style="margin-bottom:16px">No newsletter yet. No tracking, ever.</h2>
-        <p class="body" style="max-width:520px">There is no email list and no subscriber claim to make until there is one to measure. The complete, canonical update stream is the repository: watch GitHub releases for versioned changes and follow Discussions for everything else. Same content, no tracking pixels, no third-party requests.</p>
+        <div class="caption" style="margin-bottom:16px">DIGEST · REGISTER INTEREST</div>
+        <h2 class="s" style="margin-bottom:16px">No digest is sending yet. Register and you'll be first.</h2>
+        <p class="body" style="max-width:520px">There is no email going out today and no subscriber number to claim until there is one to measure. Leave your email and you'll get the digest the moment it launches — nothing before, no tracking pixels, no third-party requests, unsubscribe ends it. The canonical stream is always the repo: watch GitHub releases and follow Discussions.</p>
       </div>
-      <div style="display:flex;flex-direction:column;gap:12px">
-        <a class="hi-btn primary lg" href="https://github.com/URML-MARS/URML/releases" rel="noopener noreferrer" style="justify-content:center">Watch releases →</a>
-        <a class="hi-btn outline lg" href="https://github.com/URML-MARS/URML/discussions" rel="noopener noreferrer" style="justify-content:center">Follow Discussions →</a>
+      <div class="hi-card" style="padding:28px">
+        <form name="digest-interest" method="POST" data-netlify="true" data-netlify-honeypot="bot-field" action="/submitted">
+          <input type="hidden" name="form-name" value="digest-interest" />
+          <p class="hi-hp"><label>Leave empty: <input name="bot-field" /></label></p>
+          <div class="hi-field">
+            <label class="lab" for="d-email"><span class="name">Email</span><span class="hint">only used for the digest</span></label>
+            <input class="input" id="d-email" name="email" type="email" required autocomplete="email" placeholder="you@org.com" />
+          </div>
+          <button type="submit" class="hi-btn primary lg" style="width:100%;justify-content:center">Register interest →</button>
+          <div class="caption" style="margin-top:12px;color:var(--ink-faint)">NO DIGEST SENDS YET · NO TRACKING · SAME-ORIGIN ONLY</div>
+        </form>
+        <div style="display:flex;gap:10px;margin-top:16px">
+          <a class="hi-btn outline" href="https://github.com/URML-MARS/URML/releases" rel="noopener noreferrer" style="flex:1;justify-content:center;font-size:13px">Watch releases ↗</a>
+          <a class="hi-btn ghost" href="https://github.com/URML-MARS/URML/discussions" rel="noopener noreferrer" style="flex:1;justify-content:center;font-size:13px">Discussions ↗</a>
+        </div>
       </div>
     </div>
   </section>

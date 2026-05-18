@@ -110,10 +110,53 @@ const rfcs = [
           </div>
           <p class="body" style="margin-bottom:20px">{w.scope}</p>
           <div style="padding-top:16px;border-top:1px dashed var(--rule)">
-            <a class="hi-btn outline" href="https://github.com/URML-MARS/URML/discussions" rel="noopener noreferrer" style="font-size:13px">Express interest via Discussions →</a>
+            <a class="hi-btn outline" href="https://github.com/URML-MARS/URML/discussions" rel="noopener noreferrer" style="font-size:13px">Discuss in the open ↗</a>
           </div>
         </div>
       ))}
+    </div>
+
+    <div class="hi-card" style="margin-top:24px;padding:36px;background:var(--ink);color:var(--bone);border-color:var(--ink)">
+      <div style="display:grid;grid-template-columns:1fr 1.2fr;gap:48px;align-items:center">
+        <div>
+          <div class="caption" style="color:rgba(250,247,241,0.5);margin-bottom:12px">CHAIR INTEREST</div>
+          <h3 style="font-size:30px;color:var(--bone);margin-bottom:12px">Register interest in a WG chair seat.</h3>
+          <p class="body-sm" style="color:rgba(250,247,241,0.75)">Seats are seated at end of Phase 0. This is non-binding interest, reviewed in the open. One-year terms, renewable, no fee, conflict-of-interest disclosure required.</p>
+        </div>
+        <div class="hi-card" style="padding:24px;background:var(--bone);color:var(--ink);border-color:var(--bone)">
+          <form name="wg-chair-interest" method="POST" data-netlify="true" data-netlify-honeypot="bot-field" action="/submitted">
+            <input type="hidden" name="form-name" value="wg-chair-interest" />
+            <p class="hi-hp"><label>Leave empty: <input name="bot-field" /></label></p>
+            <div class="hi-form-row">
+              <div class="hi-field">
+                <label class="lab" for="g-name"><span class="name">Name + title</span></label>
+                <input class="input" id="g-name" name="name_title" type="text" required placeholder="Jane Doe, CTO" />
+              </div>
+              <div class="hi-field">
+                <label class="lab" for="g-org"><span class="name">Organization</span></label>
+                <input class="input" id="g-org" name="organization" type="text" required placeholder="Acme Robotics" />
+              </div>
+            </div>
+            <div class="hi-form-row">
+              <div class="hi-field">
+                <label class="lab" for="g-email"><span class="name">Email</span></label>
+                <input class="input" id="g-email" name="email" type="email" required autocomplete="email" placeholder="jane@acme.com" />
+              </div>
+              <div class="hi-field">
+                <label class="lab" for="g-wg"><span class="name">Which WG?</span></label>
+                <select class="input" id="g-wg" name="working_group">
+                  <option>Primitives WG</option>
+                  <option>Compliance WG</option>
+                  <option>Substrate WG</option>
+                  <option>Profiles WG</option>
+                </select>
+              </div>
+            </div>
+            <button type="submit" class="hi-btn primary" style="width:100%;justify-content:center">Register interest →</button>
+            <div class="caption" style="margin-top:12px;color:var(--ink-faint)">NON-BINDING · NO TRACKING · SAME-ORIGIN ONLY</div>
+          </form>
+        </div>
+      </div>
     </div>
   </section>
 

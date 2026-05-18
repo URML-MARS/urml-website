@@ -60,29 +60,44 @@ const review = [
     </div>
     <div style="display:grid;grid-template-columns:1.4fr 1fr;gap:56px;align-items:start">
       <div class="hi-card" style="padding:40px">
-        <div class="hi-field">
-          <div class="lab"><span class="name">Organization name</span><span class="hint">Public on listing</span></div>
-          <div class="input"><span style="color:var(--ink-faint)">Acme Robotics, Inc.</span></div>
-        </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px">
-          <div class="hi-field"><div class="lab"><span class="name">Primary contact</span></div><div class="input"><span style="color:var(--ink-faint)">Jane Engineer</span></div></div>
-          <div class="hi-field"><div class="lab"><span class="name">Email</span></div><div class="input"><span style="color:var(--ink-faint)">jane@acme-robotics.com</span></div></div>
-        </div>
-        <div class="hi-field">
-          <div class="lab"><span class="name">Your robots / runtimes</span><span class="hint">Models, ROS packages, SKUs — one per line</span></div>
-          <div class="input area"><span style="color:var(--ink-faint)">Acme Mover X1 · ROS 2 · Nav2 / MoveIt 2&#10;Acme Drone D2 · PX4 · pymavlink</span></div>
-        </div>
-        <div style="display:flex;flex-direction:column;gap:14px;margin:8px 0 24px">
-          {["I agree to sign commits with the Developer Certificate of Origin (DCO).","I will publish my conformance results publicly when reviewed."].map((t) => (
-            <span style="display:flex;gap:12px;align-items:flex-start;font-size:14px;color:var(--ink-2)">
-              <span style="width:18px;height:18px;border:1.5px solid var(--accent);border-radius:3px;background:var(--accent);color:var(--bone);display:flex;align-items:center;justify-content:center;margin-top:1px;flex-shrink:0"><Icon name="check" size={12} stroke="currentColor" /></span>
-              <span>{t}</span>
-            </span>
-          ))}
-        </div>
-        <hr class="hi-rule" style="margin:0 0 24px" />
-        <a class="hi-btn primary lg" href="https://github.com/URML-MARS/URML/discussions" rel="noopener noreferrer" style="width:100%;justify-content:center">Engage via GitHub Discussions →</a>
-        <div class="caption" style="margin-top:14px;color:var(--ink-faint)">PREVIEW — THE STRUCTURED APPLICATION OPENS IN PHASE 1. UNTIL THEN, ENGAGE VIA DISCUSSIONS OR A REGISTRY PR.</div>
+        <form name="application" method="POST" data-netlify="true" data-netlify-honeypot="bot-field" action="/submitted">
+          <input type="hidden" name="form-name" value="application" />
+          <p class="hi-hp"><label>Leave empty: <input name="bot-field" /></label></p>
+          <div class="hi-field">
+            <label class="lab" for="a-org"><span class="name">Organization name</span><span class="hint">Public on listing</span></label>
+            <input class="input" id="a-org" name="organization" type="text" required autocomplete="organization" placeholder="Acme Robotics, Inc." />
+          </div>
+          <div class="hi-form-row">
+            <div class="hi-field">
+              <label class="lab" for="a-contact"><span class="name">Primary contact</span></label>
+              <input class="input" id="a-contact" name="contact" type="text" required autocomplete="name" placeholder="Jane Engineer" />
+            </div>
+            <div class="hi-field">
+              <label class="lab" for="a-email"><span class="name">Email</span></label>
+              <input class="input" id="a-email" name="email" type="email" required autocomplete="email" placeholder="jane@acme-robotics.com" />
+            </div>
+          </div>
+          <div class="hi-field">
+            <label class="lab" for="a-track"><span class="name">Track</span></label>
+            <select class="input" id="a-track" name="track">
+              <option>Adopter</option>
+              <option>Runtime author</option>
+              <option>Working group</option>
+              <option>Observer</option>
+            </select>
+          </div>
+          <div class="hi-field">
+            <label class="lab" for="a-robots"><span class="name">Your robots / runtimes</span><span class="hint">Models, ROS packages, SKUs — one per line</span></label>
+            <textarea class="input" id="a-robots" name="robots_runtimes" placeholder="Acme Mover X1 · ROS 2 · Nav2 / MoveIt 2&#10;Acme Drone D2 · PX4 · pymavlink"></textarea>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:14px;margin:8px 0 24px">
+            <label class="hi-check"><input type="checkbox" name="dco_agree" required /><span>I agree to sign commits with the Developer Certificate of Origin (DCO).</span></label>
+            <label class="hi-check"><input type="checkbox" name="publish_results" required /><span>I will publish my conformance results publicly when reviewed.</span></label>
+          </div>
+          <hr class="hi-rule" style="margin:0 0 24px" />
+          <button type="submit" class="hi-btn primary lg" style="width:100%;justify-content:center">Submit application →</button>
+          <div class="caption" style="margin-top:14px;color:var(--ink-faint)">NO ACCOUNT · NO TRACKING · SAME-ORIGIN ONLY · REVIEWED IN THE OPEN</div>
+        </form>
       </div>
       <div style="display:flex;flex-direction:column;gap:24px;position:sticky;top:24px">
         <div class="hi-card" style="padding:24px">

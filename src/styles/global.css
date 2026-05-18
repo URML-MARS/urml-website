@@ -235,6 +235,37 @@ a { color: inherit; }
 
 .hi-rule { height: 1px; background: var(--rule); border: 0; margin: 0; }
 
+/* ── native form controls (real Netlify Forms) ─────────────────────── */
+/* Real inputs/textarea/select that match the prototype's .input look. */
+.hi-field input.input,
+.hi-field textarea.input,
+.hi-field select.input {
+  display: block;
+  width: 100%;
+  font-family: var(--sans);
+  font-size: 15px;
+  color: var(--ink);
+  background: var(--bone);
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  appearance: none;
+  -webkit-appearance: none;
+}
+.hi-field input.input,
+.hi-field select.input { height: 46px; padding: 0 14px; }
+.hi-field textarea.input { min-height: 110px; padding: 12px 14px; line-height: 1.5; resize: vertical; }
+.hi-field input.input::placeholder,
+.hi-field textarea.input::placeholder { color: var(--ink-faint); }
+.hi-field input.input:focus,
+.hi-field textarea.input:focus,
+.hi-field select.input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); outline: none; }
+.hi-form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+.hi-check { display: flex; gap: 12px; align-items: flex-start; font-size: 14px; color: var(--ink-2); }
+.hi-check input { margin-top: 3px; accent-color: var(--accent); flex-shrink: 0; }
+/* visually-hidden honeypot for Netlify bot-field */
+.hi-hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+@media (max-width: 900px) { .hi-form-row { grid-template-columns: 1fr; } }
+
 /* ── minimal responsive guard (full responsive is a follow-up pass) ── */
 @media (max-width: 900px) {
   .hi-nav, .hi-section, .hi-section.s, .hi-footer { padding-left: 24px; padding-right: 24px; }
