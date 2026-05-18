@@ -63,10 +63,12 @@ markdown_extensions:
 # it; no policy change needed. Material's CSS variables keep it light/dark.
 extra_css:
   - stylesheets/contact.css
+  - stylesheets/integrations.css
 
 nav:
   - Home: index.md
   - Compatible Runtimes: compatible-runtimes.md
+  - Integrations: integrations.md
   - Submit your runtime: submit.md
   - Spec: spec.md
   - Manifesto: manifesto.md

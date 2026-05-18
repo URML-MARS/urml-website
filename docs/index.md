@@ -24,12 +24,12 @@ URML sits above existing robot operating systems. A URML program describes *what
 - The conformance suite: 24 declarative fixtures across home, drone, and industrial profiles.
 - A provider-agnostic LLM bridge with revision loops driven by validator feedback.
 - A hermetic mock reference runtime for end-to-end execution without hardware.
+- The PX4 / MAVLink reference runtime (v0.1), with no ROS dependency.
 - The `urml` CLI: validate, schema, translate, emit-prompt, init, conformance run.
 
 ## What's planned
 
 - A real `rclpy` ROS 2 adapter to replace the mock.
-- The PX4 reference runtime.
 - A formal certification program with the URML-Certified mark (Phase 4).
 
 ## Where to start
@@ -37,6 +37,7 @@ URML sits above existing robot operating systems. A URML program describes *what
 - **Read the spec.** [github.com/URML-MARS/URML](https://github.com/URML-MARS/URML) is the canonical source. The [Manifesto](manifesto.md) explains why URML exists.
 - **Run a runtime.** Clone the repo, follow the quickstart in the README, run the conformance suite.
 - **Submit a runtime.** Built a URML-compatible runtime? Run the public suite and [submit it to the registry](submit.md). The [registry](compatible-runtimes.md) lists projects that have done this.
+- **See what URML targets.** [Integrations](integrations.md) lists the substrates URML's reference runtimes target and the public path a new substrate, OS, or vendor stack takes to get added.
 
 ## License
 

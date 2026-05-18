@@ -1,0 +1,16 @@
+Substrate logo assets go here.
+
+The Integrations page (docs/integrations.md) ships CSS wordmark cards by
+default, so it is honest and complete without any trademarked image files.
+
+Before dropping a real logo here:
+  - Confirm the file is one we are cleared to use under that project's
+    brand / trademark guidelines (ROS / Open Robotics, PX4 / Dronecode,
+    etc.). Do not commit scraped trademarked images.
+  - Use a local file only. The site CSP is `img-src 'self' data:`;
+    external hotlinks will not load.
+  - Reference it from the `.urml-mark` slot in the matching card, e.g.
+    <div class="urml-mark"><img src="assets/logos/ros2.svg" alt="ROS 2"></div>
+
+This .txt is intentionally not Markdown so `mkdocs build --strict` does
+not treat it as an un-navigated page; it is copied as a static asset.

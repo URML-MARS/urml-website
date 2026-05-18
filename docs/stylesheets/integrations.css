@@ -1,0 +1,148 @@
+/* Integrations page styling: substrate showcase + approval-flow diagram.
+ *
+ * Same-origin stylesheet, loaded via extra_css. CSP `style-src 'self'`
+ * permits it; no policy change needed. Colors use Material's own CSS
+ * custom properties so everything tracks light/dark automatically.
+ *
+ * No JavaScript. No third-party network requests. Logos, when present,
+ * are local files under docs/assets/logos/ (CSP `img-src 'self' data:`);
+ * until cleared assets exist, cards fall back to a CSS wordmark.
+ */
+
+/* ---- Substrate showcase --------------------------------------------- */
+
+.urml-integration-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.2rem;
+  margin: 1.5rem 0;
+}
+
+.urml-integration-card {
+  flex: 1 1 16rem;
+  display: flex;
+  flex-direction: column;
+  padding: 1.1rem 1.2rem;
+  border: 1px solid var(--md-default-fg-color--lighter);
+  border-radius: 6px;
+  background: var(--md-default-bg-color);
+}
+
+/* Logo slot. An <img> drops in here once cleared; the wordmark is the
+ * default so the page is honest and complete without trademarked files. */
+.urml-integration-card .urml-mark {
+  display: flex;
+  align-items: center;
+  min-height: 2.6rem;
+  margin-bottom: 0.6rem;
+}
+
+.urml-integration-card .urml-mark img {
+  max-height: 2.6rem;
+  max-width: 100%;
+}
+
+.urml-integration-card .urml-wordmark {
+  font-size: 1.35rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  color: var(--md-default-fg-color);
+}
+
+.urml-integration-card .urml-card-desc {
+  flex: 1;
+  margin: 0 0 0.8rem;
+  font-size: 0.86rem;
+  line-height: 1.4;
+  color: var(--md-default-fg-color--light);
+}
+
+.urml-integration-card .urml-card-link {
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+/* "Targeted next" row: present but visibly not-yet-built. */
+.urml-planned {
+  margin: 1rem 0 0.5rem;
+  padding: 0.85rem 1rem;
+  border: 1px dashed var(--md-default-fg-color--lighter);
+  border-radius: 6px;
+  font-size: 0.86rem;
+  color: var(--md-default-fg-color--light);
+}
+
+.urml-planned strong {
+  color: var(--md-default-fg-color);
+}
+
+/* ---- Approval-flow diagram ------------------------------------------ */
+
+.urml-flow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.2rem;
+  margin: 1.5rem 0;
+}
+
+.urml-flow-step {
+  flex: 1 1 9rem;
+  position: relative;
+  padding: 0.9rem 1rem;
+  border: 1px solid var(--md-default-fg-color--lighter);
+  border-radius: 6px;
+  background: var(--md-default-bg-color);
+}
+
+.urml-flow-step > strong {
+  display: block;
+  margin: 0.35rem 0 0.4rem;
+  color: var(--md-default-fg-color);
+}
+
+.urml-flow-step > small {
+  color: var(--md-default-fg-color--light);
+  line-height: 1.35;
+}
+
+.urml-flow-n {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.6rem;
+  height: 1.6rem;
+  border-radius: 50%;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--md-default-bg-color);
+  background: var(--md-default-fg-color);
+}
+
+/* Horizontal connector between steps (desktop). */
+.urml-flow-step:not(:last-child)::after {
+  content: "\2192"; /* rightwards arrow */
+  position: absolute;
+  right: -1rem;
+  top: 50%;
+  transform: translate(50%, -50%);
+  color: var(--md-default-fg-color--light);
+}
+
+.urml-flow-future {
+  border-style: dashed;
+  opacity: 0.85;
+}
+
+/* Stack vertically on narrow screens; arrow points down. */
+@media (max-width: 44rem) {
+  .urml-flow {
+    flex-direction: column;
+  }
+  .urml-flow-step:not(:last-child)::after {
+    content: "\2193"; /* downwards arrow */
+    right: 50%;
+    top: auto;
+    bottom: -1rem;
+    transform: translate(50%, 50%);
+  }
+}
