@@ -230,7 +230,9 @@ a { color: inherit; }
 .hi-footer h4 { font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(250,247,241,0.5); margin: 0 0 14px; font-weight: 500; }
 .hi-footer ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
 .hi-footer ul li { font-size: 14px; color: rgba(250,247,241,0.85); }
-.hi-footer ul li a { text-decoration: none; }
+.hi-footer ul li a { text-decoration: none; transition: color 0.12s; }
+.hi-footer ul li a:hover { color: var(--accent); }
+.hi-footer .legal a:hover { color: var(--accent); }
 .hi-footer .legal { display: flex; justify-content: space-between; padding-top: 24px; font-family: var(--mono); font-size: 11px; color: rgba(250,247,241,0.5); letter-spacing: 0.08em; text-transform: uppercase; }
 
 .hi-rule { height: 1px; background: var(--rule); border: 0; margin: 0; }

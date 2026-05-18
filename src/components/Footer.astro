@@ -1,15 +1,49 @@
 ---
 import Logo from "./Logo.astro";
-// Dark footer. Ported from the handoff (HiFooter). Link columns are
-// rendered as plain text exactly as the prototype had them (no dead or
-// speculative links — e.g. no fake "Newsletter" backend, per the
-// measure-first rule). The MARS Phase-0 steward credit from the live
-// site is preserved, small/plain/reversible, per the branding posture.
+// Dark footer. Every item is a real link: internal where the page
+// exists, the canonical GitHub artifact otherwise. No dead links.
+// External links carry rel=noopener; same-origin links keep CSP tight.
+// MARS Phase-0 steward credit preserved (small/plain/reversible).
+const GH = "https://github.com/URML-MARS/URML";
 const cols = [
-  { h: "Spec", l: ["v0.1 draft", "Changelog", "RFCs (12)", "Conformance suite", "Glossary"] },
-  { h: "Adopt", l: ["Quickstart", "Compliance review", "Conformance results", "Manufacturer guide"] },
-  { h: "Community", l: ["Working groups", "GitHub Discussions", "Blog", "Newsletter"] },
-  { h: "About", l: ["Governance", "Core commitments", "Trademark", "Security", "Contact"] },
+  {
+    h: "Spec",
+    l: [
+      ["v0.1 draft", "/spec"],
+      ["Changelog", `${GH}/blob/main/CHANGELOG.md`],
+      ["RFCs (12)", `${GH}/tree/main/docs/rfcs`],
+      ["Conformance suite", `${GH}/blob/main/conformance/CONFORMANCE_KIT.md`],
+      ["Glossary", "/spec#glossary"],
+    ],
+  },
+  {
+    h: "Adopt",
+    l: [
+      ["Quickstart", "/spec"],
+      ["Compliance review", "/compliance"],
+      ["Conformance results", "/partners"],
+      ["Manufacturer guide", "/compliance"],
+    ],
+  },
+  {
+    h: "Community",
+    l: [
+      ["Working groups", "/governance"],
+      ["GitHub Discussions", `${GH}/discussions`],
+      ["Blog", "/blog"],
+      ["Newsletter", "/blog"],
+    ],
+  },
+  {
+    h: "About",
+    l: [
+      ["Governance", "/governance"],
+      ["Core commitments", `${GH}/blob/main/CORE_COMMITMENT.md`],
+      ["Trademark", `${GH}/blob/main/TRADEMARK.md`],
+      ["Security", `${GH}/blob/main/SECURITY.md`],
+      ["Contact", "/contact"],
+    ],
+  },
 ];
 ---
 
@@ -25,7 +59,18 @@ const cols = [
     {cols.map((c) => (
       <div>
         <h4>{c.h}</h4>
-        <ul>{c.l.map((it) => <li>{it}</li>)}</ul>
+        <ul>
+          {c.l.map(([label, href]) => {
+            const ext = href.startsWith("http");
+            return (
+              <li>
+                <a href={href} rel={ext ? "noopener noreferrer" : null}>
+                  {label}{ext ? " ↗" : ""}
+                </a>
+              </li>
+            );
+          })}
+        </ul>
       </div>
     ))}
   </div>
