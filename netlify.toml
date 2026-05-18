@@ -17,7 +17,15 @@
 
 [build]
   publish = "dist"
-  command = "npm ci || npm install && npm run build"
+  # The site is a rendering layer over canonical core. Clone the core
+  # repo (public, no auth), sync the seven canonical docs into
+  # src/content/core/ (link-rewritten), then build. `rm -rf urml-core`
+  # first because Netlify reuses the workspace and urml-core/ is
+  # gitignored, so it survives between builds and `git clone` would
+  # fail "destination already exists" (same idiom as the MkDocs config
+  # on main). If core is unreachable the committed src/content/core/
+  # snapshot is what builds (sync-from-core keeps it on missing source).
+  command = "rm -rf urml-core && git clone --depth 1 https://github.com/URML-MARS/URML.git urml-core && node scripts/sync-from-core.mjs urml-core && (npm ci || npm install) && npm run build"
 
 [build.environment]
   NODE_VERSION = "20"

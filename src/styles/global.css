@@ -239,6 +239,7 @@ a { color: inherit; }
 
 /* ── prose / legal-doc pages (privacy, trademark, federal-validation) ── */
 .hi-prose { max-width: 760px; }
+.hi-prose h1 { font-size: 44px; line-height: 1.1; margin: 0 0 24px; }
 .hi-prose h2 { font-size: 32px; margin: 48px 0 14px; }
 .hi-prose h2:first-of-type { margin-top: 0; }
 .hi-prose h3 { font-size: 22px; margin: 32px 0 10px; }

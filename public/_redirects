@@ -1,14 +1,10 @@
-# Live-URL parity: the MkDocs site (use_directory_urls default) served
-# these paths. The rebuild folds their content into the new pages, so
-# 301 the old URLs to the new homes. Real standalone pages exist for
-# /privacy, /trademark, /manufacturer-federal-validation, /contact,
-# /spec — those need no redirect. Netlify normalizes the trailing
-# slash, so `/foo` also matches `/foo/`.
-/compatible-runtimes      /partners     301
-/manufacturer-directory   /partners     301
-/manufacturers            /partners     301
-/integrations             /partners     301
-/submit                   /compliance   301
-/list-your-product        /join         301
-/manifesto                /what         301
-/contact-sent             /submitted    301
+# Live-URL parity. The seven canonical docs (compatible-runtimes,
+# submit, trademark, manufacturers, manufacturer-directory,
+# list-your-product, manufacturer-federal-validation) are now REAL
+# pages rendered from core by scripts/sync-from-core.mjs, so they are
+# NOT redirected. Only the URLs with no core source / folded into the
+# designed pages keep a 301. Netlify normalizes the trailing slash, so
+# `/foo` also matches the MkDocs `/foo/` form.
+/integrations    /partners    301
+/manifesto       /what        301
+/contact-sent    /submitted   301
