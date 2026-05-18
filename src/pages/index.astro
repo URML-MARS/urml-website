@@ -1,0 +1,269 @@
+---
+import Base from "../layouts/Base.astro";
+import Stat from "../components/Stat.astro";
+import Icon from "../components/Icon.astro";
+
+// Home — the compliance-funnel direction from the handoff
+// (source/hifi-home.jsx). HiChrome is intentionally dropped (the
+// handoff marks it "do NOT ship"); Nav/Footer live in Base.
+
+const steps = [
+  { n: "1", t: "Apply", d: "Submit org + product. One form.", s: "Open · 5 min", state: "active" },
+  { n: "2", t: "Self-report conformance", d: "Run the conformance suite on your CI.", s: "Hermetic · 10 min", state: "" },
+  { n: "3", t: "Manifest review", d: "Capability + provenance audited by the WG.", s: "1 week", state: "" },
+  { n: "4", t: "Policy alignment", d: "NDAA §889 · FCC · EO 14307 cross-checked.", s: "Automated + review", state: "" },
+  { n: "5", t: "Listed", d: "Appears in the public directory with badge.", s: "Permanent", state: "" },
+];
+
+const regs = [
+  { code: "NDAA §889 / FY26", t: "Procurement restrictions", d: "Covered-foreign-country components refused at validation, not at audit." },
+  { code: "FCC Covered List", t: "Effective 2025-12-23", d: "DJI, Autel, and other listed entities flagged in the manifest pass." },
+  { code: "EO 14307", t: "Unleashing American Drone Dominance", d: "Default profile aligns with the executive order's deployment posture." },
+  { code: "ASRA", t: "American Security Robotics Act", d: "Tracking the bill — policy file will update on enactment." },
+];
+
+const gets = [
+  { icon: "badge", t: "Verifiable badge", d: "Embed on your product page. Links to a live, signed conformance report." },
+  { icon: "list", t: "Directory listing", d: "Discoverable by procurement teams searching for URML-compatible robots." },
+  { icon: "shield", t: "Federal readiness", d: "Self-reported NDAA / FCC / EO 14307 alignment in one consistent format." },
+];
+
+const layers = [
+  { tag: "L4", name: "Natural language", sub: "LLM bridge · provider-agnostic", badge: "✓ tested", l0: false },
+  { tag: "L3", name: "Behavior composition", sub: "sequence · branch · parallel · retry", badge: "✓ shipped", l0: false },
+  { tag: "L2", name: "Intent primitives", sub: "move_to / grasp / detect …", badge: "✓ shipped", l0: false },
+  { tag: "L1", name: "Hardware abstraction", sub: "manifest · provenance · safety envelope", badge: "✓ tested", l0: false },
+  { tag: "L0", name: "Substrate (not URML)", sub: "ROS 2 · PX4 · OPC UA · KUKA · ABB", badge: "external", l0: true },
+];
+
+// Code sample as an HTML string so literal { } and newlines are not
+// parsed as Astro expressions. white-space:pre in .hi-code renders it.
+const codeHtml = `<span class="c"># program.urml.yaml</span>
+<span class="k">sequence</span><span class="p">:</span>
+  - <span class="k">move_to</span><span class="p">:</span>     { room: kitchen }
+  - <span class="k">detect</span><span class="p">:</span>      { object: red_mug, frame: kitchen }
+  - <span class="k">grasp</span><span class="p">:</span>       { target: $detected }
+  - <span class="k">move_to</span><span class="p">:</span>     { room: living_room }
+  - <span class="k">release</span><span class="p">:</span>     { surface: side_table }
+
+<span class="c"># pass 1 ✓ argument typing</span>
+<span class="c"># pass 2 ✓ capability declared in manifest</span>
+<span class="c"># pass 3 ✓ inside safety envelope</span>
+<span class="c"># pass 4 ✓ variable bindings resolve</span>
+<span class="c"># pass 5 ✓ compliance policy (NDAA §889, FCC)</span>
+
+<span class="s">$ make demo-run</span>
+<span class="p">→ Executed (mock TurtleBot 4 · 18 actions)</span>`;
+---
+
+<Base
+  title="URML — a common language for the robot economy"
+  description="URML is the public spec for robot intent and compliance. One vocabulary for what a robot should do, verified against safety and policy before a single actuator moves."
+  active="Home"
+>
+  {/* ── HERO ─────────────────────────────────────────────────────── */}
+  <section class="hi-section" style="padding:88px 56px 96px">
+    <div style="display:grid;grid-template-columns:1.15fr 1fr;gap:80px;align-items:start">
+      <div>
+        <div style="display:flex;gap:10px;margin-bottom:32px;flex-wrap:wrap">
+          <span class="hi-chip"><span class="dot"></span>v0.1 · Phase 0 · Pre-public draft</span>
+          <span class="hi-chip">Apache-2.0</span>
+        </div>
+        <h1 style="max-width:740px">A common language for the&nbsp;robot&nbsp;economy.</h1>
+        <p class="lead" style="margin-top:28px;max-width:560px">
+          URML is the public spec for robot intent and compliance. One vocabulary
+          for what a robot should do — verified against safety and policy before
+          a single actuator moves.
+        </p>
+        <div style="display:flex;gap:12px;margin-top:36px;flex-wrap:wrap">
+          <a class="hi-btn primary lg" href="/join">Apply for compliance review <span class="arrow">→</span></a>
+          <a class="hi-btn outline lg" href="/spec">Read the spec</a>
+          <a class="hi-btn ghost lg" href="https://github.com/URML-MARS/URML" rel="noopener noreferrer">
+            <Icon name="git" size={16} /> github.com/URML-MARS/URML
+          </a>
+        </div>
+        <div style="margin-top:56px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:40px;max-width:560px">
+          <div>
+            <div class="caption" style="margin-bottom:6px">SUBSTRATE-AGNOSTIC</div>
+            <div class="body-sm" style="color:var(--ink-2)">Sits above ROS 2, PX4, OPC UA, and vendor SDKs.</div>
+          </div>
+          <div>
+            <div class="caption" style="margin-bottom:6px">REGULATOR-ALIGNED</div>
+            <div class="body-sm" style="color:var(--ink-2)">Default policy maps to US federal robotics regulation.</div>
+          </div>
+          <div>
+            <div class="caption" style="margin-bottom:6px">OPEN FOREVER</div>
+            <div class="body-sm" style="color:var(--ink-2)">Spec stays Apache-2.0. No vendor capture.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="hi-card" style="padding:36px;position:relative">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:20px">
+          <div class="eyebrow">The compliance path</div>
+          <div class="caption">~14 days end-to-end</div>
+        </div>
+        <div class="hi-stepper">
+          {steps.map((s) => (
+            <div class={"hi-step " + s.state}>
+              <div class="num">{s.n}</div>
+              <div>
+                <div class="title" style="font-size:22px">{s.t}</div>
+                <div class="desc">{s.d}</div>
+              </div>
+              <div class="meta">{s.s}</div>
+            </div>
+          ))}
+        </div>
+        <a class="hi-btn dark" href="/join" style="margin-top:24px;width:100%;justify-content:center">
+          Start application <span class="arrow">→</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  {/* ── REGULATORY ALIGNMENT ────────────────────────────────────── */}
+  <section class="hi-section s tint">
+    <div class="head" style="margin-bottom:36px">
+      <div class="eyebrow">Regulatory alignment</div>
+      <div>
+        <h2 class="s" style="max-width:720px">
+          The default validator policy is mapped to current US federal robotics regulation.
+        </h2>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px">
+      {regs.map((r) => (
+        <div class="hi-card" style="background:var(--bone)">
+          <div class="caption" style="color:var(--accent);margin-bottom:10px">{r.code}</div>
+          <div class="mono" style="font-size:14px;font-weight:500;margin-bottom:8px">{r.t}</div>
+          <div class="body-sm">{r.d}</div>
+        </div>
+      ))}
+    </div>
+    <div class="body-sm" style="margin-top:24px;color:var(--ink-faint)">
+      Non-US deployments can override the default with
+      <span class="mono" style="color:var(--ink-2)"> urml validate --policy file.yaml</span>, or
+      disable the compliance pass entirely with
+      <span class="mono" style="color:var(--ink-2)"> --no-policy</span>.
+    </div>
+  </section>
+
+  {/* ── WHAT YOU GET ─────────────────────────────────────────────── */}
+  <section class="hi-section">
+    <div class="head">
+      <div class="eyebrow">What compliance gets you</div>
+      <h2 style="max-width:880px">Discoverable, verifiable, federally-ready.</h2>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:24px">
+      {gets.map((c) => (
+        <div class="hi-card" style="padding:32px">
+          <div style="width:48px;height:48px;border-radius:6px;background:var(--accent-tint);color:var(--accent);display:flex;align-items:center;justify-content:center;margin-bottom:24px">
+            <Icon name={c.icon} size={24} />
+          </div>
+          <h3 style="margin-bottom:10px">{c.t}</h3>
+          <p class="body">{c.d}</p>
+          <a class="hi-btn ghost" href="/compliance" style="margin-top:18px;padding:0">
+            Learn more <span class="arrow">→</span>
+          </a>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  {/* ── ARCHITECTURE + CODE ──────────────────────────────────────── */}
+  <section class="hi-section tint">
+    <div class="head">
+      <div class="eyebrow">How URML works</div>
+      <h2 style="max-width:920px">Five layers, five validation passes, one program.</h2>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:56px">
+      <div>
+        <div class="caption" style="margin-bottom:14px">LAYER STACK</div>
+        <div>
+          {layers.map((l) => (
+            <div class={"hi-layer " + (l.l0 ? "l0" : "")}>
+              <div class="tag">{l.tag}</div>
+              <div>
+                <div class="name">{l.name}</div>
+                <div class="sub">{l.sub}</div>
+              </div>
+              <div class="badge" style={l.l0 ? "color:var(--ink-faint)" : "color:var(--accent)"}>{l.badge}</div>
+            </div>
+          ))}
+        </div>
+        <div class="body-sm" style="margin-top:18px;color:var(--ink-faint)">
+          Every program runs through five passes — args → caps → envelope → bindings → policy — before any actuator moves.
+        </div>
+      </div>
+      <div>
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:14px">
+          <div class="caption">EXAMPLE · BRING ME THE RED MUG</div>
+          <div class="caption" style="color:var(--accent)">VALIDATES ✓</div>
+        </div>
+        <div class="hi-code"><Fragment set:html={codeHtml} /></div>
+        <div style="margin-top:18px;display:flex;gap:12px;flex-wrap:wrap">
+          <a class="hi-btn outline" href="/spec">Try the demo</a>
+          <a class="hi-btn ghost" href="/spec">Read RFC-0002 — primitives →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {/* ── STATS ────────────────────────────────────────────────────── */}
+  <section class="hi-section s">
+    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:40px">
+      <Stat n="17" l="intent primitives" />
+      <Stat n="5" l="validation passes" />
+      <Stat n="188" l="unit tests passing" />
+      <Stat n="32" l="conformance fixtures" />
+      <Stat n="12" l="RFCs filed" />
+    </div>
+  </section>
+
+  {/* ── PARTNERS PREVIEW ────────────────────────────────────────── */}
+  <section class="hi-section">
+    <div class="head" style="align-items:end">
+      <div class="eyebrow">Compatible runtimes &amp; partners</div>
+      <div style="display:flex;justify-content:space-between;align-items:end;gap:40px">
+        <h2 class="s" style="max-width:580px">Self-reported, public, free. Add your organization.</h2>
+        <a class="hi-btn outline" href="/partners">Browse directory →</a>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:1px;background:var(--rule);border:1px solid var(--rule)">
+      {Array.from({ length: 12 }).map((_, i) => (
+        <div style="background:var(--bone);height:96px;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:11px;color:var(--ink-faint);letter-spacing:0.08em">
+          [ PARTNER {i + 1} ]
+        </div>
+      ))}
+    </div>
+    <div class="body-sm" style="margin-top:16px;color:var(--ink-faint)">
+      Phase 0 — directory open for self-reported entries. Your org could be first.
+    </div>
+  </section>
+
+  {/* ── CTA ──────────────────────────────────────────────────────── */}
+  <section class="hi-section dark" style="padding:96px 56px">
+    <div style="display:grid;grid-template-columns:1.4fr 1fr;gap:56px;align-items:end">
+      <div>
+        <div class="eyebrow" style="color:rgba(250,247,241,0.6)">Start the application</div>
+        <h2 style="margin-top:16px;color:var(--bone)">Make your robot speak URML.</h2>
+        <p class="lead" style="color:rgba(250,247,241,0.8);margin-top:18px;max-width:620px">
+          The compliance review is free, opt-in, and self-reported. Your manifest stays yours.
+          Listing is permanent until you de-list.
+        </p>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:12px;align-items:flex-end">
+        <a class="hi-btn primary lg" href="/join" style="min-width:280px;justify-content:center">
+          Apply for compliance review →
+        </a>
+        <a class="hi-btn outline-on-dark lg" href="/governance" style="min-width:280px;justify-content:center">
+          Talk to the working group
+        </a>
+        <div class="caption" style="color:rgba(250,247,241,0.5);margin-top:8px">
+          REVIEWED WITHIN 14 DAYS · NO COST · NO MARK YET (PHASE 4)
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>

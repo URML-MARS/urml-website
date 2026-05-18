@@ -1,0 +1,36 @@
+---
+import Logo from "./Logo.astro";
+// Dark footer. Ported from the handoff (HiFooter). Link columns are
+// rendered as plain text exactly as the prototype had them (no dead or
+// speculative links — e.g. no fake "Newsletter" backend, per the
+// measure-first rule). The MARS Phase-0 steward credit from the live
+// site is preserved, small/plain/reversible, per the branding posture.
+const cols = [
+  { h: "Spec", l: ["v0.1 draft", "Changelog", "RFCs (12)", "Conformance suite", "Glossary"] },
+  { h: "Adopt", l: ["Quickstart", "Compliance review", "Conformance results", "Manufacturer guide"] },
+  { h: "Community", l: ["Working groups", "GitHub Discussions", "Blog", "Newsletter"] },
+  { h: "About", l: ["Governance", "Core commitments", "Trademark", "Security", "Contact"] },
+];
+---
+
+<footer class="hi-footer">
+  <div class="grid">
+    <div>
+      <Logo tone="bone" />
+      <p style="margin-top:16px;font-size:14px;color:rgba(250,247,241,0.7);max-width:320px;line-height:1.55">
+        The Universal Robot Language — a public, open standard for describing
+        robot intent. Apache-2.0. Phase 0.
+      </p>
+    </div>
+    {cols.map((c) => (
+      <div>
+        <h4>{c.h}</h4>
+        <ul>{c.l.map((it) => <li>{it}</li>)}</ul>
+      </div>
+    ))}
+  </div>
+  <div class="legal">
+    <span>© 2026 URML Working Group · Apache License 2.0 · Stewarded by MARS during Phase 0</span>
+    <a href="https://github.com/URML-MARS/URML" rel="noopener noreferrer">github.com/URML-MARS/URML</a>
+  </div>
+</footer>
