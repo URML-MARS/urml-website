@@ -237,6 +237,20 @@ a { color: inherit; }
 
 .hi-rule { height: 1px; background: var(--rule); border: 0; margin: 0; }
 
+/* ── prose / legal-doc pages (privacy, trademark, federal-validation) ── */
+.hi-prose { max-width: 760px; }
+.hi-prose h2 { font-size: 32px; margin: 48px 0 14px; }
+.hi-prose h2:first-of-type { margin-top: 0; }
+.hi-prose h3 { font-size: 22px; margin: 32px 0 10px; }
+.hi-prose p { font-size: 16px; line-height: 1.65; color: var(--ink-2); margin: 0 0 16px; }
+.hi-prose ul { margin: 0 0 16px; padding-left: 22px; }
+.hi-prose li { font-size: 16px; line-height: 1.6; color: var(--ink-2); margin-bottom: 8px; }
+.hi-prose a { color: var(--accent); text-decoration: none; }
+.hi-prose a:hover { text-decoration: underline; }
+.hi-prose code, .hi-prose .mono-inline { font-family: var(--mono); font-size: 14px; background: var(--bone-2); padding: 2px 6px; border-radius: 3px; }
+.hi-prose blockquote { margin: 0 0 16px; padding: 16px 20px; border-left: 3px solid var(--accent); background: var(--bone-2); font-size: 15px; line-height: 1.6; color: var(--ink-2); }
+.hi-prose .meta { font-family: var(--mono); font-size: 12px; color: var(--ink-faint); letter-spacing: 0.04em; margin-bottom: 28px; }
+
 /* ── native form controls (real Netlify Forms) ─────────────────────── */
 /* Real inputs/textarea/select that match the prototype's .input look. */
 .hi-field input.input,
