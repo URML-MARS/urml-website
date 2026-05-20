@@ -12,10 +12,18 @@ import Icon from "../components/Icon.astro";
 const reference = [
   { org: "urml-ros2-runtime", sub: "ROS 2 · Nav2 / MoveIt 2 / vision_msgs", profiles: ["home", "industrial"], note: "First-party reference adapter · hermetic conformance" },
   { org: "urml-px4-runtime", sub: "PX4 / MAVLink via pymavlink · no ROS dependency", profiles: ["drone"], note: "First-party reference adapter · hermetic conformance" },
-  { org: "urml-industrial-arm-runtime", sub: "ROS-Industrial / MoveIt 2 · ABB·FANUC·KUKA·YASKAWA·UR·Franka", profiles: ["industrial"], note: "First-party reference adapter · hermetic conformance" },
+  { org: "urml-industrial-arm-runtime", sub: "ROS-Industrial / MoveIt 2 · ABB · FANUC · KUKA · YASKAWA · UR · Franka · Kawasaki · Stäubli · Comau · Mitsubishi Electric · Denso (11 brands)", profiles: ["industrial"], note: "First-party reference adapter · hermetic conformance" },
+  { org: "urml-cobot-runtime", sub: "Native zero-ROS cobot SDKs · UR RTDE · Franka FCI · Doosan DRFL · Techman TMflow · Kinova Kortex (5 brands)", profiles: ["industrial"], note: "First-party reference adapter · hermetic conformance" },
   { org: "urml-legged-runtime", sub: "Boston Dynamics Spot (bosdyn) · ANYbotics ANYmal (ROS 2)", profiles: ["industrial"], note: "First-party reference adapter · hermetic conformance" },
   { org: "urml-humanoid-runtime", sub: "Agility Digit (ROS 2 · locomotion subset)", profiles: ["industrial"], note: "First-party reference adapter · hermetic conformance" },
+  { org: "urml-mobile-runtime", sub: "Clearpath Husky / Jackal · ROS 2 + Nav2", profiles: ["home", "industrial"], note: "First-party reference adapter · hermetic conformance" },
   { org: "urml-marine-runtime", sub: "BlueROV2 / ArduSub via MAVLink · no ROS dependency", profiles: ["drone"], note: "First-party reference adapter · hermetic conformance" },
+  { org: "urml-opcua-runtime", sub: "OPC UA Robotics companion spec via asyncua · zero ROS · RFC-0015/0016 spec-gaps filed", profiles: ["industrial"], note: "First-party reference adapter · hermetic conformance" },
+  { org: "urml-mujoco-runtime", sub: "MuJoCo physics simulator · zero ROS · pure Protocol proof", profiles: ["home"], note: "First-party reference adapter · hermetic conformance" },
+  { org: "urml-isaac-runtime", sub: "NVIDIA Isaac Sim/Lab · zero ROS · local RTX/Omniverse (not cloud)", profiles: ["home"], note: "First-party reference adapter · hermetic conformance" },
+  { org: "urml-embedded-runtime", sub: "micro:bit/Arduino over pyserial · zero ROS · RFC-0011 educational", profiles: ["home"], note: "First-party reference adapter · hermetic conformance" },
+  { org: "urml-edu-runtime", sub: "VEX V5 · LEGO SPIKE (Pybricks BLE) · Thymio (Aseba TDM) · zero ROS · RFC-0011 educational (3 platforms)", profiles: ["home"], note: "First-party reference adapter · hermetic conformance" },
+  { org: "urml-autosar-runtime", sub: "AUTOSAR Adaptive ara::com scaffold · zero ROS · RFC-0019 Draft binding", profiles: ["industrial"], note: "First-party reference adapter · hermetic conformance · scaffold only" },
 ];
 const profiles = ["all", "home", "drone", "industrial"];
 ---
@@ -40,7 +48,7 @@ const profiles = ["all", "home", "drone", "industrial"];
       <div class="hi-card" style="padding:24px">
         <div class="eyebrow" style="margin-bottom:14px">Directory at a glance</div>
         <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px">
-          <div class="hi-stat"><div class="n" style="font-size:40px">6</div><div class="l">reference runtimes</div></div>
+          <div class="hi-stat"><div class="n" style="font-size:40px">14</div><div class="l">reference runtimes</div></div>
           <div class="hi-stat"><div class="n" style="font-size:40px">0</div><div class="l">third-party</div></div>
           <div class="hi-stat"><div class="n" style="font-size:40px">0</div><div class="l">manufacturers</div></div>
         </div>
@@ -53,7 +61,7 @@ const profiles = ["all", "home", "drone", "industrial"];
   <section style="padding:0 56px;border-bottom:1px solid var(--rule)">
     <div id="ptabs" style="display:flex;gap:0">
       <button type="button" data-ptab="runtimes" aria-pressed="true" style="background:transparent;border:0;border-bottom:2px solid var(--accent);padding:20px 28px;font-family:var(--sans);font-size:16px;font-weight:500;color:var(--ink);cursor:pointer;display:flex;align-items:center;gap:10px;margin-bottom:-1px">
-        Runtimes <span class="mono" style="font-size:11px;background:var(--accent);color:var(--bone);padding:2px 8px;border-radius:999px">6</span>
+        Runtimes <span class="mono" style="font-size:11px;background:var(--accent);color:var(--bone);padding:2px 8px;border-radius:999px">14</span>
       </button>
       <button type="button" data-ptab="manufacturers" aria-pressed="false" style="background:transparent;border:0;border-bottom:2px solid transparent;padding:20px 28px;font-family:var(--sans);font-size:16px;font-weight:500;color:var(--ink-soft);cursor:pointer;display:flex;align-items:center;gap:10px;margin-bottom:-1px">
         Manufacturers <span class="mono" style="font-size:11px;background:var(--bone-2);color:var(--ink-soft);padding:2px 8px;border-radius:999px">0</span>
