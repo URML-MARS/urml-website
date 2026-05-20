@@ -259,8 +259,14 @@ const tabs = [
         <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px">
           {[
             { t: "ros2-runtime", sub: "ROS 2 · Nav2 / MoveIt 2 / vision_msgs" },
-            { t: "px4-runtime", sub: "PX4 / MAVLink via pymavlink" },
-            { t: "industrial / legged / marine", sub: "ABB·FANUC·KUKA·YASKAWA·UR·Franka · Spot · BlueROV2" },
+            { t: "px4-runtime", sub: "PX4 / MAVLink via pymavlink (zero ROS)" },
+            { t: "industrial-arm-runtime", sub: "11 brands · ABB · FANUC · KUKA · YASKAWA · UR · Franka · Kawasaki · Stäubli · Comau · Mitsubishi · Denso" },
+            { t: "cobot-runtime", sub: "5 brands · UR RTDE · Franka FCI · Doosan DRFL · Techman TMflow · Kinova Kortex (zero ROS)" },
+            { t: "legged / humanoid / mobile / marine", sub: "Spot · ANYmal · Digit · Husky · Jackal · BlueROV2" },
+            { t: "opcua-runtime", sub: "OPC UA Robotics via asyncua (zero ROS) · RFC-0015/0016 spec-gaps filed" },
+            { t: "mujoco-runtime / isaac-runtime", sub: "Physics sims · zero ROS · Isaac needs local RTX/Omniverse (not cloud)" },
+            { t: "embedded-runtime / edu-runtime", sub: "micro:bit · Arduino · VEX V5 · LEGO SPIKE · Thymio (RFC-0011 educational)" },
+            { t: "autosar-runtime", sub: "AUTOSAR Adaptive ara::com scaffold · zero ROS · RFC-0019 Draft binding" },
           ].map((a) => (
             <div class="hi-card" style="padding:22px">
               <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px">
