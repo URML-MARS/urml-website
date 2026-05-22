@@ -25,6 +25,30 @@ const reference = [
   { org: "urml-edu-runtime", sub: "VEX V5 · LEGO SPIKE (Pybricks BLE) · Thymio (Aseba TDM) · zero ROS · RFC-0011 educational (3 platforms)", profiles: ["home"], note: "First-party reference adapter · hermetic conformance" },
   { org: "urml-autosar-runtime", sub: "AUTOSAR Adaptive ara::com scaffold · zero ROS · RFC-0019 Draft binding", profiles: ["industrial"], note: "First-party reference adapter · hermetic conformance · scaffold only" },
 ];
+
+// First-party compliant-part reference manifests. URML ships a YAML manifest
+// fixture + a positive conformance fixture for each vendor below; all pass
+// the bundled US-federal default compliance policy (RFC-0004). Vendors marked
+// with a Move #1 RFC are also subjects of a vendor-directed mapping RFC
+// (RFCs 0023-0038) requesting maintainer feedback.
+const parts = [
+  { vendor: "SCHUNK", country: "DE", kind: "Pneumatic gripper (MPG / MPP)", manifest: "schunk_mpg_cell.yaml", rfc: "0031" },
+  { vendor: "Ouster", country: "US", kind: "3D lidar (OS-1 / OS-2 / REV7)", manifest: "ouster_3d_lidar_cell.yaml", rfc: "0032" },
+  { vendor: "SICK", country: "DE", kind: "Safety lidar (microScan3 / nanoScan3)", manifest: "sick_safety_lidar_cell.yaml", rfc: "0033" },
+  { vendor: "Festo", country: "DE", kind: "Servo-electric gripper (DHEP / DHPS)", manifest: "festo_dhep_cell.yaml", rfc: "0034" },
+  { vendor: "Zivid", country: "NO", kind: "3D industrial camera (Zivid Two / 2+)", manifest: "zivid_two_cell.yaml", rfc: "0035" },
+  { vendor: "Hokuyo", country: "JP", kind: "2D lidar (URG / UST / UTM)", manifest: "hokuyo_lidar_cell.yaml", rfc: "0036" },
+  { vendor: "Robotiq", country: "CA", kind: "Servo-electric gripper (2F-85)", manifest: "robotiq_2f85_cell.yaml" },
+  { vendor: "Piab", country: "SE", kind: "Vacuum gripper", manifest: "piab_vacuum_cell.yaml" },
+  { vendor: "OnRobot", country: "DK", kind: "Magnetic gripper", manifest: "onrobot_magnetic_cell.yaml" },
+  { vendor: "Soft Robotics", country: "US", kind: "Compliant gripper", manifest: "soft_robotics_compliant_cell.yaml" },
+  { vendor: "ATI Industrial Automation", country: "US", kind: "Force-torque (Axia80)", manifest: "ati_ft_cell.yaml" },
+  { vendor: "Cognex", country: "US", kind: "Industrial vision (In-Sight 2800)", manifest: "cognex_vision_cell.yaml" },
+  { vendor: "Schmalz", country: "DE", kind: "Vacuum gripper", manifest: "schmalz_vacuum_cell.yaml" },
+  { vendor: "Bota Systems", country: "CH", kind: "6-axis force-torque", manifest: "bota_ft_cell.yaml" },
+  { vendor: "Photoneo", country: "SK", kind: "3D structured-light vision (MotionCam-3D)", manifest: "photoneo_motioncam_cell.yaml" },
+];
+
 const profiles = ["all", "home", "drone", "industrial"];
 ---
 
@@ -49,7 +73,7 @@ const profiles = ["all", "home", "drone", "industrial"];
         <div class="eyebrow" style="margin-bottom:14px">Directory at a glance</div>
         <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px">
           <div class="hi-stat"><div class="n" style="font-size:40px">14</div><div class="l">reference runtimes</div></div>
-          <div class="hi-stat"><div class="n" style="font-size:40px">0</div><div class="l">third-party</div></div>
+          <div class="hi-stat"><div class="n" style="font-size:40px">15</div><div class="l">compliant parts</div></div>
           <div class="hi-stat"><div class="n" style="font-size:40px">0</div><div class="l">manufacturers</div></div>
         </div>
         <hr class="hi-rule" style="margin:16px 0" />
@@ -58,10 +82,46 @@ const profiles = ["all", "home", "drone", "industrial"];
     </div>
   </section>
 
+  <section class="hi-section" style="padding:0 56px 32px">
+    <div class="hi-card" style="padding:24px 28px;background:var(--bone-2);border-left:3px solid var(--accent)">
+      <div class="caption" style="margin-bottom:10px;color:var(--accent)">↳ MOVE #1 LIGHTHOUSE PROGRAM · 2026-05-22</div>
+      <div style="display:grid;grid-template-columns:1.4fr 1fr;gap:32px;align-items:start">
+        <div>
+          <div style="font-size:18px;font-weight:500;color:var(--ink);margin-bottom:8px">16 vendor-directed mapping RFCs filed.</div>
+          <p class="body-sm" style="color:var(--ink-soft);margin:0">
+            URML has published one mapping RFC per Tier-1 vendor (RFCs 0023–0038), each framed as a public request for comment from that vendor's maintainers. The artifacts are in-repo; the conversations are open. URML does not certify, audit, or endorse any listed vendor; each RFC documents URML's side of the mapping and invites correction.
+          </p>
+        </div>
+        <div style="font-family:var(--mono);font-size:11px;line-height:1.8;color:var(--ink-soft)">
+          <a href="https://github.com/URML-MARS/URML/blob/main/docs/rfcs/0023-yaskawa-motoros2-integration.md" style="color:var(--ink);text-decoration:none">0023 · Yaskawa</a> ·
+          <a href="https://github.com/URML-MARS/URML/blob/main/docs/rfcs/0024-universal-robots-integration.md" style="color:var(--ink);text-decoration:none">0024 · UR</a> ·
+          <a href="https://github.com/URML-MARS/URML/blob/main/docs/rfcs/0025-kuka-integration.md" style="color:var(--ink);text-decoration:none">0025 · KUKA</a> ·
+          <a href="https://github.com/URML-MARS/URML/blob/main/docs/rfcs/0026-staubli-integration.md" style="color:var(--ink);text-decoration:none">0026 · Stäubli</a> ·
+          <a href="https://github.com/URML-MARS/URML/blob/main/docs/rfcs/0027-mitsubishi-melfa-integration.md" style="color:var(--ink);text-decoration:none">0027 · Mitsubishi</a> ·
+          <a href="https://github.com/URML-MARS/URML/blob/main/docs/rfcs/0028-fanuc-integration.md" style="color:var(--ink);text-decoration:none">0028 · FANUC</a> ·
+          <a href="https://github.com/URML-MARS/URML/blob/main/docs/rfcs/0029-kawasaki-integration.md" style="color:var(--ink);text-decoration:none">0029 · Kawasaki</a> ·
+          <a href="https://github.com/URML-MARS/URML/blob/main/docs/rfcs/0030-denso-integration.md" style="color:var(--ink);text-decoration:none">0030 · Denso</a>
+          <br>
+          <a href="https://github.com/URML-MARS/URML/blob/main/docs/rfcs/0031-schunk-integration.md" style="color:var(--ink);text-decoration:none">0031 · SCHUNK</a> ·
+          <a href="https://github.com/URML-MARS/URML/blob/main/docs/rfcs/0032-ouster-integration.md" style="color:var(--ink);text-decoration:none">0032 · Ouster</a> ·
+          <a href="https://github.com/URML-MARS/URML/blob/main/docs/rfcs/0033-sick-integration.md" style="color:var(--ink);text-decoration:none">0033 · SICK</a> ·
+          <a href="https://github.com/URML-MARS/URML/blob/main/docs/rfcs/0034-festo-integration.md" style="color:var(--ink);text-decoration:none">0034 · Festo</a> ·
+          <a href="https://github.com/URML-MARS/URML/blob/main/docs/rfcs/0035-zivid-integration.md" style="color:var(--ink);text-decoration:none">0035 · Zivid</a> ·
+          <a href="https://github.com/URML-MARS/URML/blob/main/docs/rfcs/0036-hokuyo-integration.md" style="color:var(--ink);text-decoration:none">0036 · Hokuyo</a> ·
+          <a href="https://github.com/URML-MARS/URML/blob/main/docs/rfcs/0037-osrf-gazebo-integration.md" style="color:var(--ink);text-decoration:none">0037 · OSRF / Gazebo</a> ·
+          <a href="https://github.com/URML-MARS/URML/blob/main/docs/rfcs/0038-ros-industrial-consortium.md" style="color:var(--ink);text-decoration:none">0038 · ROS-Industrial</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <section style="padding:0 56px;border-bottom:1px solid var(--rule)">
     <div id="ptabs" style="display:flex;gap:0">
       <button type="button" data-ptab="runtimes" aria-pressed="true" style="background:transparent;border:0;border-bottom:2px solid var(--accent);padding:20px 28px;font-family:var(--sans);font-size:16px;font-weight:500;color:var(--ink);cursor:pointer;display:flex;align-items:center;gap:10px;margin-bottom:-1px">
         Runtimes <span class="mono" style="font-size:11px;background:var(--accent);color:var(--bone);padding:2px 8px;border-radius:999px">14</span>
+      </button>
+      <button type="button" data-ptab="parts" aria-pressed="false" style="background:transparent;border:0;border-bottom:2px solid transparent;padding:20px 28px;font-family:var(--sans);font-size:16px;font-weight:500;color:var(--ink-soft);cursor:pointer;display:flex;align-items:center;gap:10px;margin-bottom:-1px">
+        Compliant parts <span class="mono" style="font-size:11px;background:var(--bone-2);color:var(--ink-soft);padding:2px 8px;border-radius:999px">15</span>
       </button>
       <button type="button" data-ptab="manufacturers" aria-pressed="false" style="background:transparent;border:0;border-bottom:2px solid transparent;padding:20px 28px;font-family:var(--sans);font-size:16px;font-weight:500;color:var(--ink-soft);cursor:pointer;display:flex;align-items:center;gap:10px;margin-bottom:-1px">
         Manufacturers <span class="mono" style="font-size:11px;background:var(--bone-2);color:var(--ink-soft);padding:2px 8px;border-radius:999px">0</span>
@@ -112,6 +172,45 @@ const profiles = ["all", "home", "drone", "industrial"];
       <div style="display:flex;flex-direction:column;gap:10px">
         <a class="hi-btn primary" href="/join" style="justify-content:center">Submit your runtime →</a>
         <a class="hi-btn outline-on-dark" href="/compliance" style="justify-content:center">Read the 5-step guide</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="hi-section" data-pane="parts" style="padding:40px 56px 56px;display:none">
+    <div class="hi-card" style="margin:0 0 24px;padding:20px 24px;background:var(--bone-2)">
+      <p class="body-sm" style="margin:0;color:var(--ink-soft)">
+        Each row below is a URML-authored reference manifest for a vendor's part, validated under URML's bundled US-federal default compliance policy (<a href="https://github.com/URML-MARS/URML/blob/main/docs/rfcs/0004-compliance-policy.md" style="color:var(--accent)">RFC-0004</a>). Rows marked with a Move #1 RFC link to a vendor-directed mapping RFC requesting maintainer feedback. The Manufacturers tab remains the path for vendors who want to self-report; this tab is URML's own first-party reference manifests.
+      </p>
+    </div>
+    <div style="display:grid;grid-template-columns:1.6fr 0.6fr 1.6fr 0.8fr 24px;gap:20px;padding:10px 16px;border-bottom:1px solid var(--ink);font-family:var(--mono);font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-soft);font-weight:500">
+      <span>Vendor</span><span>Origin</span><span>Part kind</span><span>Move #1 RFC</span><span></span>
+    </div>
+    {parts.map((p) => (
+      <a href={p.rfc ? `https://github.com/URML-MARS/URML/blob/main/docs/rfcs/${p.rfc}-${p.vendor.toLowerCase().replace(/[^a-z0-9]+/g, "-")}-integration.md` : `https://github.com/URML-MARS/URML/blob/main/reference/validator/tests/fixtures/manifests/${p.manifest}`} rel="noopener noreferrer" style="display:grid;grid-template-columns:1.6fr 0.6fr 1.6fr 0.8fr 24px;gap:20px;padding:20px 16px;border-bottom:1px solid var(--rule);text-decoration:none;color:inherit;align-items:center">
+        <div>
+          <div class="mono" style="font-weight:600;font-size:15px;color:var(--ink)">{p.vendor}</div>
+          <div class="mono" style="font-size:11px;color:var(--ink-faint);margin-top:6px">{p.manifest}</div>
+        </div>
+        <div class="mono" style="font-size:12px;color:var(--ink-soft)">{p.country}</div>
+        <div class="body-sm" style="color:var(--ink-soft)">{p.kind}</div>
+        <div style="font-family:var(--mono);font-size:11px">
+          {p.rfc
+            ? <span style="color:var(--accent)">RFC-{p.rfc}</span>
+            : <span style="color:var(--ink-faint)">manifest only</span>}
+        </div>
+        <span style="color:var(--ink-faint);text-align:right">↗</span>
+      </a>
+    ))}
+
+    <div class="hi-card" style="margin-top:32px;padding:28px;background:var(--ink);color:var(--bone);border-color:var(--ink);display:grid;grid-template-columns:1.4fr 1fr;gap:32px;align-items:center">
+      <div>
+        <div class="caption" style="color:rgba(250,247,241,0.5);margin-bottom:8px">PART VENDORS</div>
+        <h3 style="font-size:28px;color:var(--bone);margin-bottom:6px">Your part already integrates.</h3>
+        <p class="body-sm" style="color:rgba(250,247,241,0.7)">If your part is on this list and you want a vendor-direct mapping RFC (or to correct the existing one), open an Issue against URML or contact the maintainer. URML is in Phase 0; feedback shapes the spec.</p>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <a class="hi-btn primary" href="https://github.com/URML-MARS/URML/discussions" style="justify-content:center" rel="noopener noreferrer">Open a discussion →</a>
+        <a class="hi-btn outline-on-dark" href="/compliance" style="justify-content:center">Read the parts guide</a>
       </div>
     </div>
   </section>
