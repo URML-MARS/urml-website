@@ -7,6 +7,7 @@
 
 const tabs = document.querySelectorAll("#ptabs button[data-ptab]");
 const panes = document.querySelectorAll("[data-pane]");
+const filterBar = document.querySelector("[data-filter-bar]");
 tabs.forEach((b) => b.addEventListener("click", () => {
   const id = b.dataset.ptab;
   tabs.forEach((x) => {
@@ -16,6 +17,8 @@ tabs.forEach((b) => b.addEventListener("click", () => {
     x.style.borderBottomColor = on ? "var(--accent)" : "transparent";
   });
   panes.forEach((p) => { p.style.display = p.dataset.pane === id ? "" : "none"; });
+  // Profile filter only applies to reference runtimes; hide its bar on other tabs.
+  if (filterBar) filterBar.style.display = id === "runtimes" ? "" : "none";
 }));
 
 const chips = document.querySelectorAll("#pfilter button[data-prof]");

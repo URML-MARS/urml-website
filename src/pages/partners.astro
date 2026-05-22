@@ -129,7 +129,7 @@ const profiles = ["all", "home", "drone", "industrial"];
     </div>
   </section>
 
-  <section style="padding:20px 56px;background:var(--bone-2);border-bottom:1px solid var(--rule)">
+  <section data-filter-bar style="padding:20px 56px;background:var(--bone-2);border-bottom:1px solid var(--rule)">
     <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap">
       <div class="caption" style="color:var(--ink-faint)">FILTER</div>
       <span class="body-sm" style="color:var(--ink-soft)">Profile:</span>
@@ -138,6 +138,7 @@ const profiles = ["all", "home", "drone", "industrial"];
           <button type="button" data-prof={opt} class="hi-chip" style={"cursor:pointer;" + (i === 0 ? "background:var(--ink);color:var(--bone);border-color:var(--ink)" : "")}>{opt}</button>
         ))}
       </div>
+      <span class="body-sm" style="color:var(--ink-faint);margin-left:auto">Filter applies to reference runtimes.</span>
     </div>
   </section>
 
