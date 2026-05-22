@@ -244,40 +244,10 @@ const profiles = ["all", "home", "drone", "industrial"];
   </section>
 </Base>
 
-<script>
-  // Partners tab + profile-filter island. Astro-bundled (script-src
-  // 'self' safe; no inline, no third party).
-  const tabs = document.querySelectorAll<HTMLButtonElement>("#ptabs button[data-ptab]");
-  const panes = document.querySelectorAll<HTMLElement>("[data-pane]");
-  tabs.forEach((b) => b.addEventListener("click", () => {
-    const id = b.dataset.ptab;
-    tabs.forEach((x) => {
-      const on = x === b;
-      x.setAttribute("aria-pressed", on ? "true" : "false");
-      x.style.color = on ? "var(--ink)" : "var(--ink-soft)";
-      x.style.borderBottomColor = on ? "var(--accent)" : "transparent";
-    });
-    panes.forEach((p) => { p.style.display = p.dataset.pane === id ? "" : "none"; });
-  }));
-
-  const chips = document.querySelectorAll<HTMLButtonElement>("#pfilter button[data-prof]");
-  const rows = document.querySelectorAll<HTMLElement>("[data-prof-row]");
-  const empty = document.querySelector<HTMLElement>("[data-empty]");
-  chips.forEach((c) => c.addEventListener("click", () => {
-    const want = c.dataset.prof;
-    chips.forEach((x) => {
-      const on = x === c;
-      x.style.background = on ? "var(--ink)" : "";
-      x.style.color = on ? "var(--bone)" : "";
-      x.style.borderColor = on ? "var(--ink)" : "";
-    });
-    let shown = 0;
-    rows.forEach((r) => {
-      const profs = (r.dataset.profRow || "").split(",");
-      const vis = want === "all" || profs.includes(want as string);
-      r.style.display = vis ? "" : "none";
-      if (vis) shown++;
-    });
-    if (empty) empty.style.display = shown === 0 ? "" : "none";
-  }));
-</script>
+<!-- External script lives in /public/js/partners.js to comply with the
+     netlify.toml CSP (`script-src 'self'`, no `'unsafe-inline'`). Astro
+     silently inlines small <script> blocks despite the no-inline policy
+     comment in netlify.toml; serving the JS as a static asset under
+     /public sidesteps that. Behaviour is identical to the prior inline
+     block (tabs + profile-filter island, idempotent on click). -->
+<script src="/js/partners.js" type="module" defer is:inline></script>
