@@ -1,6 +1,7 @@
 ---
 import Base from "../layouts/Base.astro";
 import Icon from "../components/Icon.astro";
+import { reference, parts, profiles, manufacturersCount } from "../data/partners";
 // Partners — design shell from hifi-partners.jsx, content reconciled
 // with the live registry reality (docs/compatible-runtimes.md):
 // self-reported, URML does NOT certify/audit/endorse, third-party
@@ -8,48 +9,7 @@ import Icon from "../components/Icon.astro";
 // (built in the core repo this session); they pass the conformance
 // suite hermetically. No invented "verified/founding" tiers or dates.
 // Tab + profile filter is a CSP-safe bundled island.
-
-const reference = [
-  { org: "urml-ros2-runtime", sub: "ROS 2 · Nav2 / MoveIt 2 / vision_msgs", profiles: ["home", "industrial"], note: "First-party reference adapter · hermetic conformance" },
-  { org: "urml-px4-runtime", sub: "PX4 / MAVLink via pymavlink · no ROS dependency", profiles: ["drone"], note: "First-party reference adapter · hermetic conformance" },
-  { org: "urml-industrial-arm-runtime", sub: "ROS-Industrial / MoveIt 2 · ABB · FANUC · KUKA · YASKAWA · UR · Franka · Kawasaki · Stäubli · Comau · Mitsubishi Electric · Denso · Hyundai · Nachi · Epson · Omron · Hanwha (16 brands)", profiles: ["industrial"], note: "First-party reference adapter · hermetic conformance" },
-  { org: "urml-cobot-runtime", sub: "Native zero-ROS cobot SDKs · UR RTDE · Franka FCI · Doosan DRFL · Techman TMflow · Kinova Kortex · Mecademic · Neura · Kassow (8 brands)", profiles: ["industrial"], note: "First-party reference adapter · hermetic conformance" },
-  { org: "urml-legged-runtime", sub: "Boston Dynamics Spot (bosdyn) · ANYbotics ANYmal (ROS 2)", profiles: ["industrial"], note: "First-party reference adapter · hermetic conformance" },
-  { org: "urml-humanoid-runtime", sub: "Agility Digit (ROS 2 · locomotion subset)", profiles: ["industrial"], note: "First-party reference adapter · hermetic conformance" },
-  { org: "urml-mobile-runtime", sub: "Clearpath Husky / Jackal · ROS 2 + Nav2", profiles: ["home", "industrial"], note: "First-party reference adapter · hermetic conformance" },
-  { org: "urml-marine-runtime", sub: "BlueROV2 / ArduSub via MAVLink · no ROS dependency", profiles: ["drone"], note: "First-party reference adapter · hermetic conformance" },
-  { org: "urml-opcua-runtime", sub: "OPC UA Robotics companion spec via asyncua · zero ROS · RFC-0015/0016 spec-gaps filed", profiles: ["industrial"], note: "First-party reference adapter · hermetic conformance" },
-  { org: "urml-mujoco-runtime", sub: "MuJoCo physics simulator · zero ROS · pure Protocol proof", profiles: ["home"], note: "First-party reference adapter · hermetic conformance" },
-  { org: "urml-isaac-runtime", sub: "NVIDIA Isaac Sim/Lab · zero ROS · local RTX/Omniverse (not cloud)", profiles: ["home"], note: "First-party reference adapter · hermetic conformance" },
-  { org: "urml-embedded-runtime", sub: "micro:bit/Arduino over pyserial · zero ROS · RFC-0011 educational", profiles: ["home"], note: "First-party reference adapter · hermetic conformance" },
-  { org: "urml-edu-runtime", sub: "VEX V5 · LEGO SPIKE (Pybricks BLE) · Thymio (Aseba TDM) · zero ROS · RFC-0011 educational (3 platforms)", profiles: ["home"], note: "First-party reference adapter · hermetic conformance" },
-  { org: "urml-autosar-runtime", sub: "AUTOSAR Adaptive ara::com scaffold · zero ROS · RFC-0019 Draft binding", profiles: ["industrial"], note: "First-party reference adapter · hermetic conformance · scaffold only" },
-];
-
-// First-party compliant-part reference manifests. URML ships a YAML manifest
-// fixture + a positive conformance fixture for each vendor below; all pass
-// the bundled US-federal default compliance policy (RFC-0004). Vendors marked
-// with a Move #1 RFC are also subjects of a vendor-directed mapping RFC
-// (RFCs 0023-0038) requesting maintainer feedback.
-const parts = [
-  { vendor: "SCHUNK", country: "DE", kind: "Pneumatic gripper (MPG / MPP)", manifest: "schunk_mpg_cell.yaml", rfc: "0031" },
-  { vendor: "Ouster", country: "US", kind: "3D lidar (OS-1 / OS-2 / REV7)", manifest: "ouster_3d_lidar_cell.yaml", rfc: "0032" },
-  { vendor: "SICK", country: "DE", kind: "Safety lidar (microScan3 / nanoScan3)", manifest: "sick_safety_lidar_cell.yaml", rfc: "0033" },
-  { vendor: "Festo", country: "DE", kind: "Servo-electric gripper (DHEP / DHPS)", manifest: "festo_dhep_cell.yaml", rfc: "0034" },
-  { vendor: "Zivid", country: "NO", kind: "3D industrial camera (Zivid Two / 2+)", manifest: "zivid_two_cell.yaml", rfc: "0035" },
-  { vendor: "Hokuyo", country: "JP", kind: "2D lidar (URG / UST / UTM)", manifest: "hokuyo_lidar_cell.yaml", rfc: "0036" },
-  { vendor: "Robotiq", country: "CA", kind: "Servo-electric gripper (2F-85)", manifest: "robotiq_2f85_cell.yaml" },
-  { vendor: "Piab", country: "SE", kind: "Vacuum gripper", manifest: "piab_vacuum_cell.yaml" },
-  { vendor: "OnRobot", country: "DK", kind: "Magnetic gripper", manifest: "onrobot_magnetic_cell.yaml" },
-  { vendor: "Soft Robotics", country: "US", kind: "Compliant gripper", manifest: "soft_robotics_compliant_cell.yaml" },
-  { vendor: "ATI Industrial Automation", country: "US", kind: "Force-torque (Axia80)", manifest: "ati_ft_cell.yaml" },
-  { vendor: "Cognex", country: "US", kind: "Industrial vision (In-Sight 2800)", manifest: "cognex_vision_cell.yaml" },
-  { vendor: "Schmalz", country: "DE", kind: "Vacuum gripper", manifest: "schmalz_vacuum_cell.yaml" },
-  { vendor: "Bota Systems", country: "CH", kind: "6-axis force-torque", manifest: "bota_ft_cell.yaml" },
-  { vendor: "Photoneo", country: "SK", kind: "3D structured-light vision (MotionCam-3D)", manifest: "photoneo_motioncam_cell.yaml" },
-];
-
-const profiles = ["all", "home", "drone", "industrial"];
+// Data lives in src/data/partners.ts so the homepage preview shares it.
 ---
 
 <Base
@@ -72,9 +32,9 @@ const profiles = ["all", "home", "drone", "industrial"];
       <div class="hi-card" style="padding:24px">
         <div class="eyebrow" style="margin-bottom:14px">Directory at a glance</div>
         <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px">
-          <div class="hi-stat"><div class="n" style="font-size:40px">14</div><div class="l">reference runtimes</div></div>
-          <div class="hi-stat"><div class="n" style="font-size:40px">15</div><div class="l">compliant parts</div></div>
-          <div class="hi-stat"><div class="n" style="font-size:40px">0</div><div class="l">manufacturers</div></div>
+          <div class="hi-stat"><div class="n" style="font-size:40px">{reference.length}</div><div class="l">reference runtimes</div></div>
+          <div class="hi-stat"><div class="n" style="font-size:40px">{parts.length}</div><div class="l">compliant parts</div></div>
+          <div class="hi-stat"><div class="n" style="font-size:40px">{manufacturersCount}</div><div class="l">manufacturers</div></div>
         </div>
         <hr class="hi-rule" style="margin:16px 0" />
         <a class="hi-btn primary" href="/join" style="width:100%;justify-content:center">Add your organization →</a>
@@ -118,13 +78,13 @@ const profiles = ["all", "home", "drone", "industrial"];
   <section style="padding:0 56px;border-bottom:1px solid var(--rule)">
     <div id="ptabs" style="display:flex;gap:0">
       <button type="button" data-ptab="runtimes" aria-pressed="true" style="background:transparent;border:0;border-bottom:2px solid var(--accent);padding:20px 28px;font-family:var(--sans);font-size:16px;font-weight:500;color:var(--ink);cursor:pointer;display:flex;align-items:center;gap:10px;margin-bottom:-1px">
-        Runtimes <span class="mono" style="font-size:11px;background:var(--accent);color:var(--bone);padding:2px 8px;border-radius:999px">14</span>
+        Runtimes <span class="mono" style="font-size:11px;background:var(--accent);color:var(--bone);padding:2px 8px;border-radius:999px">{reference.length}</span>
       </button>
       <button type="button" data-ptab="parts" aria-pressed="false" style="background:transparent;border:0;border-bottom:2px solid transparent;padding:20px 28px;font-family:var(--sans);font-size:16px;font-weight:500;color:var(--ink-soft);cursor:pointer;display:flex;align-items:center;gap:10px;margin-bottom:-1px">
-        Compliant parts <span class="mono" style="font-size:11px;background:var(--bone-2);color:var(--ink-soft);padding:2px 8px;border-radius:999px">15</span>
+        Compliant parts <span class="mono" style="font-size:11px;background:var(--bone-2);color:var(--ink-soft);padding:2px 8px;border-radius:999px">{parts.length}</span>
       </button>
       <button type="button" data-ptab="manufacturers" aria-pressed="false" style="background:transparent;border:0;border-bottom:2px solid transparent;padding:20px 28px;font-family:var(--sans);font-size:16px;font-weight:500;color:var(--ink-soft);cursor:pointer;display:flex;align-items:center;gap:10px;margin-bottom:-1px">
-        Manufacturers <span class="mono" style="font-size:11px;background:var(--bone-2);color:var(--ink-soft);padding:2px 8px;border-radius:999px">0</span>
+        Manufacturers <span class="mono" style="font-size:11px;background:var(--bone-2);color:var(--ink-soft);padding:2px 8px;border-radius:999px">{manufacturersCount}</span>
       </button>
     </div>
   </section>
