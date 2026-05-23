@@ -2,10 +2,20 @@
 import Base from "../layouts/Base.astro";
 import Stat from "../components/Stat.astro";
 import Icon from "../components/Icon.astro";
+import { reference, parts, manufacturersCount } from "../data/partners";
 
 // Home — the compliance-funnel direction from the handoff
 // (source/hifi-home.jsx). HiChrome is intentionally dropped (the
 // handoff marks it "do NOT ship"); Nav/Footer live in Base.
+
+// Partners-preview grid: surface 6 reference runtimes + 6 compliant
+// parts from the shared directory data so the homepage shows real
+// entries instead of [ PARTNER N ] placeholders. Full directory at
+// /partners.
+const previewCells = [
+  ...reference.slice(0, 6).map((r) => ({ label: r.org, sub: r.profiles.join(" · ") })),
+  ...parts.slice(0, 6).map((p) => ({ label: p.vendor, sub: p.country })),
+];
 
 const steps = [
   { n: "1", t: "Apply", d: "Submit org + product. One form.", s: "Open · 5 min", state: "active" },
@@ -231,14 +241,15 @@ const codeHtml = `<span class="c"># program.urml.yaml</span>
       </div>
     </div>
     <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:1px;background:var(--rule);border:1px solid var(--rule)">
-      {Array.from({ length: 12 }).map((_, i) => (
-        <div style="background:var(--bone);height:96px;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:11px;color:var(--ink-faint);letter-spacing:0.08em">
-          [ PARTNER {i + 1} ]
+      {previewCells.map((c) => (
+        <div style="background:var(--bone);height:96px;padding:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;font-family:var(--mono);font-size:11px;color:var(--ink);letter-spacing:0.04em;line-height:1.35">
+          <div style="font-weight:600;word-break:break-word">{c.label}</div>
+          <div style="margin-top:6px;color:var(--ink-faint);font-size:10px;letter-spacing:0.08em;text-transform:uppercase">{c.sub}</div>
         </div>
       ))}
     </div>
     <div class="body-sm" style="margin-top:16px;color:var(--ink-faint)">
-      Phase 0 — directory open for self-reported entries. Your org could be first.
+      Phase 0 · {reference.length} reference runtimes + {parts.length} compliant parts listed · {manufacturersCount} manufacturers — yours could be next.
     </div>
   </section>
 
