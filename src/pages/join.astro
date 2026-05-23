@@ -3,15 +3,15 @@ import Base from "../layouts/Base.astro";
 import Icon from "../components/Icon.astro";
 // Join — design shell from hifi-join.jsx. The application form is a
 // faithful visual PREVIEW (the handoff itself renders only step 1 and
-// says the real form needs a decided backend). Phase 0 has no
-// application backend; CTAs route to the real Phase-0 channels
+// says the real form needs a decided backend). Phase 1 has no
+// application backend yet; CTAs route to the real Phase-1 channels
 // (Discussions, the conformance kit, the registry PR flow). No fake
 // submit / autosave / multi-step is wired.
 
 const tracks = [
   { t: "Adopter", s: "Use URML in your product. Publish a federal-validation self-report; list in the public directory.", icon: "shield", who: "Robot manufacturers · integrators", href: "/compliance", featured: false },
   { t: "Runtime author", s: "Build an adapter against the ROSAdapter Protocol. Self-report the conformance suite.", icon: "cpu", who: "ROS / PX4 / vendor SDK authors", href: "/compliance", featured: false },
-  { t: "Working group", s: "A future WG chair seat: RFC vote, spec direction. Seats open at end of Phase 0.", icon: "stamp", who: "Express interest via Discussions", href: "https://github.com/URML-MARS/URML/discussions", featured: true },
+  { t: "Working group", s: "A future WG chair seat: RFC vote, spec direction. Seats open when the working group forms in Phase 2.", icon: "stamp", who: "Express interest via Discussions", href: "https://github.com/URML-MARS/URML/discussions", featured: true },
   { t: "Observer", s: "Read RFCs, follow Discussions, watch the repo. No application.", icon: "eye", who: "Anyone · no application", href: "https://github.com/URML-MARS/URML", featured: false },
 ];
 
@@ -25,11 +25,11 @@ const review = [
 
 <Base
   title="Join URML — pick the track that fits your role"
-  description="Adopter, runtime author, working-group chair, or observer. Every track is free; the spec stays Apache-2.0 forever. Phase 0 engagement is via GitHub Discussions and the public registry."
+  description="Adopter, runtime author, working-group chair, or observer. Every track is free; the spec stays Apache-2.0 forever. Phase 1 engagement is via GitHub Discussions and the public registry."
   active="Join"
 >
   <section class="hi-section" style="padding:72px 56px 56px">
-    <div class="eyebrow" style="margin-bottom:24px">↳ Get involved · Phase 0</div>
+    <div class="eyebrow" style="margin-bottom:24px">↳ Get involved · Phase 1</div>
     <div style="display:grid;grid-template-columns:1.3fr 1fr;gap:80px;align-items:end">
       <h1 class="s" style="max-width:740px">Join the working group shaping the&nbsp;robot economy.</h1>
       <p class="lead" style="max-width:460px">Pick the track that fits your role. Every track is free. The spec stays Apache-2.0 forever, and no mark is in use until Phase 4.</p>
