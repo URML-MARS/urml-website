@@ -38,14 +38,6 @@ const gets = [
   { icon: "shield", t: "Federal readiness", d: "Self-reported NDAA / FCC / EO 14307 alignment in one consistent format." },
 ];
 
-const layers = [
-  { tag: "L4", name: "Natural language", sub: "LLM bridge · provider-agnostic", badge: "✓ tested", l0: false },
-  { tag: "L3", name: "Behavior composition", sub: "sequence · branch · parallel · retry", badge: "✓ shipped", l0: false },
-  { tag: "L2", name: "Intent primitives", sub: "move_to / grasp / detect …", badge: "✓ shipped", l0: false },
-  { tag: "L1", name: "Hardware abstraction", sub: "manifest · provenance · safety envelope", badge: "✓ tested", l0: false },
-  { tag: "L0", name: "Substrate (not URML)", sub: "ROS 2 · PX4 · OPC UA · KUKA · ABB", badge: "external", l0: true },
-];
-
 // Code sample as an HTML string so literal { } and newlines are not
 // parsed as Astro expressions. white-space:pre in .hi-code renders it.
 const codeHtml = `<span class="c"># program.urml.yaml</span>
@@ -80,15 +72,28 @@ const codeHtml = `<span class="c"># program.urml.yaml</span>
           <span class="hi-chip">Apache-2.0</span>
         </div>
         <h1 style="max-width:740px">A common language for the&nbsp;robot&nbsp;economy.</h1>
-        <p class="lead" style="margin-top:28px;max-width:560px">
-          URML is the public spec for robot intent and compliance. One vocabulary
-          for what a robot should do — verified against safety and policy before
-          a single actuator moves.
+        <p class="lead" style="margin-top:28px;max-width:600px">
+          A six-year-old can describe what a robot should do. A roboticist needs
+          three weeks to make the robot do it. URML is the shared, open vocabulary
+          that closes the gap, written down before every vendor ships their own dialect.
         </p>
         <div style="display:flex;gap:12px;margin-top:36px;flex-wrap:wrap">
-          <a class="hi-btn primary lg" href="/join">Apply for compliance review <span class="arrow">→</span></a>
-          <a class="hi-btn outline lg" href="/spec">Read the spec</a>
-          <a class="hi-btn ghost lg" href="https://github.com/URML-MARS/URML" rel="noopener noreferrer">
+          <a class="hi-btn primary lg" href="#example" style="flex-direction:column;align-items:flex-start;text-align:left;padding-top:14px;padding-bottom:14px">
+            <span style="font-size:11px;letter-spacing:0.12em;font-weight:600;color:rgba(250,247,241,0.7);text-transform:uppercase">End users</span>
+            <span style="font-size:16px;margin-top:2px">See it run <span class="arrow">→</span></span>
+          </a>
+          <a class="hi-btn outline lg" href="/spec" style="flex-direction:column;align-items:flex-start;text-align:left;padding-top:14px;padding-bottom:14px">
+            <span style="font-size:11px;letter-spacing:0.12em;font-weight:600;color:var(--ink-faint);text-transform:uppercase">Builders</span>
+            <span style="font-size:16px;margin-top:2px">Read the spec</span>
+          </a>
+          <a class="hi-btn outline lg" href="/join" style="flex-direction:column;align-items:flex-start;text-align:left;padding-top:14px;padding-bottom:14px">
+            <span style="font-size:11px;letter-spacing:0.12em;font-weight:600;color:var(--ink-faint);text-transform:uppercase">Robot makers</span>
+            <span style="font-size:16px;margin-top:2px">List a product</span>
+            <span style="font-size:11px;color:var(--ink-faint);margin-top:2px">starts a compliance review</span>
+          </a>
+        </div>
+        <div style="margin-top:14px">
+          <a class="hi-btn ghost" href="https://github.com/URML-MARS/URML" rel="noopener noreferrer" style="padding-left:0">
             <Icon name="git" size={16} /> github.com/URML-MARS/URML
           </a>
         </div>
@@ -182,26 +187,20 @@ const codeHtml = `<span class="c"># program.urml.yaml</span>
   </section>
 
   {/* ── ARCHITECTURE + CODE ──────────────────────────────────────── */}
-  <section class="hi-section tint">
+  <section class="hi-section tint" id="example">
     <div class="head">
       <div class="eyebrow">How URML works</div>
       <h2 style="max-width:920px">Five layers, five validation passes, one program.</h2>
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:56px">
       <div>
-        <div class="caption" style="margin-bottom:14px">LAYER STACK</div>
-        <div>
-          {layers.map((l) => (
-            <div class={"hi-layer " + (l.l0 ? "l0" : "")}>
-              <div class="tag">{l.tag}</div>
-              <div>
-                <div class="name">{l.name}</div>
-                <div class="sub">{l.sub}</div>
-              </div>
-              <div class="badge" style={l.l0 ? "color:var(--ink-faint)" : "color:var(--accent)"}>{l.badge}</div>
-            </div>
-          ))}
-        </div>
+        <div class="caption" style="margin-bottom:14px">ARCHITECTURE</div>
+        <img
+          src="/assets/architecture-stack.svg"
+          alt="URML architecture: five-layer stack. Layer 4 natural language interface, Layer 3 behavior composition, Layer 2 intent primitives, Layer 1 hardware abstraction, Layer 0 substrate (not part of URML). A validator runs five passes across layers 4 through 1 before any actuator moves. Domain profiles extend layers 3 and 2."
+          style="width:100%;height:auto;display:block;border-radius:8px"
+          loading="lazy"
+        />
         <div class="body-sm" style="margin-top:18px;color:var(--ink-faint)">
           Every program runs through five passes — args → caps → envelope → bindings → policy — before any actuator moves.
         </div>
