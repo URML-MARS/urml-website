@@ -36,6 +36,8 @@ export default function QueueIsland() {
   const [error, setError] = useState<string | null>(null);
   const [editing, setEditing] = useState<string | null>(null); // item id, or "new", or null
   const [busy, setBusy] = useState(false);
+  const [generatingId, setGeneratingId] = useState<string | null>(null);
+  const [generatedMessage, setGeneratedMessage] = useState<string | null>(null);
 
   useEffect(() => {
     void load();
@@ -97,6 +99,27 @@ export default function QueueIsland() {
     }
   }
 
+  async function generate(id: string) {
+    setGeneratingId(id);
+    setGeneratedMessage(null);
+    try {
+      const r = await fetch(`/api/admin/generate/${encodeURIComponent(id)}`, {
+        method: "POST",
+        credentials: "same-origin",
+      });
+      if (!r.ok) {
+        const j = (await r.json().catch(() => ({}))) as { error?: string };
+        throw new Error(j.error || `generate ${r.status}`);
+      }
+      setGeneratedMessage("Draft generated. Open the Drafts tab to review and publish.");
+      await load();
+    } catch (e) {
+      setError(e instanceof Error ? e.message : String(e));
+    } finally {
+      setGeneratingId(null);
+    }
+  }
+
   async function remove(id: string, topic: string) {
     if (!confirm(`Delete "${topic}"?`)) return;
     setBusy(true);
@@ -120,6 +143,13 @@ export default function QueueIsland() {
         <div class="queue-error" role="alert">
           {error}
           <button type="button" onClick={() => setError(null)} class="queue-error-close">×</button>
+        </div>
+      )}
+      {generatedMessage && (
+        <div class="queue-success" role="status">
+          {generatedMessage}{" "}
+          <a href="/admin/drafts" class="queue-success-link">Open Drafts →</a>
+          <button type="button" onClick={() => setGeneratedMessage(null)} class="queue-error-close">×</button>
         </div>
       )}
 
@@ -160,8 +190,10 @@ export default function QueueIsland() {
               <QueueCard
                 key={it.id}
                 item={it}
+                generating={generatingId === it.id}
                 onEdit={() => setEditing(it.id)}
                 onDelete={() => remove(it.id, it.topic)}
+                onGenerate={() => generate(it.id)}
               />
             ),
           )}
@@ -310,11 +342,15 @@ function QueueForm(props: {
 
 function QueueCard(props: {
   item: Item;
+  generating: boolean;
   onEdit: () => void;
   onDelete: () => void;
+  onGenerate: () => void;
 }) {
   const { item } = props;
   const created = useMemo(() => fmt(item.created_at), [item.created_at]);
+  const canGenerate = item.status === "pending" || item.status === "drafted";
+  const generateLabel = item.status === "drafted" ? "Re-generate draft" : "Generate draft";
   return (
     <article class="queue-card">
       <div class="queue-card-head">
@@ -354,8 +390,17 @@ function QueueCard(props: {
       <div class="queue-card-actions">
         <button type="button" class="queue-secondary" onClick={props.onEdit}>Edit</button>
         <button type="button" class="queue-secondary danger" onClick={props.onDelete}>Delete</button>
-        <button type="button" class="queue-primary" disabled title="Wires to Gemini in PR-E">
-          Generate draft (PR-E)
+        {item.status === "drafted" && (
+          <a class="queue-secondary" href="/admin/drafts">View draft →</a>
+        )}
+        <button
+          type="button"
+          class="queue-primary"
+          onClick={props.onGenerate}
+          disabled={!canGenerate || props.generating}
+          title={!canGenerate ? `Status ${item.status} — cannot regenerate.` : undefined}
+        >
+          {props.generating ? "Generating…" : generateLabel}
         </button>
       </div>
     </article>
