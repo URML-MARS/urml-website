@@ -13,7 +13,14 @@ author: "Ido Yahalomi"
 draft: false
 ---
 
+<figure class="post-hero">
+<img src="https://www.technewsworld.com/wp-content/uploads/sites/3/2026/05/google-io-2026.jpg" alt="https://www.technewsworld.com/story/google-i-o-2026-signals-an-extinction-event-for-standalone-apps-180348.html" loading="lazy" referrerpolicy="no-referrer" />
+<figcaption>Image: https://www.technewsworld.com/story/google-i-o-2026-signals-an-extinction-event-for-standalone-apps-180348.html</figcaption>
+</figure>
+
 The application of advanced AI models like Gemini is showing new possibilities for robotics. A recent demonstration illustrates how these models can enhance robot capabilities, particularly in understanding and executing complex tasks through natural language ([video](https://www.youtube.com/watch?v=kCXQce1dtNE)).
+
+<div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/kCXQce1dtNE" title="Gemini AI robot demo" frameborder="0" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>
 
 The video showcases robots that can interpret ambiguous human instructions. For example, a robot is asked to "clear the table," a command that requires understanding context and identifying relevant objects. The robot uses multimodal reasoning, combining visual perception with its language model, to identify items like a banana, a sponge, and a bottle. It then proceeds to sort these items appropriately, demonstrating an ability to plan and execute a sequence of actions based on a high-level goal.
 

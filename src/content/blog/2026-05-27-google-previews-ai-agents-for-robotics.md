@@ -13,6 +13,11 @@ author: "Ido Yahalomi"
 draft: false
 ---
 
+<figure class="post-hero">
+<img src="https://www.technewsworld.com/wp-content/uploads/sites/3/2026/05/google-io-2026.jpg" alt="https://www.technewsworld.com/story/google-i-o-2026-signals-an-extinction-event-for-standalone-apps-180348.html" loading="lazy" referrerpolicy="no-referrer" />
+<figcaption>Image: https://www.technewsworld.com/story/google-i-o-2026-signals-an-extinction-event-for-standalone-apps-180348.html</figcaption>
+</figure>
+
 Google recently demonstrated its vision for the future of artificial intelligence. The company is developing universal AI agents designed to be helpful in daily life. The primary example is Project Astra, an agent powered by the Gemini family of models.
 
 Project Astra is designed to be a multimodal system. It can process a continuous stream of video and audio input to understand its environment in real time. In a demonstration, the agent used a phone's camera to identify objects, remember where an item was previously seen, and interpret code on a computer screen. This ability to perceive, reason, and converse about the surrounding world is a core capability.
