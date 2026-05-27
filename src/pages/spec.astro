@@ -312,28 +312,11 @@ const tabs = [
   </section>
 </Base>
 
-<script>
-  // Code-tabs island. Astro bundles this to an external module
-  // (script-src 'self' safe — no inline script, no third-party).
-  const root = document.getElementById("codetabs");
-  if (root) {
-    const btns = root.querySelectorAll<HTMLButtonElement>("button[data-tab]");
-    const panels = document.querySelectorAll<HTMLElement>("[data-panel]");
-    btns.forEach((b) => {
-      b.addEventListener("click", () => {
-        const id = b.dataset.tab;
-        btns.forEach((x) => {
-          const on = x === b;
-          x.setAttribute("aria-pressed", on ? "true" : "false");
-          x.style.background = on ? "var(--bone)" : "transparent";
-          x.style.color = on ? "var(--ink)" : "var(--ink-soft)";
-          x.style.borderBottomColor = on ? "var(--accent)" : "transparent";
-          x.style.fontWeight = on ? "500" : "400";
-        });
-        panels.forEach((p) => {
-          p.style.display = p.dataset.panel === id ? "" : "none";
-        });
-      });
-    });
-  }
-</script>
+<!--
+  Code-tabs island lives in /public/js/spec-codetabs.js so the strict
+  CSP `script-src 'self'` permits it. Astro inlines small <script>
+  blocks by default (the comment from the original inline version
+  claimed it would always be external — it wasn't), which violated
+  CSP. External file in /public is the durable fix.
+-->
+<script src="/js/spec-codetabs.js" defer></script>
