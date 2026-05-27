@@ -93,7 +93,13 @@ function videoEmbedHtml(url: string, title: string): string | null {
   const ytId = youtubeId(url);
   if (ytId) {
     const t = escapeHtmlAttr(title || "Video");
-    return `<div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/${ytId}" title="${t}" frameborder="0" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>`;
+    // Use youtube.com/embed/ rather than youtube-nocookie.com/embed/.
+    // Some channels (notably Google for Developers) disable embedding
+    // on the privacy-enhanced "nocookie" domain, which surfaces as
+    // "Error 153: Video player configuration error" inside the iframe.
+    // Compatibility wins for a content site; cookies now set on iframe
+    // load instead of on play. Disclosed in /privacy.
+    return `<div class="video-embed"><iframe src="https://www.youtube.com/embed/${ytId}" title="${t}" frameborder="0" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>`;
   }
   const vmId = vimeoId(url);
   if (vmId) {
