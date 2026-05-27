@@ -11,7 +11,9 @@
     "check": "astro check"
   },
   "dependencies": {
+    "@astrojs/netlify": "^5.5.4",
     "@astrojs/rss": "^4.0.18",
+    "@netlify/blobs": "^10.7.8",
     "astro": "^4.16.18"
   },
   "devDependencies": {

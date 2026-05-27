@@ -5,6 +5,11 @@ import rss from "@astrojs/rss";
 import { getCollection } from "astro:content";
 import type { APIContext } from "astro";
 
+// Force static-build under hybrid mode (endpoints default to SSR
+// otherwise). RSS is a static file regenerated on each deploy; no
+// per-request Function calls.
+export const prerender = true;
+
 export async function GET(context: APIContext) {
   const posts = (await getCollection("blog", ({ data }) => !data.draft))
     .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());

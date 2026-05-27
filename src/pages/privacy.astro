@@ -17,7 +17,7 @@ import Base from "../layouts/Base.astro";
 
       <h2>What this site does not do</h2>
       <ul>
-        <li>No cookies. The site sets none.</li>
+        <li>The public site sets no cookies. (An admin area at <code>/admin</code> is gated by login and sets a session cookie for the maintainer only; ordinary visitors never see it.)</li>
         <li>No analytics. No Google Analytics, no Plausible, no anything that counts or profiles visitors.</li>
         <li>No third-party loads. No fonts, scripts, or trackers from other origins. A Content-Security-Policy header blocks any cross-origin request at the browser level, so if a future change tried to add one it would break visibly instead of leaking quietly.</li>
         <li>No tracking, no newsletter that sends today, no automatic data collection. Browsing any page sends us nothing.</li>
