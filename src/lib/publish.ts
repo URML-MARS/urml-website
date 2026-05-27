@@ -195,7 +195,9 @@ export async function commitPostToGitHub(args: SerializeArgs): Promise<CommitRes
 }
 
 export async function recordPublishedIndex(entry: PublishedIndexEntry): Promise<void> {
-  await publishedIndexStore().setJSON(entry.id, entry);
+  // Use the slug as the Blob key (URL-safe, unique within a deploy).
+  // The original entry.id is preserved inside the record for display.
+  await publishedIndexStore().setJSON(entry.slug, entry);
 }
 
 export async function listPublishedIndex(): Promise<PublishedIndexEntry[]> {
