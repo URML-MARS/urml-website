@@ -1,6 +1,7 @@
 ---
 import AdminBase from "../../layouts/AdminBase.astro";
 import BlogSubnav from "../../components/admin/BlogSubnav.astro";
+import DraftsIsland from "../../components/admin/DraftsIsland.tsx";
 
 export const prerender = false;
 ---
@@ -10,26 +11,320 @@ export const prerender = false;
 
   <section>
     <h1 style="font-size:28px;margin:0 0 8px">Drafts</h1>
-    <p style="color:var(--ink-soft);margin:0 0 24px;max-width:720px;line-height:1.55">
-      LLM-generated drafts awaiting review. When PR-E lands, hitting <strong>Generate draft</strong>
-      on a queue item will call Gemini, parse its structured output, and land the result here
-      for you to skim, edit, and publish.
+    <p style="color:var(--ink-soft);margin:0 0 24px;max-width:760px;line-height:1.55">
+      Gemini-generated drafts. Click <strong>Edit & publish</strong> on a card to open the editor.
+      Skim the body for <code>&lt;!-- TELL: --&gt;</code> markers (auto-flagged AI tells), tweak
+      anything that needs it, then publish. Publishing commits the post to <code>main</code> on
+      GitHub and triggers a Netlify rebuild (~2 min to live).
     </p>
 
-    <div class="empty">
-      <p><strong>Empty.</strong></p>
-      <p>Drafts subview activates in PR-E. The Queue tab is functional today.</p>
-    </div>
+    <DraftsIsland client:load />
   </section>
 </AdminBase>
 
-<style>
-  .empty {
-    padding: 64px 24px;
+<style is:global>
+  .drafts-root {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .drafts-error {
+    padding: 12px 16px;
+    background: #fbecdf;
+    border: 1px solid var(--accent);
+    border-radius: 6px;
+    color: var(--ink);
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .drafts-success {
+    padding: 12px 16px;
+    background: #d8e8d4;
+    border: 1px solid #2e5a2a;
+    border-radius: 6px;
+    color: #2e5a2a;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .drafts-success a { color: #2e5a2a; font-weight: 600; }
+  .drafts-success code {
+    background: rgba(46, 90, 42, 0.1);
+    padding: 1px 6px;
+    border-radius: 3px;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  }
+  .drafts-error-close {
+    background: transparent;
+    border: 0;
+    font-size: 20px;
+    line-height: 1;
+    cursor: pointer;
+    color: inherit;
+    padding: 0 4px;
+  }
+
+  .drafts-filter {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+    margin-bottom: 4px;
+  }
+  .drafts-filter button {
+    padding: 6px 12px;
+    background: transparent;
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    color: var(--ink-soft);
+    font-size: 13px;
+    cursor: pointer;
+  }
+  .drafts-filter button.active {
+    background: var(--ink);
+    color: var(--bone);
+    border-color: var(--ink);
+  }
+  .drafts-count {
+    margin-left: 8px;
+    font-size: 12px;
+    color: var(--ink-faint);
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  }
+
+  .drafts-loading,
+  .drafts-empty {
+    padding: 56px 16px;
     text-align: center;
     color: var(--ink-faint);
     border: 1px dashed var(--rule);
     border-radius: 8px;
+    font-size: 14px;
   }
-  .empty strong { color: var(--ink); font-weight: 600; }
+  .drafts-empty a { color: var(--accent); font-weight: 500; }
+
+  .drafts-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  /* Draft card (collapsed view) */
+  .draft-card {
+    padding: 20px;
+    background: #ffffff;
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+  }
+  .draft-card-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 16px;
+    margin-bottom: 6px;
+  }
+  .draft-card-head h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--ink);
+  }
+  .draft-summary {
+    margin: 6px 0 10px;
+    color: var(--ink-soft);
+    font-size: 14px;
+    line-height: 1.55;
+  }
+  .draft-meta {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    color: var(--ink-faint);
+    font-size: 12px;
+    margin-bottom: 8px;
+  }
+  .draft-cat {
+    color: var(--accent);
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    text-transform: uppercase;
+    font-weight: 600;
+    font-size: 11px;
+    letter-spacing: 0.04em;
+  }
+  .draft-confidence {
+    margin: 12px 0;
+    padding: 10px 14px;
+    background: var(--bone-2);
+    border-radius: 6px;
+    font-size: 13px;
+    color: var(--ink-soft);
+    line-height: 1.5;
+  }
+  .draft-confidence strong { color: var(--ink); }
+
+  .draft-preview {
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px dashed var(--rule);
+    font-size: 13px;
+  }
+  .draft-preview summary {
+    cursor: pointer;
+    color: var(--ink-soft);
+    margin-bottom: 8px;
+  }
+  .draft-body-preview {
+    margin: 0;
+    padding: 12px;
+    background: var(--bone-2);
+    border-radius: 6px;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 12px;
+    line-height: 1.55;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    max-height: 300px;
+    overflow-y: auto;
+  }
+
+  .draft-card-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 14px;
+  }
+
+  /* Draft pills */
+  .draft-pill {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 999px;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    flex-shrink: 0;
+  }
+  .draft-pill-fresh      { background: #fbecdf; color: #8a4a14; }
+  .draft-pill-edited     { background: #e3e5fa; color: #2c3585; }
+  .draft-pill-published  { background: #d8e8d4; color: #2e5a2a; }
+  .draft-pill-discarded  { background: var(--bone-2); color: var(--ink-faint); }
+
+  /* Editor (expanded) */
+  .draft-editor {
+    padding: 24px;
+    background: #ffffff;
+    border: 2px solid var(--accent);
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .draft-editor-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .draft-editor-meta {
+    font-size: 12px;
+    color: var(--ink-faint);
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  }
+  .draft-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+  .draft-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .draft-label {
+    font-size: 12px;
+    color: var(--ink-soft);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .draft-field input[type="text"],
+  .draft-field select,
+  .draft-field textarea {
+    padding: 10px 12px;
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: 14px;
+    background: var(--bone);
+    color: var(--ink);
+  }
+  .draft-field textarea {
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 13px;
+    line-height: 1.6;
+    resize: vertical;
+  }
+  .draft-field input:focus,
+  .draft-field select:focus,
+  .draft-field textarea:focus {
+    outline: 2px solid var(--accent);
+    outline-offset: 1px;
+    border-color: var(--accent);
+  }
+  .draft-field input:disabled,
+  .draft-field select:disabled,
+  .draft-field textarea:disabled {
+    background: var(--bone-2);
+    color: var(--ink-soft);
+    cursor: not-allowed;
+  }
+
+  .draft-editor-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+    flex-wrap: wrap;
+  }
+  .draft-primary {
+    padding: 10px 18px;
+    background: var(--ink);
+    color: var(--bone);
+    border: 0;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    line-height: 1.2;
+  }
+  .draft-primary:hover { background: #2a2520; }
+  .draft-primary:disabled {
+    background: var(--ink-faint);
+    cursor: not-allowed;
+    opacity: 0.7;
+  }
+  .draft-secondary {
+    padding: 10px 14px;
+    background: transparent;
+    border: 1px solid var(--rule);
+    color: var(--ink-soft);
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+  }
+  .draft-secondary:hover {
+    border-color: var(--ink-soft);
+    color: var(--ink);
+  }
+  .draft-secondary.danger:hover {
+    border-color: #b03030;
+    color: #b03030;
+  }
+  .draft-secondary:disabled { opacity: 0.5; cursor: not-allowed; }
 </style>
