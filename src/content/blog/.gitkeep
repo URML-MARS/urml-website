@@ -1,0 +1,3 @@
+# Placeholder so the empty blog content directory is tracked in git.
+# Posts land here as `YYYY-MM-DD-slug.md`. First post arrives in PR-2;
+# until then the /blog index renders the honest empty state.
