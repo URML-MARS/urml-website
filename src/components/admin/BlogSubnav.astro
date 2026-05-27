@@ -1,0 +1,50 @@
+---
+// Sub-tab navigation inside the Blog tab. Sits below the top-level
+// AdminBase tabs (Blog | Subscribers). Active state driven by the
+// `active` prop the consuming page sets.
+
+interface Props {
+  active: "queue" | "drafts" | "published" | "archived";
+}
+const { active } = Astro.props;
+
+const items: Array<{ key: Props["active"]; label: string; href: string }> = [
+  { key: "queue", label: "Queue", href: "/admin" },
+  { key: "drafts", label: "Drafts", href: "/admin/drafts" },
+  { key: "published", label: "Published", href: "/admin/published" },
+  { key: "archived", label: "Archived", href: "/admin/archived" },
+];
+---
+
+<nav class="blog-subnav" aria-label="Blog sections">
+  {items.map((item) => (
+    <a
+      href={item.href}
+      class={item.key === active ? "subtab active" : "subtab"}
+      aria-current={item.key === active ? "page" : undefined}
+    >{item.label}</a>
+  ))}
+</nav>
+
+<style>
+  .blog-subnav {
+    display: flex;
+    gap: 2px;
+    border-bottom: 1px solid var(--rule);
+    margin: 0 0 24px;
+  }
+  .subtab {
+    padding: 10px 16px;
+    font-size: 14px;
+    color: var(--ink-faint);
+    text-decoration: none;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+  }
+  .subtab:hover { color: var(--ink-soft); }
+  .subtab.active {
+    color: var(--ink);
+    border-bottom-color: var(--accent);
+    font-weight: 500;
+  }
+</style>

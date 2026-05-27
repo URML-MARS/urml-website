@@ -1,0 +1,42 @@
+---
+import AdminBase from "../../layouts/AdminBase.astro";
+import BlogSubnav from "../../components/admin/BlogSubnav.astro";
+
+export const prerender = false;
+---
+
+<AdminBase title="Blog · Published" active="blog">
+  <BlogSubnav active="published" />
+
+  <section>
+    <h1 style="font-size:28px;margin:0 0 8px">Published</h1>
+    <p style="color:var(--ink-soft);margin:0 0 24px;max-width:720px;line-height:1.55">
+      Live posts in <code>src/content/blog/</code>. Each row links to the post on the public
+      site, the markdown file on GitHub, and the originating queue item. Activates in PR-E
+      once the publish flow exists.
+    </p>
+
+    <div class="empty">
+      <p><strong>Empty.</strong></p>
+      <p>Published subview activates in PR-E. The Queue tab is functional today.</p>
+    </div>
+  </section>
+</AdminBase>
+
+<style>
+  .empty {
+    padding: 64px 24px;
+    text-align: center;
+    color: var(--ink-faint);
+    border: 1px dashed var(--rule);
+    border-radius: 8px;
+  }
+  .empty strong { color: var(--ink); font-weight: 600; }
+  code {
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    background: var(--bone-2);
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 13px;
+  }
+</style>

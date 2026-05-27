@@ -1,6 +1,7 @@
 // @ts-check
 import { defineConfig } from "astro/config";
 import netlify from "@astrojs/netlify";
+import preact from "@astrojs/preact";
 
 // Hybrid output. Public pages stay static (the no-third-party-request
 // property, the strict CSP, the audit-honest "what you see is what's
@@ -22,6 +23,10 @@ export default defineConfig({
   site: "https://urml.dev",
   output: "hybrid",
   adapter: netlify(),
+  // Preact for admin-only interactive islands (Queue CRUD, Drafts
+  // editor, Subscribers table). Bundle is ~4 kB, loaded only on
+  // /admin/* pages that mount an island. Public bundle is unaffected.
+  integrations: [preact()],
   build: { format: "directory" },
   // No telemetry, no external anything. The strict CSP that enforces
   // "zero third-party network requests" lives in netlify.toml; nothing
