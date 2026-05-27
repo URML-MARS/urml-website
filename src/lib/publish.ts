@@ -10,7 +10,7 @@
 // etc. up to -10. After that, fail loudly.
 
 import type { Draft } from "./drafts";
-import type { QueueItem } from "./queue";
+import type { QueueItem, QueueRef, QueueVideo } from "./queue";
 import { getStore } from "@netlify/blobs";
 
 export interface PublishedIndexEntry {
@@ -50,11 +50,188 @@ interface SerializeArgs {
   draft: Draft;
   queueItem: QueueItem;
   author: string;
+  sourceImages?: SourceImage[];
+}
+
+export interface SourceImage {
+  refUrl: string;
+  imageUrl: string;
+  refTitle: string;
+}
+
+// ---------------------------------------------------------------------------
+// Video embeds: post-process the markdown body so YouTube and Vimeo links
+// turn into responsive inline iframes. Instagram / TikTok stay as plain
+// links (their embeds require third-party JS, which would violate the
+// zero-third-party-script stance).
+
+function youtubeId(url: string): string | null {
+  let m = url.match(/youtu\.be\/([A-Za-z0-9_-]{6,})/);
+  if (m) return m[1];
+  m = url.match(/[?&]v=([A-Za-z0-9_-]{6,})/);
+  if (m) return m[1];
+  m = url.match(/youtube(?:-nocookie)?\.com\/(?:embed|shorts)\/([A-Za-z0-9_-]{6,})/);
+  if (m) return m[1];
+  return null;
+}
+
+function vimeoId(url: string): string | null {
+  const m = url.match(/vimeo\.com\/(?:video\/)?(\d+)/);
+  return m ? m[1] : null;
+}
+
+function escapeHtmlAttr(s: string): string {
+  return s
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+function videoEmbedHtml(url: string, title: string): string | null {
+  const ytId = youtubeId(url);
+  if (ytId) {
+    const t = escapeHtmlAttr(title || "Video");
+    return `<div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/${ytId}" title="${t}" frameborder="0" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>`;
+  }
+  const vmId = vimeoId(url);
+  if (vmId) {
+    const t = escapeHtmlAttr(title || "Video");
+    return `<div class="video-embed"><iframe src="https://player.vimeo.com/video/${vmId}" title="${t}" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>`;
+  }
+  return null;
+}
+
+export function processVideoEmbeds(body: string, videos: QueueVideo[]): string {
+  if (videos.length === 0) return body;
+
+  // Map of platform-prefixed video ID to the supplied video record.
+  const supplied = new Map<string, QueueVideo>();
+  for (const v of videos) {
+    const yt = youtubeId(v.url);
+    if (yt) supplied.set(`yt:${yt}`, v);
+    const vm = vimeoId(v.url);
+    if (vm) supplied.set(`vm:${vm}`, v);
+  }
+  if (supplied.size === 0) return body;
+
+  const embedded = new Set<string>();
+  const linkRegex = /\[[^\]]*\]\(([^)\s]+)[^)]*\)/g;
+  const paragraphs = body.split(/\n{2,}/);
+  const result: string[] = [];
+
+  for (const para of paragraphs) {
+    result.push(para);
+    for (const match of para.matchAll(linkRegex)) {
+      const url = match[1];
+      const yt = youtubeId(url);
+      if (yt && supplied.has(`yt:${yt}`) && !embedded.has(`yt:${yt}`)) {
+        const v = supplied.get(`yt:${yt}`)!;
+        const html = videoEmbedHtml(v.url, v.title || "Video");
+        if (html) {
+          result.push(html);
+          embedded.add(`yt:${yt}`);
+        }
+      }
+      const vm = vimeoId(url);
+      if (vm && supplied.has(`vm:${vm}`) && !embedded.has(`vm:${vm}`)) {
+        const v = supplied.get(`vm:${vm}`)!;
+        const html = videoEmbedHtml(v.url, v.title || "Video");
+        if (html) {
+          result.push(html);
+          embedded.add(`vm:${vm}`);
+        }
+      }
+    }
+  }
+
+  // Append any supplied YouTube/Vimeo video that the LLM forgot to link.
+  const remaining: QueueVideo[] = [];
+  for (const [key, v] of supplied) {
+    if (!embedded.has(key)) remaining.push(v);
+  }
+  if (remaining.length > 0) {
+    result.push("");
+    result.push(`<p class="video-watch-label">Watch:</p>`);
+    for (const v of remaining) {
+      const html = videoEmbedHtml(v.url, v.title || "Video");
+      if (html) result.push(html);
+    }
+  }
+
+  return result.join("\n\n");
+}
+
+// ---------------------------------------------------------------------------
+// Source images: at publish time, fetch each source URL and try to extract
+// its og:image. Use the first one as a hero image at the top of the post.
+// Best-effort: any fetch / parse failure just skips that image. Never
+// blocks the publish.
+
+async function fetchOgImage(refUrl: string, timeoutMs = 4000): Promise<string | null> {
+  try {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), timeoutMs);
+    const resp = await fetch(refUrl, {
+      method: "GET",
+      headers: {
+        "User-Agent": "urml-admin/1.0 (+https://urml.dev/contact)",
+        Accept: "text/html,application/xhtml+xml",
+      },
+      signal: controller.signal,
+      redirect: "follow",
+    });
+    clearTimeout(timer);
+    if (!resp.ok) return null;
+    const html = (await resp.text()).slice(0, 200000); // cap to first 200 KB
+    // Match og:image regardless of attribute order, single or double quotes.
+    let m = html.match(
+      /<meta\s+(?:[^>]*?\s+)?property\s*=\s*["']og:image(?::secure_url|:url)?["']\s+(?:[^>]*?\s+)?content\s*=\s*["']([^"']+)["']/i,
+    );
+    if (!m) {
+      m = html.match(
+        /<meta\s+(?:[^>]*?\s+)?content\s*=\s*["']([^"']+)["']\s+(?:[^>]*?\s+)?property\s*=\s*["']og:image(?::secure_url|:url)?["']/i,
+      );
+    }
+    if (!m) return null;
+    const url = m[1].trim();
+    if (!url.startsWith("https://") && !url.startsWith("http://")) return null;
+    return url;
+  } catch {
+    return null;
+  }
+}
+
+export async function collectSourceImages(refs: QueueRef[]): Promise<SourceImage[]> {
+  // Cap to the first 5 refs so we never block publish on a long ref list.
+  const eligible = refs.slice(0, 5);
+  const results = await Promise.all(
+    eligible.map(async (r) => {
+      const img = await fetchOgImage(r.url);
+      return img ? { refUrl: r.url, imageUrl: img, refTitle: r.title || r.url } : null;
+    }),
+  );
+  return results.filter((x): x is SourceImage => x !== null);
+}
+
+function heroImageHtml(image: SourceImage): string {
+  return `<figure class="post-hero">
+<img src="${escapeHtmlAttr(image.imageUrl)}" alt="${escapeHtmlAttr(image.refTitle)}" loading="lazy" referrerpolicy="no-referrer" />
+<figcaption>Image: ${escapeHtmlAttr(image.refTitle)}</figcaption>
+</figure>`;
 }
 
 export function serializeMarkdown(args: SerializeArgs): string {
-  const { draft, queueItem, author } = args;
+  const { draft, queueItem, author, sourceImages = [] } = args;
   const date = todayIso();
+
+  // Body transformations: videos inline, hero image at the top.
+  let body = draft.body_markdown.trim();
+  body = processVideoEmbeds(body, queueItem.videos);
+  if (sourceImages.length > 0) {
+    body = heroImageHtml(sourceImages[0]) + "\n\n" + body;
+  }
 
   const sources = queueItem.refs
     .filter((r) => r.url)
@@ -86,7 +263,7 @@ export function serializeMarkdown(args: SerializeArgs): string {
   lines.push("draft: false");
   lines.push("---");
   lines.push("");
-  lines.push(draft.body_markdown.trim());
+  lines.push(body);
   lines.push("");
 
   return lines.join("\n");
