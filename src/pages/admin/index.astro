@@ -1,84 +1,303 @@
 ---
 import AdminBase from "../../layouts/AdminBase.astro";
+import BlogSubnav from "../../components/admin/BlogSubnav.astro";
+import QueueIsland from "../../components/admin/QueueIsland.tsx";
 
-// Blog tab — default landing page when signed in.
-// Placeholder shell with Queue / Drafts / Published / Archived subnav.
-// Each subview is empty until PR-D (queue CRUD), PR-E (Gemini drafts +
-// publish), arrive.
+// Queue subview — the default Blog landing page. Hosts the Preact
+// island that talks to /api/admin/queue endpoints.
 
 export const prerender = false;
-
-const subviews = [
-  { key: "queue", label: "Queue", count: 0, blurb: "Topic queue for the LLM. Manual add/edit. (PR-D)" },
-  { key: "drafts", label: "Drafts", count: 0, blurb: "LLM-generated drafts awaiting review. (PR-E)" },
-  { key: "published", label: "Published", count: 0, blurb: "Live posts in src/content/blog/. (PR-E)" },
-  { key: "archived", label: "Archived", count: 0, blurb: "Removed or de-listed posts. (PR-E)" },
-];
 ---
 
-<AdminBase title="Blog" active="blog">
-  <section>
-    <h1 style="font-size:28px;margin:0 0 8px">Blog</h1>
-    <p style="color:var(--ink-soft);margin:0 0 32px">Topic queue, LLM drafts, and published posts. Subviews appear as the rest of the roadmap lands.</p>
+<AdminBase title="Blog · Queue" active="blog">
+  <BlogSubnav active="queue" />
 
-    <div class="subviews">
-      {subviews.map((s) => (
-        <div class="subview">
-          <div class="subview-head">
-            <h2>{s.label}</h2>
-            <span class="count">{s.count}</span>
-          </div>
-          <p class="blurb">{s.blurb}</p>
-          <div class="empty">Empty.</div>
-        </div>
-      ))}
-    </div>
+  <section>
+    <h1 class="page-title">Queue</h1>
+    <p class="page-blurb">
+      Topics waiting to be drafted. Add a topic with references (articles, news links) and videos
+      (YouTube, Instagram, TikTok). When PR-E lands, the <strong>Generate draft</strong> button
+      will hand the queue item to Gemini and produce a draft post for your review.
+    </p>
+
+    <QueueIsland client:load />
   </section>
 </AdminBase>
 
-<style>
-  .subviews {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+<style is:global>
+  /* QueueIsland styles. Scoped via the .queue-root container so they
+     don't leak to other admin pages. */
+  .page-title {
+    font-size: 28px;
+    margin: 0 0 8px;
+  }
+  .page-blurb {
+    color: var(--ink-soft);
+    margin: 0 0 24px;
+    max-width: 720px;
+    line-height: 1.55;
+  }
+  .queue-root {
+    display: flex;
+    flex-direction: column;
     gap: 16px;
   }
-  .subview {
-    border: 1px solid var(--rule);
-    border-radius: 8px;
-    padding: 20px;
-    background: #ffffff;
+  .queue-add {
+    align-self: flex-start;
+    padding: 10px 16px;
+    background: var(--ink);
+    color: var(--bone);
+    border: 0;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
   }
-  .subview-head {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    margin-bottom: 6px;
-  }
-  .subview-head h2 {
-    margin: 0;
-    font-size: 16px;
-    font-weight: 600;
-  }
-  .count {
-    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
-    font-size: 12px;
-    color: var(--ink-faint);
-    background: var(--bone-2);
-    padding: 2px 8px;
-    border-radius: 999px;
-  }
-  .blurb {
-    margin: 0 0 16px;
+  .queue-add:hover { background: #2a2520; }
+  .queue-add:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  .queue-error {
+    padding: 12px 16px;
+    background: #fbecdf;
+    border: 1px solid var(--accent);
+    border-radius: 6px;
+    color: var(--ink);
     font-size: 13px;
-    color: var(--ink-faint);
-    line-height: 1.5;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
   }
-  .empty {
-    padding: 24px 8px;
+  .queue-error-close {
+    background: transparent;
+    border: 0;
+    font-size: 20px;
+    line-height: 1;
+    cursor: pointer;
+    color: var(--ink-soft);
+    padding: 0 4px;
+  }
+
+  .queue-loading,
+  .queue-empty {
+    padding: 48px 16px;
     text-align: center;
     color: var(--ink-faint);
-    font-size: 13px;
-    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
-    border-top: 1px dashed var(--rule);
+    border: 1px dashed var(--rule);
+    border-radius: 8px;
+    font-size: 14px;
   }
+  .queue-empty strong { color: var(--ink); }
+
+  .queue-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  /* Card */
+  .queue-card {
+    padding: 20px;
+    background: #ffffff;
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+  }
+  .queue-card-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 16px;
+    margin-bottom: 6px;
+  }
+  .queue-card-head h3 {
+    margin: 0;
+    font-size: 17px;
+    font-weight: 500;
+    color: var(--ink);
+  }
+  .queue-pill {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 999px;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    flex-shrink: 0;
+  }
+  .queue-pill-pending     { background: var(--bone-2); color: var(--ink-soft); }
+  .queue-pill-drafted     { background: #fbecdf; color: #8a4a14; }
+  .queue-pill-published   { background: #d8e8d4; color: #2e5a2a; }
+  .queue-pill-archived    { background: var(--bone-2); color: var(--ink-faint); }
+  .queue-notes {
+    margin: 8px 0;
+    color: var(--ink-soft);
+    font-size: 14px;
+    line-height: 1.55;
+    white-space: pre-wrap;
+  }
+  .queue-meta {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    color: var(--ink-faint);
+    font-size: 12px;
+    margin-top: 8px;
+  }
+  .queue-details {
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px dashed var(--rule);
+    font-size: 13px;
+  }
+  .queue-details summary {
+    cursor: pointer;
+    color: var(--ink-soft);
+    margin-bottom: 8px;
+  }
+  .queue-link-list {
+    margin: 8px 0 0;
+    padding-left: 20px;
+  }
+  .queue-link-list li {
+    margin-bottom: 4px;
+    word-break: break-all;
+  }
+  .queue-platform {
+    color: var(--ink-faint);
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .queue-card-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 16px;
+    flex-wrap: wrap;
+  }
+
+  /* Form */
+  .queue-form {
+    padding: 20px;
+    background: #ffffff;
+    border: 2px solid var(--accent);
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .queue-form h3 {
+    margin: 0 0 4px;
+    font-size: 17px;
+    font-weight: 500;
+  }
+  .queue-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .queue-label {
+    font-size: 12px;
+    color: var(--ink-soft);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .queue-form input[type="text"],
+  .queue-form input[type="url"],
+  .queue-form textarea {
+    padding: 10px 12px;
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: 14px;
+    background: var(--bone);
+    color: var(--ink);
+  }
+  .queue-form input:focus,
+  .queue-form textarea:focus {
+    outline: 2px solid var(--accent);
+    outline-offset: 1px;
+    border-color: var(--accent);
+  }
+  .queue-form textarea { resize: vertical; }
+  .queue-list-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .queue-hint {
+    margin: 4px 0 0;
+    font-size: 12px;
+    color: var(--ink-faint);
+  }
+  .queue-row {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr auto;
+    gap: 6px;
+  }
+  .queue-tiny {
+    background: transparent;
+    border: 1px dashed var(--rule);
+    color: var(--ink-soft);
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 12px;
+    cursor: pointer;
+  }
+  .queue-tiny:hover { color: var(--accent); border-color: var(--accent); }
+  .queue-remove {
+    background: transparent;
+    border: 1px solid var(--rule);
+    color: var(--ink-faint);
+    width: 32px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 18px;
+    line-height: 1;
+  }
+  .queue-remove:hover {
+    color: #b03030;
+    border-color: #b03030;
+  }
+  .queue-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 4px;
+  }
+  .queue-primary {
+    padding: 9px 16px;
+    background: var(--ink);
+    color: var(--bone);
+    border: 0;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+  }
+  .queue-primary:hover { background: #2a2520; }
+  .queue-primary:disabled {
+    background: var(--ink-faint);
+    cursor: not-allowed;
+    opacity: 0.7;
+  }
+  .queue-secondary {
+    padding: 9px 14px;
+    background: transparent;
+    border: 1px solid var(--rule);
+    color: var(--ink-soft);
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+  }
+  .queue-secondary:hover {
+    border-color: var(--ink-soft);
+    color: var(--ink);
+  }
+  .queue-secondary.danger:hover {
+    border-color: #b03030;
+    color: #b03030;
+  }
+  .queue-secondary:disabled { opacity: 0.5; cursor: not-allowed; }
 </style>

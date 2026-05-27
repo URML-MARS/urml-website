@@ -1,0 +1,35 @@
+---
+import AdminBase from "../../layouts/AdminBase.astro";
+import BlogSubnav from "../../components/admin/BlogSubnav.astro";
+
+export const prerender = false;
+---
+
+<AdminBase title="Blog · Drafts" active="blog">
+  <BlogSubnav active="drafts" />
+
+  <section>
+    <h1 style="font-size:28px;margin:0 0 8px">Drafts</h1>
+    <p style="color:var(--ink-soft);margin:0 0 24px;max-width:720px;line-height:1.55">
+      LLM-generated drafts awaiting review. When PR-E lands, hitting <strong>Generate draft</strong>
+      on a queue item will call Gemini, parse its structured output, and land the result here
+      for you to skim, edit, and publish.
+    </p>
+
+    <div class="empty">
+      <p><strong>Empty.</strong></p>
+      <p>Drafts subview activates in PR-E. The Queue tab is functional today.</p>
+    </div>
+  </section>
+</AdminBase>
+
+<style>
+  .empty {
+    padding: 64px 24px;
+    text-align: center;
+    color: var(--ink-faint);
+    border: 1px dashed var(--rule);
+    border-radius: 8px;
+  }
+  .empty strong { color: var(--ink); font-weight: 600; }
+</style>

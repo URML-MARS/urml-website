@@ -1,0 +1,34 @@
+---
+import AdminBase from "../../layouts/AdminBase.astro";
+import BlogSubnav from "../../components/admin/BlogSubnav.astro";
+
+export const prerender = false;
+---
+
+<AdminBase title="Blog · Archived" active="blog">
+  <BlogSubnav active="archived" />
+
+  <section>
+    <h1 style="font-size:28px;margin:0 0 8px">Archived</h1>
+    <p style="color:var(--ink-soft);margin:0 0 24px;max-width:720px;line-height:1.55">
+      Removed or de-listed posts and queue items. Soft-delete history; nothing is purged.
+      Activates in PR-E along with the publish/unpublish flow.
+    </p>
+
+    <div class="empty">
+      <p><strong>Empty.</strong></p>
+      <p>Archived subview activates in PR-E. The Queue tab is functional today.</p>
+    </div>
+  </section>
+</AdminBase>
+
+<style>
+  .empty {
+    padding: 64px 24px;
+    text-align: center;
+    color: var(--ink-faint);
+    border: 1px dashed var(--rule);
+    border-radius: 8px;
+  }
+  .empty strong { color: var(--ink); font-weight: 600; }
+</style>
