@@ -2,6 +2,7 @@
 import { getCollection } from "astro:content";
 import Base from "../layouts/Base.astro";
 import PostCard from "../components/blog/PostCard.astro";
+import SignupForm from "../components/SignupForm.astro";
 
 // Blog index. Queries the `blog` content collection (schema in
 // src/content/config.ts). Honest empty state when there are no posts.
@@ -90,21 +91,12 @@ const postCards = posts.map((post) => ({
   <section class="hi-section tint">
     <div style="display:grid;grid-template-columns:1.4fr 1fr;gap:56px;align-items:center">
       <div>
-        <div class="caption" style="margin-bottom:16px">DIGEST · REGISTER INTEREST</div>
-        <h2 class="s" style="margin-bottom:16px">No digest is sending yet. Register and you'll be first.</h2>
-        <p class="body" style="max-width:520px">There is no email going out today and no subscriber number to claim until there is one to measure. Leave your email and you'll get the digest the moment it launches — nothing before, no tracking pixels, no third-party requests, unsubscribe ends it. The canonical stream is always the repo: watch GitHub releases and follow Discussions.</p>
+        <div class="caption" style="margin-bottom:16px">DIGEST</div>
+        <h2 class="s" style="margin-bottom:16px">Sign up for the digest.</h2>
+        <p class="body" style="max-width:520px">Confirm via email, then wait. The digest ships when there are posts to summarize and not before — quiet weeks get skipped, no filler. The canonical stream is always the repo: <a href="/rss.xml">RSS</a> and <a href="https://github.com/URML-MARS/URML/discussions" rel="noopener noreferrer">Discussions</a> on GitHub.</p>
       </div>
       <div class="hi-card" style="padding:28px">
-        <form name="digest-interest" method="POST" data-netlify="true" data-netlify-honeypot="bot-field" action="/submitted">
-          <input type="hidden" name="form-name" value="digest-interest" />
-          <p class="hi-hp"><label>Leave empty: <input name="bot-field" /></label></p>
-          <div class="hi-field">
-            <label class="lab" for="d-email"><span class="name">Email</span><span class="hint">only used for the digest</span></label>
-            <input class="input" id="d-email" name="email" type="email" required autocomplete="email" placeholder="you@org.com" />
-          </div>
-          <button type="submit" class="hi-btn primary lg" style="width:100%;justify-content:center">Register interest →</button>
-          <div class="caption" style="margin-top:12px;color:var(--ink-faint)">NO DIGEST SENDS YET · NO TRACKING · SAME-ORIGIN ONLY</div>
-        </form>
+        <SignupForm />
         <div style="display:flex;gap:10px;margin-top:16px">
           <a class="hi-btn outline" href="https://github.com/URML-MARS/URML/releases" rel="noopener noreferrer" style="flex:1;justify-content:center;font-size:13px">Watch releases ↗</a>
           <a class="hi-btn ghost" href="https://github.com/URML-MARS/URML/discussions" rel="noopener noreferrer" style="flex:1;justify-content:center;font-size:13px">Discussions ↗</a>

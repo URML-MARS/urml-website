@@ -20,7 +20,7 @@ import Base from "../layouts/Base.astro";
         <li>The public site sets no cookies. (An admin area at <code>/admin</code> is gated by login and sets a session cookie for the maintainer only; ordinary visitors never see it.)</li>
         <li>No analytics. No Google Analytics, no Plausible, no anything that counts or profiles visitors.</li>
         <li>No third-party loads. No fonts, scripts, or trackers from other origins. A Content-Security-Policy header blocks any cross-origin request at the browser level, so if a future change tried to add one it would break visibly instead of leaking quietly.</li>
-        <li>No tracking, no newsletter that sends today, no automatic data collection. Browsing any page sends us nothing.</li>
+        <li>No tracking pixels, no read receipts, no click tracking, no automatic data collection. Browsing any page sends us nothing.</li>
         <li>No JavaScript beyond the small bundled scripts that power the page tabs and filters. None of it sends anything anywhere.</li>
       </ul>
 
@@ -28,6 +28,13 @@ import Base from "../layouts/Base.astro";
       <p>The <a href="/contact">contact page</a> has a form. It is one of a few places on this site that take input, and each only does so when you deliberately fill it in and submit.</p>
       <p>If you submit it, the form sends what you typed (your message, the email address you provide for a reply, and an optional name) to Netlify, which hosts this site. Netlify stores the submission in the project's Netlify dashboard and notifies the maintainer so you get a reply. That is the entire data flow. The form uses no third-party service, sets no cookies, and loads no tracker. Spam is filtered with a hidden honeypot field, not a third-party CAPTCHA.</p>
       <p>If you would rather not use the form, the same contact page links the GitHub issue tracker for anything that can be public.</p>
+
+      <h2>The blog digest</h2>
+      <p>The <a href="/blog">/blog</a> page has a "subscribe" form. It is the second place on this site that takes input, and like the contact form, it only does so when you deliberately fill it in and submit.</p>
+      <p>If you submit it, we store your email address as a subscriber record so we can send you the digest. We use Resend (<a href="https://resend.com/privacy" rel="noopener noreferrer">Resend's privacy policy</a>) as the email processor: your address is passed to them so they can deliver the email. We do not use tracking pixels, click tracking, or read receipts. Resend's "track opens" and "track clicks" toggles are explicitly disabled in our send calls.</p>
+      <p>We use double opt-in: you will receive a confirmation email, and your address is not active on the digest list until you click the link inside. Until you confirm, the only thing we have done with your email is store it pending confirmation and pass it to Resend for that one confirmation send.</p>
+      <p>You can unsubscribe at any time by clicking the unsubscribe link in any email we send you. Unsubscribing removes your record from our store and you will receive no further emails. If you cannot find the link, ping <a href="/contact">contact</a>.</p>
+      <p>Retention: until you unsubscribe or the project ends, whichever comes first. We do not share the list with anyone.</p>
 
       <h2>The hosting caveat</h2>
       <p>This site is hosted on Netlify. Like any web host or CDN, Netlify processes the basic technical metadata needed to serve a page: your IP address, the request time, and the file requested. That happens at the network layer for every site on the internet and is outside this project's control. For ordinary browsing, URML does not add to that, does not read it, and does not receive it. For a form submission, Netlify additionally receives and stores what you submitted, as described above. Netlify's own data handling is in <a href="https://www.netlify.com/privacy/" rel="noopener noreferrer">Netlify's privacy policy</a>.</p>

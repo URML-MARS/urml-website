@@ -1,0 +1,69 @@
+---
+// Public subscriber signup form. POSTs to /api/subscribers/signup
+// which writes to Netlify Blobs and sends a confirmation email via
+// Resend (double opt-in). No client JS; native browser form
+// submission with a 303 redirect to /subscribed on success.
+//
+// CTA copy is honest about cadence: "Occasional posts ... irregular
+// while the project is small." Don't promise daily/weekly until
+// measured. The unsubscribe link is in every email.
+---
+
+<form method="POST" action="/api/subscribers/signup" class="signup-form">
+  <p class="signup-honeypot"><label>Leave empty: <input name="bot-field" tabindex="-1" autocomplete="off" /></label></p>
+  <div class="signup-row">
+    <label for="signup-email" class="signup-sr-only">Email</label>
+    <input
+      id="signup-email"
+      name="email"
+      type="email"
+      required
+      autocomplete="email"
+      placeholder="you@org.com"
+      class="signup-input"
+    />
+    <button type="submit" class="hi-btn primary">Subscribe →</button>
+  </div>
+  <p class="signup-meta">
+    Occasional posts on URML and adjacent robotics work. Cadence is irregular while the project is small.
+    Double opt-in (you'll get a confirmation email). No tracking. Unsubscribe link in every email.
+  </p>
+</form>
+
+<style>
+  .signup-form { width: 100%; }
+  .signup-honeypot { position: absolute; left: -9999px; }
+  .signup-row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .signup-input {
+    flex: 1;
+    min-width: 220px;
+    padding: 11px 14px;
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    font-size: 15px;
+    font-family: inherit;
+    background: var(--bone);
+    color: var(--ink);
+  }
+  .signup-input:focus {
+    outline: 2px solid var(--accent);
+    outline-offset: 1px;
+  }
+  .signup-meta {
+    margin-top: 10px;
+    font-size: 12px;
+    color: var(--ink-faint);
+    line-height: 1.5;
+  }
+  .signup-sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+  }
+</style>
