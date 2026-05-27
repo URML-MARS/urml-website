@@ -58,3 +58,12 @@
     Referrer-Policy = "no-referrer"
     X-Frame-Options = "DENY"
     Permissions-Policy = "geolocation=(), microphone=(), camera=(), interest-cohort=()"
+
+# API endpoints — never cache. Both intermediate CDNs and the browser
+# should re-request these every time so subscriber state, admin actions,
+# and (later) Gemini drafts are never served stale. Applies to all
+# /api/* paths including /api/subscribers/* added in PR-B.
+[[headers]]
+  for = "/api/*"
+  [headers.values]
+    Cache-Control = "no-store"
