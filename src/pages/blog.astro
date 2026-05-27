@@ -116,26 +116,10 @@ const postCards = posts.map((post) => ({
   </section>
 </Base>
 
-<script>
-  // Blog category-filter island (Astro-bundled, CSP-safe). Functional
-  // against PostCard's data-bcat-row attribute (lowercased category).
-  const chips = document.querySelectorAll<HTMLButtonElement>("#bfilter button[data-bcat]");
-  const rows = document.querySelectorAll<HTMLElement>("[data-bcat-row]");
-  const empty = document.querySelector<HTMLElement>("[data-bempty]");
-  chips.forEach((c) => c.addEventListener("click", () => {
-    const want = c.dataset.bcat;
-    chips.forEach((x) => {
-      const on = x === c;
-      x.style.background = on ? "var(--ink)" : "var(--bone)";
-      x.style.color = on ? "var(--bone)" : "var(--ink-soft)";
-      x.style.borderColor = on ? "var(--ink)" : "var(--rule)";
-    });
-    let shown = 0;
-    rows.forEach((r) => {
-      const vis = want === "all" || r.dataset.bcatRow === want;
-      (r as HTMLElement).style.display = vis ? "" : "none";
-      if (vis) shown++;
-    });
-    if (empty) empty.style.display = shown === 0 ? "" : "none";
-  }));
-</script>
+<!--
+  Category-filter island lives in /public/js/blog-filter.js so the
+  strict CSP `script-src 'self'` permits it. Astro inlines small
+  <script> blocks by default, which would violate CSP — using an
+  external file in /public bypasses that bundling entirely.
+-->
+<script src="/js/blog-filter.js" defer></script>
