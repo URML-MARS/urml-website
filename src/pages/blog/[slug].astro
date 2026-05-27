@@ -1,0 +1,132 @@
+---
+import { getCollection, type CollectionEntry } from "astro:content";
+import Base from "../../layouts/Base.astro";
+import PostMeta from "../../components/blog/PostMeta.astro";
+import SourcesList from "../../components/blog/SourcesList.astro";
+
+export async function getStaticPaths() {
+  const posts = await getCollection("blog", ({ data }) => !data.draft || import.meta.env.DEV);
+  return posts.map((post) => ({
+    // Strip the YYYY-MM-DD- date prefix from the filename to get a clean URL slug.
+    params: { slug: post.slug.replace(/^\d{4}-\d{2}-\d{2}-/, "") },
+    props: { post },
+  }));
+}
+
+interface Props {
+  post: CollectionEntry<"blog">;
+}
+const { post } = Astro.props;
+const { Content } = await post.render();
+const fmt = new Intl.DateTimeFormat("en-US", { year: "numeric", month: "short", day: "numeric" });
+---
+
+<Base
+  title={`${post.data.title} — URML`}
+  description={post.data.summary}
+  active="Blog"
+>
+  <article class="post" style="padding:56px 56px 96px;max-width:760px;margin:0 auto">
+    <nav class="breadcrumb">
+      <a href="/blog">Blog</a> <span aria-hidden="true">/</span> <span>{post.data.title}</span>
+    </nav>
+    <h1>{post.data.title}</h1>
+    <PostMeta date={post.data.date} category={post.data.category} tags={post.data.tags} />
+    {post.data.cover_note && (
+      <aside class="cover-note" role="note">{post.data.cover_note}</aside>
+    )}
+    <div class="prose">
+      <Content />
+    </div>
+    {post.data.updated && (
+      <p class="updated">Updated {fmt.format(post.data.updated)}</p>
+    )}
+    <SourcesList sources={post.data.sources} />
+  </article>
+</Base>
+
+<style>
+  .post { color: var(--ink); }
+  .breadcrumb {
+    font-size: 13px;
+    color: var(--ink-faint);
+    margin-bottom: 28px;
+  }
+  .breadcrumb a {
+    color: var(--ink-soft);
+    text-decoration: none;
+  }
+  .breadcrumb a:hover { color: var(--accent); }
+  h1 {
+    font-size: 40px;
+    line-height: 1.2;
+    margin-bottom: 8px;
+    color: var(--ink);
+  }
+  .cover-note {
+    margin: 24px 0;
+    padding: 14px 18px;
+    border-left: 3px solid var(--accent);
+    background: var(--bone-2);
+    font-size: 14px;
+    color: var(--ink-soft);
+  }
+  .prose {
+    margin-top: 36px;
+    line-height: 1.7;
+    font-size: 16px;
+    color: var(--ink);
+  }
+  .prose :global(h2) {
+    font-size: 22px;
+    margin-top: 36px;
+    margin-bottom: 14px;
+    color: var(--ink);
+  }
+  .prose :global(h3) {
+    font-size: 18px;
+    margin-top: 28px;
+    margin-bottom: 10px;
+    color: var(--ink);
+  }
+  .prose :global(p) { margin-bottom: 18px; }
+  .prose :global(ul),
+  .prose :global(ol) {
+    margin-bottom: 18px;
+    padding-left: 22px;
+  }
+  .prose :global(li) { margin-bottom: 6px; }
+  .prose :global(a) { color: var(--accent); }
+  .prose :global(blockquote) {
+    border-left: 3px solid var(--rule);
+    margin: 18px 0;
+    padding: 4px 16px;
+    color: var(--ink-soft);
+    font-style: italic;
+  }
+  .prose :global(code) {
+    background: var(--bone-2);
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-family: var(--mono);
+    font-size: 14px;
+  }
+  .prose :global(pre) {
+    background: var(--ink);
+    color: var(--bone);
+    padding: 16px 20px;
+    border-radius: 6px;
+    overflow-x: auto;
+    font-size: 13px;
+    margin-bottom: 20px;
+  }
+  .prose :global(pre code) {
+    background: transparent;
+    padding: 0;
+  }
+  .updated {
+    margin-top: 36px;
+    font-size: 13px;
+    color: var(--ink-faint);
+  }
+</style>

@@ -1,0 +1,49 @@
+---
+interface Props {
+  date: Date;
+  category: string;
+  tags?: string[];
+}
+const { date, category, tags = [] } = Astro.props;
+const fmt = new Intl.DateTimeFormat("en-US", { year: "numeric", month: "short", day: "numeric" });
+---
+
+<div class="post-meta">
+  <time datetime={date.toISOString().slice(0, 10)}>{fmt.format(date)}</time>
+  <span class="dot" aria-hidden="true">·</span>
+  <span class="cat">{category}</span>
+  {tags.length > 0 && (
+    <>
+      <span class="dot" aria-hidden="true">·</span>
+      {tags.map((t) => (
+        <a href={`/blog?tag=${encodeURIComponent(t)}`} class="tag">#{t}</a>
+      ))}
+    </>
+  )}
+</div>
+
+<style>
+  .post-meta {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+    font-size: 13px;
+    color: var(--ink-faint);
+    margin-top: 16px;
+  }
+  .dot { color: var(--ink-faint); }
+  .cat {
+    color: var(--accent);
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-size: 11px;
+  }
+  .tag {
+    color: var(--ink-soft);
+    text-decoration: none;
+    font-family: var(--mono);
+  }
+  .tag:hover { color: var(--accent); }
+</style>
