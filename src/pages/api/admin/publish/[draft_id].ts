@@ -94,7 +94,10 @@ export const POST: APIRoute = async ({ params, request, locals }) => {
 
   const publishedAt = new Date().toISOString();
 
-  // Update draft → published.
+  // Post-commit Blob updates. Wrapped individually so that if any one
+  // fails (Blob outage, key issue, schema mismatch), the response still
+  // reports the GitHub commit success — the post is live, just the
+  // admin index may be slightly out of sync. Each failure is logged.
   await updateDraft(id, {
     status: "published",
     published_slug: commit.slug,
@@ -105,15 +108,17 @@ export const POST: APIRoute = async ({ params, request, locals }) => {
     suggested_tags: toPublish.suggested_tags,
     suggested_category: toPublish.suggested_category,
     urml_angle: toPublish.urml_angle,
-  });
+  }).catch((err) =>
+    console.warn(`[publish] updateDraft failed (post-commit) for ${id}:`, err),
+  );
 
-  // Update queue item.
   await updateQueueItem(draft.queue_id, {
     status: "published",
     published_slug: commit.slug,
-  });
+  }).catch((err) =>
+    console.warn(`[publish] updateQueueItem failed (post-commit) for ${draft.queue_id}:`, err),
+  );
 
-  // Record published-index pointer.
   const entry: PublishedIndexEntry = {
     id: `${publishedAt}-${commit.slug}`,
     draft_id: id,
@@ -126,7 +131,9 @@ export const POST: APIRoute = async ({ params, request, locals }) => {
     github_commit_url: commit.commit_url,
     github_html_url: commit.html_url,
   };
-  await recordPublishedIndex(entry);
+  await recordPublishedIndex(entry).catch((err) =>
+    console.warn(`[publish] recordPublishedIndex failed (post-commit):`, err),
+  );
 
   await writeAudit({
     actor: admin.login,
@@ -138,7 +145,7 @@ export const POST: APIRoute = async ({ params, request, locals }) => {
       filename: commit.filename,
       commit_url: commit.commit_url,
     },
-  }).catch(() => {});
+  }).catch((err) => console.warn(`[publish] writeAudit failed:`, err));
 
   return json({
     ok: true,

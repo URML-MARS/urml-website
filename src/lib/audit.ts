@@ -30,6 +30,10 @@ export async function writeAudit(entry: Omit<AuditEntry, "ts">): Promise<void> {
   const suffix = Array.from(rand)
     .map((b) => b.toString(16).padStart(2, "0"))
     .join("");
-  const key = `${ts}-${suffix}`;
+  // Netlify Blobs keys must be URL-safe. The ISO timestamp contains
+  // colons, which are not valid. Replace them; the value field still
+  // holds the original ISO timestamp for display.
+  const safeTs = ts.replace(/:/g, "_");
+  const key = `${safeTs}-${suffix}`;
   await auditStore().setJSON(key, { ts, ...entry });
 }
