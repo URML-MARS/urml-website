@@ -10,11 +10,17 @@
 
 import type { QueueItem } from "./queue";
 
-export const GEMINI_MODEL = "gemini-2.5-pro";
+// Switched from 2.5-pro to 2.5-flash after the pro model regularly took
+// 15-20s+ and tripped Netlify's Function timeout (10s on Starter, 26s
+// on Pro). 2.5-flash typically responds in 3-7s with sufficient
+// editorial quality for this workload. If quality degrades, the next
+// step is background generation (returns 202 + polling) rather than
+// going back to pro on the request path.
+export const GEMINI_MODEL = "gemini-2.5-flash";
 
 // Bump when the prompt or schema changes. Stored on every draft so we
 // can audit which version produced what.
-export const PROMPT_VERSION = "v1-2026-05-27";
+export const PROMPT_VERSION = "v2-2026-05-27";
 
 export interface GeminiOutput {
   title: string;
@@ -60,6 +66,12 @@ SOURCES DISCIPLINE:
 - Every factual claim must trace to a supplied reference URL, video URL, or the user's notes.
 - If a claim cannot be sourced from the supplied inputs, omit it.
 - Do not invent statistics, dates, quotes, or names.
+
+VIDEO LINKS:
+- When a video URL is supplied (YouTube, Instagram, TikTok, Vimeo, etc.), reference it inline in the body where it's contextually relevant, using a plain markdown link. Example: "A demo on the BMW floor shows the gait change ([video](https://youtu.be/...))."
+- If the video is the central subject of the post, mention and link it within the first paragraph.
+- Do not embed via HTML/iframe; emit a plain markdown link. The site renders these as links today; embed treatment is a future enhancement.
+- Do not link a video unless it actually appears in the supplied videos list.
 
 OUTPUT:
 - Strict JSON matching the supplied responseSchema.
@@ -165,6 +177,10 @@ export async function generateFromQueueItem(item: QueueItem): Promise<GeminiResu
   }
   if (!resp.ok) {
     const text = await resp.text().catch(() => "");
+    // Log the full response so Netlify Function logs capture what actually
+    // went wrong (model name typo, schema error, etc.). The error string
+    // returned to the UI is trimmed.
+    console.error(`[gemini] API ${resp.status} from ${GEMINI_MODEL}:`, text);
     return {
       ok: false,
       status: resp.status,
