@@ -1,0 +1,143 @@
+---
+// Admin chrome. Two tabs (Blog default, Subscribers), logout button.
+// Used by every page under /admin/* except /admin/login (which is the
+// pre-auth surface and uses Base.astro instead).
+//
+// The session is validated by src/middleware.ts before this layout
+// renders. `Astro.locals.adminUser` is guaranteed to be set here.
+
+interface Props {
+  title: string;
+  active: "blog" | "subscribers";
+}
+const { title, active } = Astro.props;
+const user = Astro.locals.adminUser;
+
+const tabs: Array<{ key: "blog" | "subscribers"; label: string; href: string }> = [
+  { key: "blog", label: "Blog", href: "/admin" },
+  { key: "subscribers", label: "Subscribers", href: "/admin/subscribers" },
+];
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>{title} — Admin</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+    <style is:global>
+      :root {
+        --ink: #181715;
+        --ink-soft: #4a4640;
+        --ink-faint: #8a857a;
+        --bone: #faf7f1;
+        --bone-2: #f0ece0;
+        --accent: #cc6b1f;
+        --rule: #d6d0c0;
+      }
+      * { box-sizing: border-box; }
+      html, body { margin: 0; padding: 0; background: var(--bone); color: var(--ink); }
+      body { font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; line-height: 1.5; }
+      a { color: var(--accent); }
+    </style>
+  </head>
+  <body>
+    <header class="admin-header">
+      <div class="admin-header-inner">
+        <a class="admin-brand" href="/admin">URML <span>admin</span></a>
+        <nav class="admin-tabs" aria-label="Admin sections">
+          {tabs.map((t) => (
+            <a
+              href={t.href}
+              class={t.key === active ? "tab active" : "tab"}
+              aria-current={t.key === active ? "page" : undefined}
+            >{t.label}</a>
+          ))}
+        </nav>
+        <div class="admin-user">
+          {user && <span class="admin-user-login">{user.login}</span>}
+          <form method="POST" action="/api/admin/auth/logout" class="admin-logout-form">
+            <button type="submit" class="admin-logout">Logout</button>
+          </form>
+        </div>
+      </div>
+    </header>
+    <main class="admin-main">
+      <slot />
+    </main>
+
+    <style>
+      .admin-header { border-bottom: 1px solid var(--rule); background: var(--bone); }
+      .admin-header-inner {
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+        align-items: center;
+        gap: 32px;
+        padding: 14px 32px;
+        max-width: 1280px;
+        margin: 0 auto;
+      }
+      .admin-brand {
+        font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+        font-weight: 600;
+        font-size: 16px;
+        color: var(--ink);
+        text-decoration: none;
+        letter-spacing: 0.04em;
+      }
+      .admin-brand span {
+        color: var(--accent);
+        margin-left: 6px;
+      }
+      .admin-tabs {
+        display: flex;
+        gap: 4px;
+      }
+      .admin-tabs .tab {
+        padding: 8px 14px;
+        font-size: 14px;
+        color: var(--ink-soft);
+        text-decoration: none;
+        border-radius: 6px;
+      }
+      .admin-tabs .tab:hover { background: var(--bone-2); }
+      .admin-tabs .tab.active {
+        background: var(--ink);
+        color: var(--bone);
+      }
+      .admin-user {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .admin-user-login {
+        font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+        font-size: 12px;
+        color: var(--ink-faint);
+      }
+      .admin-logout-form { margin: 0; }
+      .admin-logout {
+        font-family: inherit;
+        font-size: 13px;
+        padding: 6px 12px;
+        border: 1px solid var(--rule);
+        border-radius: 6px;
+        background: transparent;
+        color: var(--ink-soft);
+        cursor: pointer;
+      }
+      .admin-logout:hover {
+        border-color: var(--ink-soft);
+        color: var(--ink);
+      }
+      .admin-main {
+        max-width: 1280px;
+        margin: 0 auto;
+        padding: 32px;
+      }
+    </style>
+  </body>
+</html>

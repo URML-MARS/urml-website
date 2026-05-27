@@ -1,0 +1,98 @@
+---
+// Pre-auth surface. The only /admin/* page that is publicly accessible.
+// Middleware skips this path entirely.
+//
+// Static (no SSR, no Blobs, no env-var reads). The "Sign in with GitHub"
+// button is a plain anchor to /api/admin/auth/start which does the
+// OAuth dance.
+
+// Prerender by default in hybrid mode; explicit for clarity.
+export const prerender = true;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Sign in — URML admin</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <style>
+      html, body { margin: 0; padding: 0; background: #faf7f1; color: #181715; font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+      .wrap {
+        display: grid;
+        place-items: center;
+        min-height: 100vh;
+        padding: 24px;
+      }
+      .card {
+        max-width: 420px;
+        width: 100%;
+        padding: 40px;
+        background: #ffffff;
+        border: 1px solid #d6d0c0;
+        border-radius: 10px;
+      }
+      .brand {
+        font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+        font-size: 14px;
+        color: #8a857a;
+        letter-spacing: 0.06em;
+        margin-bottom: 24px;
+        text-transform: uppercase;
+      }
+      h1 {
+        font-size: 28px;
+        margin: 0 0 8px;
+        color: #181715;
+      }
+      p {
+        margin: 0 0 24px;
+        color: #4a4640;
+        line-height: 1.55;
+      }
+      .signin {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 11px 18px;
+        background: #181715;
+        color: #faf7f1;
+        text-decoration: none;
+        border-radius: 6px;
+        font-size: 15px;
+        font-weight: 500;
+      }
+      .signin:hover { background: #2a2520; }
+      .signin svg { width: 18px; height: 18px; }
+      .meta {
+        margin-top: 32px;
+        font-size: 12px;
+        color: #8a857a;
+        line-height: 1.6;
+      }
+      .meta a { color: #cc6b1f; }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="card">
+        <div class="brand">URML · admin</div>
+        <h1>Sign in</h1>
+        <p>Access is restricted to the maintainer's GitHub account.</p>
+        <a class="signin" href="/api/admin/auth/start">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1.1-.7.1-.7.1-.7 1.2.1 1.9 1.3 1.9 1.3 1.1 1.9 2.9 1.3 3.6 1 .1-.8.4-1.4.8-1.7-2.7-.3-5.5-1.3-5.5-6 0-1.3.5-2.4 1.3-3.2-.1-.3-.6-1.6.1-3.3 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0c2.3-1.5 3.3-1.2 3.3-1.2.7 1.7.2 3 .1 3.3.8.8 1.3 1.9 1.3 3.2 0 4.7-2.9 5.7-5.6 6 .4.4.8 1.1.8 2.3v3.4c0 .3.2.7.8.6A12 12 0 0 0 12 .3"/>
+          </svg>
+          Sign in with GitHub
+        </a>
+        <p class="meta">
+          Cookies: the sign-in flow sets a short-lived OAuth state cookie and, on success,
+          a 24-hour session cookie. Both are HttpOnly and same-origin. Disclosed on
+          <a href="/privacy">/privacy</a>. The public site sets no cookies.
+        </p>
+      </div>
+    </div>
+  </body>
+</html>
