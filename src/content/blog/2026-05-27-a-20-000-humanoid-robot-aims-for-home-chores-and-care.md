@@ -16,6 +16,10 @@ The robot is showcased performing various tasks typically found in a home settin
 
 The vision for this robot extends beyond simple manipulation. It is intended to integrate into the routines of a home, performing repetitive or physically demanding tasks. The video illustrates some of these capabilities, highlighting its potential for broader adoption ([video](https://www.youtube.com/watch?v=SHKhXHenr8w)). Its introduction at this price point suggests a strategic effort to make humanoid technology more accessible to the consumer market.
 
-<div class="video-embed"><iframe src="https://www.youtube.com/embed/SHKhXHenr8w" title="Humanoid home robot at $20K, built for chores and care." frameborder="0" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>
+<a class="lite-youtube" href="https://www.youtube.com/watch?v=SHKhXHenr8w" target="_blank" rel="noopener noreferrer" aria-label="Play &quot;Humanoid home robot at $20K, built for chores and care.&quot; on YouTube">
+<img class="lite-yt-thumb" src="https://i.ytimg.com/vi/SHKhXHenr8w/hqdefault.jpg" alt="Humanoid home robot at $20K, built for chores and care." loading="lazy" referrerpolicy="no-referrer" />
+<span class="lite-yt-play" aria-hidden="true"></span>
+<span class="lite-yt-meta"><span class="lite-yt-logo">YouTube</span> · Humanoid home robot at $20K, built for chores and care.</span>
+</a>
 
 The development of such robots raises questions about how they will safely and effectively operate within complex, unstructured home environments. Their ability to understand and execute a wide range of human instructions for varied tasks will be key to their utility. This type of domestic robot highlights the increasing need for clear, standardized ways to define robot tasks and behaviors, ensuring they can seamlessly integrate into diverse user workflows and environments.

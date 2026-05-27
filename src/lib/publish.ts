@@ -92,14 +92,23 @@ function escapeHtmlAttr(s: string): string {
 function videoEmbedHtml(url: string, title: string): string | null {
   const ytId = youtubeId(url);
   if (ytId) {
+    // Lite-YouTube pattern: thumbnail + play button overlay, click
+    // opens the video on YouTube in a new tab. We do NOT embed an
+    // iframe at any point. This works for every YouTube video —
+    // including ones whose uploaders disabled embedding entirely
+    // (which surfaced previously as "Error 153" inside an iframe).
+    //
+    // Only the thumbnail loads from Google (i.ytimg.com) on page open;
+    // YouTube proper is only loaded when the user clicks the link.
+    // Disclosed in /privacy.
     const t = escapeHtmlAttr(title || "Video");
-    // Use youtube.com/embed/ rather than youtube-nocookie.com/embed/.
-    // Some channels (notably Google for Developers) disable embedding
-    // on the privacy-enhanced "nocookie" domain, which surfaces as
-    // "Error 153: Video player configuration error" inside the iframe.
-    // Compatibility wins for a content site; cookies now set on iframe
-    // load instead of on play. Disclosed in /privacy.
-    return `<div class="video-embed"><iframe src="https://www.youtube.com/embed/${ytId}" title="${t}" frameborder="0" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>`;
+    const watchUrl = `https://www.youtube.com/watch?v=${ytId}`;
+    const thumbUrl = `https://i.ytimg.com/vi/${ytId}/hqdefault.jpg`;
+    return `<a class="lite-youtube" href="${watchUrl}" target="_blank" rel="noopener noreferrer" aria-label="Play \&quot;${t}\&quot; on YouTube">
+<img class="lite-yt-thumb" src="${thumbUrl}" alt="${t}" loading="lazy" referrerpolicy="no-referrer" />
+<span class="lite-yt-play" aria-hidden="true"></span>
+<span class="lite-yt-meta"><span class="lite-yt-logo">YouTube</span> · ${t}</span>
+</a>`;
   }
   const vmId = vimeoId(url);
   if (vmId) {
