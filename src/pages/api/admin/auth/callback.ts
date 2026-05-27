@@ -100,14 +100,19 @@ export const GET: APIRoute = async ({ url, request }) => {
   });
   const session = await signSession({ id: userBody.id, login: userBody.login });
 
-  return new Response(null, {
-    status: 302,
-    headers: {
-      Location: "/admin",
-      "Set-Cookie": [sessionCookieHeader(session), clearStateCookieHeader()].join(", "),
-      "Cache-Control": "no-store",
-    },
+  // Two Set-Cookie headers: set the session cookie AND clear the state
+  // cookie. They MUST be sent as separate Set-Cookie headers — joining
+  // with a comma is RFC-ambiguous (cookies contain commas in Expires
+  // dates) and browsers will accept only one of them, breaking the
+  // login. Use Headers.append() so each cookie gets its own header line.
+  const headers = new Headers({
+    Location: "/admin",
+    "Cache-Control": "no-store",
   });
+  headers.append("Set-Cookie", sessionCookieHeader(session));
+  headers.append("Set-Cookie", clearStateCookieHeader());
+
+  return new Response(null, { status: 302, headers });
 };
 
 function forbidden(message: string): Response {
