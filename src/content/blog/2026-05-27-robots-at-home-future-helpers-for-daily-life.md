@@ -14,11 +14,19 @@ Robotics is advancing toward a future where automated assistants will play a sig
 
 One example of this progress is a robot shown performing household tasks ([video](https://www.youtube.com/watch?v=EUFX9J67Qo0)). It demonstrates the ability to walk and pick up objects, placing them into a basket. The robot also shows an ability to fold clothes, suggesting capabilities for common domestic duties.
 
-<div class="video-embed"><iframe src="https://www.youtube.com/embed/EUFX9J67Qo0" title="Home robot performing chores" frameborder="0" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>
+<a class="lite-youtube" href="https://www.youtube.com/watch?v=EUFX9J67Qo0" target="_blank" rel="noopener noreferrer" aria-label="Play &quot;Home robot performing chores&quot; on YouTube">
+<img class="lite-yt-thumb" src="https://i.ytimg.com/vi/EUFX9J67Qo0/hqdefault.jpg" alt="Home robot performing chores" loading="lazy" referrerpolicy="no-referrer" />
+<span class="lite-yt-play" aria-hidden="true"></span>
+<span class="lite-yt-meta"><span class="lite-yt-logo">YouTube</span> · Home robot performing chores</span>
+</a>
 
 Another video highlights a robot capable of replacing human housekeepers ([video](https://www.youtube.com/watch?v=bK1F3V_iLeQ)). This robot is presented as a general-purpose humanoid designed to perform various household chores. It walks, interacts with its environment, and is described as performing tasks such as cleaning.
 
-<div class="video-embed"><iframe src="https://www.youtube.com/embed/bK1F3V_iLeQ" title="General-purpose humanoid housekeeper" frameborder="0" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>
+<a class="lite-youtube" href="https://www.youtube.com/watch?v=bK1F3V_iLeQ" target="_blank" rel="noopener noreferrer" aria-label="Play &quot;General-purpose humanoid housekeeper&quot; on YouTube">
+<img class="lite-yt-thumb" src="https://i.ytimg.com/vi/bK1F3V_iLeQ/hqdefault.jpg" alt="General-purpose humanoid housekeeper" loading="lazy" referrerpolicy="no-referrer" />
+<span class="lite-yt-play" aria-hidden="true"></span>
+<span class="lite-yt-meta"><span class="lite-yt-logo">YouTube</span> · General-purpose humanoid housekeeper</span>
+</a>
 
 These developments point to a future where robots could assist with mundane or physically demanding tasks. Imagine a robot that can consistently manage laundry, organize clutter, or keep living spaces tidy. The goal is to integrate these machines seamlessly into home environments, making them useful and reliable members of the household.
 
