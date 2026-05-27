@@ -36,6 +36,14 @@ import Base from "../layouts/Base.astro";
       <p>You can unsubscribe at any time by clicking the unsubscribe link in any email we send you. Unsubscribing removes your record from our store and you will receive no further emails. If you cannot find the link, ping <a href="/contact">contact</a>.</p>
       <p>Retention: until you unsubscribe or the project ends, whichever comes first. We do not share the list with anyone.</p>
 
+      <h2>Embedded media in blog posts</h2>
+      <p>Some blog posts include media from third-party sources:</p>
+      <ul>
+        <li><strong>Hero images from referenced articles.</strong> When the maintainer publishes a post that references a news article, the publish step fetches the article's Open Graph image and embeds it at the top of the post. The image is <em>hotlinked</em> from the publisher's CDN — your browser fetches it directly from them. The site sets <code>Referrer-Policy: no-referrer</code>, so the publisher cannot see which page on urml.dev embedded their image. The Content-Security-Policy restricts image sources to HTTPS only.</li>
+        <li><strong>YouTube and Vimeo video embeds.</strong> When a post references a video, the publish step converts the link into an inline player. YouTube embeds use <code>youtube-nocookie.com</code>, YouTube's privacy-enhanced mode: no cookies or tracking are set until you press play. Vimeo embeds load from <code>player.vimeo.com</code>. The site's Content-Security-Policy restricts iframe sources to just these two hosts. Instagram and TikTok videos remain as plain links because their embeds require third-party JavaScript, which this site does not load.</li>
+      </ul>
+      <p>If you don't want to load embedded media, browser extensions that block third-party requests (uBlock Origin in strict mode, NoScript, etc.) will prevent the loads without breaking the rest of the page.</p>
+
       <h2>The hosting caveat</h2>
       <p>This site is hosted on Netlify. Like any web host or CDN, Netlify processes the basic technical metadata needed to serve a page: your IP address, the request time, and the file requested. That happens at the network layer for every site on the internet and is outside this project's control. For ordinary browsing, URML does not add to that, does not read it, and does not receive it. For a form submission, Netlify additionally receives and stores what you submitted, as described above. Netlify's own data handling is in <a href="https://www.netlify.com/privacy/" rel="noopener noreferrer">Netlify's privacy policy</a>.</p>
       <p>We spell this out rather than claim a tidy "zero data" because the honest version is more useful than the flattering one.</p>

@@ -2,6 +2,7 @@ import type { APIRoute } from "astro";
 import { writeAudit } from "../../../../lib/audit";
 import { getDraft, updateDraft } from "../../../../lib/drafts";
 import {
+  collectSourceImages,
   commitPostToGitHub,
   recordPublishedIndex,
   type PublishedIndexEntry,
@@ -74,10 +75,19 @@ export const POST: APIRoute = async ({ params, request, locals }) => {
     return json({ error: "linked queue item not found" }, 409);
   }
 
+  // Fetch og:image from each source URL in parallel. Best-effort:
+  // any fetch failure just drops that image; never blocks publish.
+  // Capped to 5 refs internally so worst-case adds ~4s to publish.
+  const sourceImages = await collectSourceImages(queueItem.refs).catch((err) => {
+    console.warn("[publish] collectSourceImages failed (non-fatal):", err);
+    return [];
+  });
+
   const commit = await commitPostToGitHub({
     draft: toPublish,
     queueItem,
     author: admin.login === "idoco2003" ? "Ido Yahalomi" : admin.login,
+    sourceImages,
   });
 
   if (!commit.ok) {

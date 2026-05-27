@@ -70,8 +70,11 @@ SOURCES DISCIPLINE:
 VIDEO LINKS:
 - When a video URL is supplied (YouTube, Instagram, TikTok, Vimeo, etc.), reference it inline in the body where it's contextually relevant, using a plain markdown link. Example: "A demo on the BMW floor shows the gait change ([video](https://youtu.be/...))."
 - If the video is the central subject of the post, mention and link it within the first paragraph.
-- Do not embed via HTML/iframe; emit a plain markdown link. The site renders these as links today; embed treatment is a future enhancement.
+- Do NOT emit HTML or iframe markup. Always use plain markdown links. The publish step converts supplied YouTube and Vimeo links into inline player embeds automatically; Instagram and TikTok stay as plain links.
 - Do not link a video unless it actually appears in the supplied videos list.
+
+SOURCE IMAGES:
+- The publish step automatically fetches an Open Graph image from each supplied reference URL and places one at the top of the post as a hero image. You do not need to mention images or insert HTML for them. Write the body as if a hero image will sit above your first paragraph.
 
 OUTPUT:
 - Strict JSON matching the supplied responseSchema.
