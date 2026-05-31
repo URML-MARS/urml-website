@@ -1,0 +1,171 @@
+---
+import Base from "../layouts/Base.astro";
+import Icon from "../components/Icon.astro";
+// Fleet — the multi-robot vision (RFC-0286). Honest framing: the cross-robot
+// validator + reference runtime + conformance lane are shipped and tested;
+// geometric collision is future; building-scale traffic is Open-RMF.
+
+const GH = "https://github.com/URML-MARS/URML";
+
+const value = [
+  {
+    who: "DELETES THE GLUE",
+    t: "One language, not N SDKs.",
+    d: "Choreographing a mobile base and an industrial arm today means two vendor SDKs plus hand-rolled timing. A roster and one program replace it — one validator, one synchronizer.",
+  },
+  {
+    who: "CATCHES WHAT NO SDK CAN",
+    t: "Cross-robot safety, before anything moves.",
+    d: "The validator rejects two robots sent into the same place at the same instant, statically. No single vendor SDK can catch this, because no single SDK sees both robots.",
+  },
+  {
+    who: "SWAP A ROBOT, KEEP THE PLAN",
+    t: "Substrate-fungible orchestration.",
+    d: "Replace a member's robot and the choreography is unchanged — only the roster entry changes. 'Universal' made concrete across vendors.",
+  },
+];
+
+const rejects = [
+  { code: "fleet.undeclared_member", d: "An `on:` or `barrier:` names a robot the roster does not declare." },
+  { code: "fleet.capability_unsupported_on_member", d: "A command is scoped to a member whose manifest cannot do it." },
+  { code: "fleet.concurrent_shared_workspace", d: "Two robots are driven to the same location at once with no barrier." },
+  { code: "fleet.barrier_missing_peer_link", d: "A barrier synchronizes a member that declares no peer link." },
+];
+
+const missionCode = `<span class="c"># courier_handoff.fleet.yaml — a roster, then the program</span>
+<span class="k">members</span><span class="p">:</span>
+  - { name: courier, manifest: husky_amr }    <span class="c"># mobile base</span>
+  - { name: arm,     manifest: kawasaki_rs }   <span class="c"># stationary arm</span>
+<span class="p">---</span>
+<span class="k">behavior</span><span class="p">:</span>
+  <span class="k">type</span><span class="p">:</span> sequence
+  <span class="k">steps</span><span class="p">:</span>
+    - { type: <span class="s">"on"</span>, member: courier, body: { <span class="k">move_to</span>: { location: handoff_dock } } }
+    - { type: <span class="k">barrier</span>, members: [courier, arm] }   <span class="c"># both arrive before the exchange</span>
+    - <span class="k">type</span><span class="p">:</span> parallel
+      <span class="k">branches</span><span class="p">:</span>
+        - { type: <span class="s">"on"</span>, member: arm,     body: { <span class="k">pick_from</span>: { source: handoff_dock, object: widget } } }
+        - { type: <span class="s">"on"</span>, member: courier, body: { <span class="k">wait</span>: { duration: <span class="s">"2s"</span> } } }  <span class="c"># hold</span>
+    - { type: <span class="k">barrier</span>, members: [courier, arm] }   <span class="c"># courier leaves only once the arm clears</span>
+    - { type: <span class="s">"on"</span>, member: courier, body: { <span class="k">move_to</span>: { location: staging } } }`;
+---
+
+<Base
+  title="Fleet — one program commands a heterogeneous robot fleet"
+  description="URML's multi-robot direction (RFC-0286): name several robots, address them, combine and synchronize their commands, and catch cross-robot collisions statically — before anything moves."
+  active="Fleet"
+>
+  <section class="hi-section" style="padding:88px 56px 72px">
+    <div class="eyebrow" style="margin-bottom:24px">↳ Multi-robot · RFC-0286</div>
+    <span class="hi-chip" style="margin-bottom:24px"><span class="dot"></span>Accepted · reference slice shipped</span>
+    <h1 style="max-width:980px">One sentence moves a robot. One program moves a fleet — in sync.</h1>
+    <p class="lead" style="max-width:740px;margin-top:32px">
+      The next step past "one English sentence makes a robot move" is a single program
+      commanding several heterogeneous robots at once: name each one, address it, combine and
+      synchronize their work, and have the validator reject a cross-robot collision
+      <em> before any actuator engages.</em> No single vendor SDK does this across vendors.
+    </p>
+    <div style="display:flex;gap:12px;margin-top:36px;flex-wrap:wrap">
+      <a class="hi-btn primary" href={`${GH}/blob/main/docs/rfcs/0286-multi-robot-fleet-addressing.md`} rel="noopener noreferrer">Read RFC-0286 →</a>
+      <a class="hi-btn outline" href={`${GH}/tree/main/examples/fleet`} rel="noopener noreferrer">Run the demo</a>
+      <a class="hi-btn ghost" href="/spec">Layer-3 spec →</a>
+    </div>
+  </section>
+
+  <section class="hi-section tint">
+    <div class="head">
+      <div class="eyebrow">The worked example</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:end">
+        <h2 style="max-width:600px">A courier-to-arm handoff.</h2>
+        <p class="body-sm" style="max-width:460px">
+          A mobile base brings a tray to a shared dock; a stationary arm picks a widget and
+          places it on a conveyor; the courier leaves only after the arm has cleared. Two
+          heterogeneous robots, one job neither can do alone.
+        </p>
+      </div>
+    </div>
+    <div class="hi-card" style="padding:0;overflow:hidden">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 22px;background:var(--accent-tint);border-bottom:1.5px solid var(--accent)">
+        <div class="caption" style="color:var(--accent)">ONE FLEET MISSION FILE</div>
+        <div class="mono" style="font-size:12px;color:var(--accent);font-weight:600">✓ validate_fleet → accepted</div>
+      </div>
+      <div class="hi-code" style="border-radius:0"><Fragment set:html={missionCode} /></div>
+      <div style="padding:22px;border-top:1px dashed var(--rule)">
+        <p class="body-sm" style="color:var(--ink-2)">
+          <span class="mono">on:</span> addresses one member; <span class="mono">barrier:</span>
+          synchronizes them. Each member runs against its own manifest, so the arm's
+          <span class="mono"> place_at</span> is checked against the arm and the courier's
+          <span class="mono"> move_to</span> against the courier.
+          <strong style="color:var(--ink)"> The point is what gets rejected.</strong>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="hi-section">
+    <div class="head">
+      <div class="eyebrow">Why it's worth building</div>
+      <h2 class="s" style="max-width:820px">Three reasons, each a real removal of work or risk.</h2>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:var(--rule);border:1px solid var(--rule)">
+      {value.map((c) => (
+        <div style="background:var(--bone);padding:36px">
+          <div class="caption" style="color:var(--accent);margin-bottom:14px">{c.who}</div>
+          <h3 style="margin-bottom:14px;max-width:360px">{c.t}</h3>
+          <p class="body">{c.d}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="hi-section tint">
+    <div class="head">
+      <div class="eyebrow">The load-bearing value</div>
+      <h2 class="s" style="max-width:880px">Four cross-robot checks the validator runs before anything moves.</h2>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+      {rejects.map((r) => (
+        <div class="hi-card" style="padding:24px">
+          <div class="mono" style="font-size:13px;color:var(--accent);margin-bottom:10px;font-weight:600">{r.code}</div>
+          <p class="body-sm" style="color:var(--ink-2)">{r.d}</p>
+        </div>
+      ))}
+    </div>
+    <p class="body-sm" style="margin-top:24px;color:var(--ink-faint);max-width:820px">
+      The third — two robots into the same place at the same instant — is the collision class
+      no single vendor SDK can catch, because no single SDK sees both robots. That is the moat
+      URML's validator extends from one robot to a fleet.
+    </p>
+  </section>
+
+  <section class="hi-section s">
+    <div class="head">
+      <div class="eyebrow">Where it stands — honestly</div>
+      <h2 class="s" style="max-width:820px">The reference slice is shipped and tested. Some of it is named as future work.</h2>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+      <div class="hi-card" style="padding:28px">
+        <div class="caption" style="color:var(--accent);margin-bottom:12px">SHIPPED &amp; TESTED</div>
+        <ul style="list-style:none;padding:0;margin:0;display:grid;gap:10px;font-size:14px;color:var(--ink-2)">
+          <li style="display:flex;gap:10px;align-items:start"><Icon name="check" size={14} stroke="var(--accent)" /><span>The cross-robot validator (<span class="mono">validate_fleet</span>) and its four checks</span></li>
+          <li style="display:flex;gap:10px;align-items:start"><Icon name="check" size={14} stroke="var(--accent)" /><span>The reference <span class="mono">FleetRuntime</span> — hermetic, no ROS, any OS</span></li>
+          <li style="display:flex;gap:10px;align-items:start"><Icon name="check" size={14} stroke="var(--accent)" /><span>A conformance lane: one positive, four negatives</span></li>
+          <li style="display:flex;gap:10px;align-items:start"><Icon name="check" size={14} stroke="var(--accent)" /><span>A runnable demo: <span class="mono">python examples/fleet/run_demo.py</span></span></li>
+        </ul>
+      </div>
+      <div class="hi-card tint" style="padding:28px">
+        <div class="caption" style="margin-bottom:12px">NAMED AS FUTURE WORK</div>
+        <ul style="list-style:none;padding:0;margin:0;display:grid;gap:10px;font-size:14px;color:var(--ink-2)">
+          <li>— Collision is by declared-location <em>name</em> today; geometric volume overlap is future.</li>
+          <li>— A barrier is statically checked; an executed concurrency-hazard scenario is future.</li>
+          <li>— Building-scale fleet traffic (lift queues, aisle reservation) composes with Open-RMF, not URML.</li>
+          <li>— A dedicated multi-robot LLM-bridge prompt mode is a follow-on.</li>
+        </ul>
+      </div>
+    </div>
+    <div style="display:flex;gap:12px;margin-top:32px;flex-wrap:wrap">
+      <a class="hi-btn primary" href={`${GH}/blob/main/docs/rfcs/0286-multi-robot-fleet-addressing.md`} rel="noopener noreferrer">Read RFC-0286 →</a>
+      <a class="hi-btn outline" href={`${GH}/blob/main/docs/demos/fleet-coordination.md`} rel="noopener noreferrer">Demo walkthrough</a>
+    </div>
+  </section>
+</Base>
