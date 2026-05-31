@@ -64,3 +64,57 @@ export const parts: CompliantPart[] = [
 export const profiles: ReadonlyArray<"all" | Profile> = ["all", "home", "drone", "industrial"];
 
 export const manufacturersCount = 0;
+
+// Engaged outreach that turned into shipped code. These are the threads where
+// a maintainer answered URML's mapping-RFC questions AND URML shipped a
+// reference adapter (or spec binding) in response. Described by category, not
+// by brand: the org is identifiable only via the linked public thread, and a
+// listing reflects a public exchange, not an endorsement. Adapter-shipped only
+// (the highest-confidence subset of the wider `engaged` ledger in the core repo).
+export interface EngagedStory {
+  category: string; // headline, e.g. "Tier-1 industrial-arm OEM"
+  outcome: string; // one sentence: what the maintainer did (no org name)
+  shipped: string; // what URML shipped in response
+  rfc: string; // RFC number, e.g. "0073"
+  rfcSlug: string; // RFC filename slug in docs/rfcs/, e.g. "robotical-marty-outreach"
+  thread: string; // full public GitHub URL of the engaged thread
+}
+
+export const engaged: EngagedStory[] = [
+  {
+    category: "Educational bipedal robot",
+    outcome:
+      "A driver-library contributor engaged over five rounds, then ran URML's validation script on real hardware over WiFi and returned a live execution trace.",
+    shipped: "Reference adapter · edu-runtime",
+    rfc: "0073",
+    rfcSlug: "robotical-marty-outreach",
+    thread: "https://github.com/robotical/martypy/issues/52",
+  },
+  {
+    category: "Desktop quadruped",
+    outcome:
+      "The platform's founder answered all seven mapping-RFC questions with parametric command examples and volunteered an ESP32 retarget.",
+    shipped: "Reference adapter · edu-runtime",
+    rfc: "0062",
+    rfcSlug: "petoi-bittle-outreach",
+    thread: "https://github.com/PetoiCamp/OpenCat-Quadruped-Robot/issues/113",
+  },
+  {
+    category: "Tier-1 industrial-arm OEM",
+    outcome:
+      "An OEM org member answered all four mapping-RFC questions and endorsed the AS-language program-call binding.",
+    shipped: "RFC-0015 call_program AS-language binding · industrial-arm-runtime",
+    rfc: "0029",
+    rfcSlug: "kawasaki-integration",
+    thread: "https://github.com/Kawasaki-Robotics/khi_ros2/issues/9",
+  },
+  {
+    category: "Quadruped mobility platform (community ROS 2 driver)",
+    outcome:
+      "The open-source ROS 2 driver maintainer (explicitly the community driver, not the manufacturer) validated URML's substrate cut for the platform.",
+    shipped: "Reference adapter · legged-runtime",
+    rfc: "0043",
+    rfcSlug: "boston-dynamics-spot-integration",
+    thread: "https://github.com/rai-opensource/spot_ros2/discussions/805",
+  },
+];

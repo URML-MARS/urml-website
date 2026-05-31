@@ -1,7 +1,7 @@
 ---
 import Base from "../layouts/Base.astro";
 import Icon from "../components/Icon.astro";
-import { reference, parts, profiles, manufacturersCount } from "../data/partners";
+import { reference, parts, profiles, manufacturersCount, engaged } from "../data/partners";
 // Partners — design shell from hifi-partners.jsx, content reconciled
 // with the live registry reality (docs/compatible-runtimes.md):
 // self-reported, URML does NOT certify/audit/endorse, third-party
@@ -85,6 +85,9 @@ import { reference, parts, profiles, manufacturersCount } from "../data/partners
       </button>
       <button type="button" data-ptab="manufacturers" aria-pressed="false" style="background:transparent;border:0;border-bottom:2px solid transparent;padding:20px 28px;font-family:var(--sans);font-size:16px;font-weight:500;color:var(--ink-soft);cursor:pointer;display:flex;align-items:center;gap:10px;margin-bottom:-1px">
         Manufacturers <span class="mono" style="font-size:11px;background:var(--bone-2);color:var(--ink-soft);padding:2px 8px;border-radius:999px">{manufacturersCount}</span>
+      </button>
+      <button type="button" data-ptab="engaged" aria-pressed="false" style="background:transparent;border:0;border-bottom:2px solid transparent;padding:20px 28px;font-family:var(--sans);font-size:16px;font-weight:500;color:var(--ink-soft);cursor:pointer;display:flex;align-items:center;gap:10px;margin-bottom:-1px">
+        Engaged <span class="mono" style="font-size:11px;background:var(--bone-2);color:var(--ink-soft);padding:2px 8px;border-radius:999px">{engaged.length}</span>
       </button>
     </div>
   </section>
@@ -187,6 +190,32 @@ import { reference, parts, profiles, manufacturersCount } from "../data/partners
         <a class="hi-btn primary" href="/join">Become the first listing →</a>
         <a class="hi-btn outline" href="/compliance">Read the manufacturer guide</a>
       </div>
+    </div>
+  </section>
+
+  <section class="hi-section" data-pane="engaged" style="padding:40px 56px 56px;display:none">
+    <div class="hi-card" style="margin:0 0 24px;padding:20px 24px;background:var(--bone-2)">
+      <p class="body-sm" style="margin:0;color:var(--ink-soft)">
+        A handful of mapping RFCs became two-way conversations where a maintainer answered URML's questions and URML shipped a reference adapter (or spec binding) in response. Those are below, described by category. Each links the public thread, where the maintainer and organization are identifiable. URML does not certify, audit, or endorse anyone; a listing reflects a public exchange, not an endorsement, and the engaged party is the maintainer who replied, not necessarily the manufacturer.
+      </p>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:20px">
+      {engaged.map((e) => (
+        <div class="hi-card" style="padding:24px 28px;display:flex;flex-direction:column;gap:14px">
+          <div>
+            <div style="font-size:17px;font-weight:600;color:var(--ink)">{e.category}</div>
+            <p class="body-sm" style="margin:10px 0 0;color:var(--ink-soft)">{e.outcome}</p>
+          </div>
+          <span style="font-family:var(--mono);font-size:11px;color:var(--accent);display:flex;gap:6px;align-items:center;margin-top:auto">
+            <Icon name="check" size={12} stroke="currentColor" /> URML SHIPPED · {e.shipped}
+          </span>
+          <hr class="hi-rule" style="margin:0" />
+          <div style="display:flex;gap:18px;font-family:var(--mono);font-size:11px">
+            <a href={`https://github.com/URML-MARS/URML/blob/main/docs/rfcs/${e.rfc}-${e.rfcSlug}.md`} rel="noopener noreferrer" style="color:var(--accent);text-decoration:none">RFC-{e.rfc} ↗</a>
+            <a href={e.thread} rel="noopener noreferrer" style="color:var(--ink-soft);text-decoration:none">View thread ↗</a>
+          </div>
+        </div>
+      ))}
     </div>
   </section>
 
