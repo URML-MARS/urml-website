@@ -120,13 +120,23 @@ export default function DraftsIsland() {
         const j = (await r.json().catch(() => ({}))) as { error?: string };
         throw new Error(j.error || `publish ${r.status}`);
       }
-      const data = (await r.json()) as { slug: string; public_url: string };
+      const data = (await r.json()) as {
+        slug: string;
+        public_url: string;
+        warning?: string;
+      };
       setPublishedMessage({ slug: data.slug, url: data.public_url });
       setEditingId(null);
       await load();
-      setError(null);
+      // A degraded publish committed the post but could not update the
+      // admin record. Surface the warning so the operator does not re-click.
+      setError(data.warning ?? null);
     } catch (e) {
       setError(e instanceof Error ? e.message : String(e));
+      // Refresh against server reality: a draft that turns out already
+      // published drops out of the Active filter instead of lingering
+      // with an enabled Publish button.
+      await load();
     } finally {
       setBusy(false);
     }
