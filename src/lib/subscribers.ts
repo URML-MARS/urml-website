@@ -137,7 +137,7 @@ export function htmlResponse(body: string): Response {
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex">
-<title>URML — Subscription</title>
+<title>URML · Subscription</title>
 <style>
 body { font-family: system-ui, -apple-system, sans-serif; max-width: 600px; margin: 80px auto; padding: 0 24px; line-height: 1.6; color: #181715; background: #faf7f1; }
 h1 { font-size: 28px; margin-bottom: 16px; color: #181715; }

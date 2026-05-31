@@ -5,7 +5,7 @@ import Base from "../layouts/Base.astro";
 ---
 
 <Base
-  title="Privacy — URML"
+  title="Privacy · URML"
   description="This site collects nothing about you as you browse. The one exception is the contact form, which only collects what you choose to type into it. Both statements are verifiable in the source."
   active=""
 >
@@ -39,8 +39,8 @@ import Base from "../layouts/Base.astro";
       <h2>Embedded media in blog posts</h2>
       <p>Some blog posts include media from third-party sources:</p>
       <ul>
-        <li><strong>Hero images from referenced articles.</strong> When the maintainer publishes a post that references a news article, the publish step fetches the article's Open Graph image and embeds it at the top of the post. The image is <em>hotlinked</em> from the publisher's CDN — your browser fetches it directly from them. The site sets <code>Referrer-Policy: no-referrer</code>, so the publisher cannot see which page on urml.dev embedded their image. The Content-Security-Policy restricts image sources to HTTPS only.</li>
-        <li><strong>YouTube videos.</strong> When a post references a YouTube video, the publish step renders a clickable thumbnail with a play button overlay (the "lite-youtube" pattern). The thumbnail itself is loaded from <code>i.ytimg.com</code> (Google's image CDN) when the post is opened; no YouTube iframe loads automatically, and no YouTube cookies are set. Clicking the thumbnail opens the video on <code>www.youtube.com</code> in a new tab — at that point YouTube's normal privacy policy applies. This pattern also works for videos whose uploaders disabled embedding entirely.</li>
+        <li><strong>Hero images from referenced articles.</strong> When the maintainer publishes a post that references a news article, the publish step fetches the article's Open Graph image and embeds it at the top of the post. The image is <em>hotlinked</em> from the publisher's CDN. Your browser fetches it directly from them. The site sets <code>Referrer-Policy: no-referrer</code>, so the publisher cannot see which page on urml.dev embedded their image. The Content-Security-Policy restricts image sources to HTTPS only.</li>
+        <li><strong>YouTube videos.</strong> When a post references a YouTube video, the publish step renders a clickable thumbnail with a play button overlay (the "lite-youtube" pattern). The thumbnail itself is loaded from <code>i.ytimg.com</code> (Google's image CDN) when the post is opened; no YouTube iframe loads automatically, and no YouTube cookies are set. Clicking the thumbnail opens the video on <code>www.youtube.com</code> in a new tab, and at that point YouTube's normal privacy policy applies. This pattern also works for videos whose uploaders disabled embedding entirely.</li>
         <li><strong>Vimeo videos.</strong> Vimeo embeds load from <code>player.vimeo.com</code> as an iframe on page load. The site's Content-Security-Policy restricts iframe sources to a small allowlist (Vimeo and, for legacy posts, the two YouTube embed domains).</li>
         <li><strong>Instagram and TikTok videos.</strong> Stay as plain links. Their embeds require third-party JavaScript, which this site does not load.</li>
       </ul>

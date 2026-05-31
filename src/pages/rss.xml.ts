@@ -15,7 +15,7 @@ export async function GET(context: APIContext) {
     .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 
   return rss({
-    title: "URML — Notes",
+    title: "URML · Notes",
     description: "Notes on robotics, with occasional URML.",
     site: context.site!,
     items: posts.map((post) => ({
