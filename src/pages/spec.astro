@@ -54,7 +54,7 @@ const RFCS = [
 ];
 
 const codeBlocks: Record<string, string> = {
-  urml: `<span class="c"># program.urml.yaml — bring me the red mug</span>
+  urml: `<span class="c"># program.urml.yaml: bring me the red mug</span>
 <span class="k">sequence</span><span class="p">:</span>
   - <span class="k">move_to</span><span class="p">:</span>     { room: kitchen }
   - <span class="k">detect</span><span class="p">:</span>      { object: red_mug, frame: kitchen }
@@ -62,8 +62,8 @@ const codeBlocks: Record<string, string> = {
   - <span class="k">move_to</span><span class="p">:</span>     { room: living_room }
   - <span class="k">release</span><span class="p">:</span>     { surface: side_table }
 
-<span class="c"># All five passes — executed against mock TurtleBot 4</span>`,
-  manifest: `<span class="c"># manifest.yaml — capability declaration</span>
+<span class="c"># All five passes: executed against mock TurtleBot 4</span>`,
+  manifest: `<span class="c"># manifest.yaml: capability declaration</span>
 <span class="k">robot</span><span class="p">:</span>     acme-mover-x1
 <span class="k">profile</span><span class="p">:</span>   home
 
@@ -76,7 +76,7 @@ const codeBlocks: Record<string, string> = {
 <span class="k">provenance</span><span class="p">:</span>
   <span class="k">controller</span><span class="p">:</span>   { country: US, vendor: Acme }
   <span class="k">vision</span><span class="p">:</span>       { country: US, vendor: Intel }`,
-  policy: `<span class="c"># policy.yaml — NDAA 889 / FCC default</span>
+  policy: `<span class="c"># policy.yaml: NDAA 889 / FCC default</span>
 <span class="k">policy</span><span class="p">:</span> ndaa-fcc-default
 <span class="k">version</span><span class="p">:</span> 2026-05-16
 
@@ -99,7 +99,7 @@ const tabs = [
 ---
 
 <Base
-  title="URML specification — your map to the GitHub source of truth"
+  title="URML specification · your map to the GitHub source of truth"
   description="The normative URML spec lives on GitHub (Apache-2.0). This page indexes it: the intent primitives, code examples, the RFC list, the conformance suite, and a glossary."
   active="Spec"
 >
@@ -148,7 +148,7 @@ const tabs = [
         <div class="caption" style="margin-bottom:12px">§1 · OVERVIEW</div>
         <h2 class="s">A small, opinionated language.</h2>
         <p class="body" style="margin-top:18px;max-width:720px">
-          URML programs are YAML — a tree of intent primitives composed with
+          URML programs are YAML, a tree of intent primitives composed with
           <span class="mono"> sequence</span>, <span class="mono">branch</span>, <span class="mono">parallel</span>,
           <span class="mono"> retry</span>, and <span class="mono">on_error</span>. The runtime translates
           intent into substrate calls; the validator refuses any program that cannot satisfy all five passes.
@@ -236,7 +236,7 @@ const tabs = [
         <h2 class="s">Declarative fixtures.</h2>
         <p class="body" style="max-width:720px;margin-top:18px;margin-bottom:24px">
           Any URML-compatible runtime must pass the public conformance suite. Fixtures are YAML,
-          hermetic, and produce a machine-readable results file — the artifact you submit for listing.
+          hermetic, and produce a machine-readable results file, the artifact you submit for listing.
           See <span class="mono">conformance/CONFORMANCE_KIT.md</span>.
         </p>
         <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px">

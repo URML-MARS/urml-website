@@ -10,7 +10,7 @@ import Icon from "../components/Icon.astro";
 
 const steps = [
   { n: "1", t: "Run the conformance suite", d: "Clone the repo, run the suite on your runtime via the bring-your-own-adapter kit. Output one machine-readable results file.", s: "~10 min on CI" },
-  { n: "2", t: "Author the capability manifest", d: "Declare what your robot can do — mobility, manipulation, perception, frames, safety envelope.", s: "~2 hours · template provided" },
+  { n: "2", t: "Author the capability manifest", d: "Declare what your robot can do: mobility, manipulation, perception, frames, safety envelope.", s: "~2 hours · template provided" },
   { n: "3", t: "Add the provenance block", d: "Where every covered component comes from. Required for a federal-validation self-report.", s: "~1 hour" },
   { n: "4", t: "Validate against the bundled default policy", d: "Run urml validate with no --policy and no --no-policy. The bundled US-federal default must be the one in effect. Pin the URML commit.", s: "Automated" },
   { n: "5", t: "Submit a PR to the registry", d: "Open a PR to docs/compatible-runtimes.md (runtimes) or the manufacturer directory (robots/parts).", s: "WG reviews in <2 weeks" },
@@ -18,9 +18,9 @@ const steps = [
 
 const policy = [
   { code: "NDAA §889 & FY26 NDAA", t: "Procurement restrictions on covered foreign entities" },
-  { code: "FCC Covered List", t: "Effective 2025-12-23 — DJI, Autel, Hesai, Unitree, et al." },
+  { code: "FCC Covered List", t: "Effective 2025-12-23: DJI, Autel, Hesai, Unitree, et al." },
   { code: "Executive Order 14307", t: "\"Unleashing American Drone Dominance\"" },
-  { code: "ASRA (pending)", t: "American Security Robotics Act — tracked, activates on enactment" },
+  { code: "ASRA (pending)", t: "American Security Robotics Act, tracked, activates on enactment" },
 ];
 
 const faq = [
@@ -34,7 +34,7 @@ const faq = [
 ---
 
 <Base
-  title="URML compliance — a free, self-reported federal-validation path"
+  title="URML compliance: a free, self-reported federal-validation path"
   description="Run the conformance suite, author a manifest, validate against the bundled US-federal default policy, submit a PR. Free, opt-in, self-reported. Not a certification, audit, endorsement, or legal advice."
   active="Compliance"
 >
@@ -147,7 +147,7 @@ const faq = [
       </div>
     </div>
     <div class="hi-card" style="margin-top:24px;padding:24px;border-color:#a64321">
-      <div class="caption" style="color:#a64321;margin-bottom:10px">MANDATORY DISCLAIMER — REPRODUCED FROM THE BUNDLED POLICY HEADER</div>
+      <div class="caption" style="color:#a64321;margin-bottom:10px">MANDATORY DISCLAIMER: REPRODUCED FROM THE BUNDLED POLICY HEADER</div>
       <p class="body-sm" style="color:var(--ink-2)">
         THIS IS NOT LEGAL ADVICE. A policy file passing the validator is not a legal compliance
         determination. Deployers must consult counsel for any binding compliance determination.

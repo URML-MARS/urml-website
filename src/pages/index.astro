@@ -29,7 +29,7 @@ const regs = [
   { code: "NDAA §889 / FY26", t: "Procurement restrictions", d: "Covered-foreign-country components refused at validation, not at audit." },
   { code: "FCC Covered List", t: "Effective 2025-12-23", d: "DJI, Autel, and other listed entities flagged in the manifest pass." },
   { code: "EO 14307", t: "Unleashing American Drone Dominance", d: "Default profile aligns with the executive order's deployment posture." },
-  { code: "ASRA", t: "American Security Robotics Act", d: "Tracking the bill — policy file will update on enactment." },
+  { code: "ASRA", t: "American Security Robotics Act", d: "Tracking the bill. The policy file will update on enactment." },
 ];
 
 const gets = [
@@ -59,7 +59,7 @@ const codeHtml = `<span class="c"># program.urml.yaml</span>
 ---
 
 <Base
-  title="URML — a common language for the robot economy"
+  title="URML · a common language for the robot economy"
   description="URML is the public spec for robot intent and compliance. One vocabulary for what a robot should do, verified against safety and policy before a single actuator moves."
   active="Home"
 >
@@ -202,7 +202,7 @@ const codeHtml = `<span class="c"># program.urml.yaml</span>
           loading="lazy"
         />
         <div class="body-sm" style="margin-top:18px;color:var(--ink-faint)">
-          Every program runs through five passes — args → caps → envelope → bindings → policy — before any actuator moves.
+          Every program runs through five passes (args → caps → envelope → bindings → policy) before any actuator moves.
         </div>
       </div>
       <div>
@@ -213,7 +213,7 @@ const codeHtml = `<span class="c"># program.urml.yaml</span>
         <div class="hi-code"><Fragment set:html={codeHtml} /></div>
         <div style="margin-top:18px;display:flex;gap:12px;flex-wrap:wrap">
           <a class="hi-btn outline" href="/spec">Try the demo</a>
-          <a class="hi-btn ghost" href="/spec">Read RFC-0002 — primitives →</a>
+          <a class="hi-btn ghost" href="/spec">Read RFC-0002: primitives →</a>
         </div>
       </div>
     </div>
@@ -248,7 +248,7 @@ const codeHtml = `<span class="c"># program.urml.yaml</span>
       ))}
     </div>
     <div class="body-sm" style="margin-top:16px;color:var(--ink-faint)">
-      Phase 1 · {reference.length} reference runtimes + {parts.length} compliant parts listed · {manufacturersCount} manufacturers — yours could be next.
+      Phase 1 · {reference.length} reference runtimes + {parts.length} compliant parts listed · {manufacturersCount} manufacturers. Yours could be next.
     </div>
   </section>
 

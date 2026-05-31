@@ -29,7 +29,7 @@ const passes = [
 const next = [
   { t: "Read the spec", d: "v0.1 normative reference. Mirrors the GitHub source of truth.", href: "/spec", icon: "spec" },
   { t: "Run the demo", d: "Three commands, hermetic, no robot needed. URML in your terminal.", href: "/spec", icon: "cpu" },
-  { t: "Get compliant", d: "If you make robots — the 5-step path to a public listing.", href: "/compliance", icon: "shield" },
+  { t: "Get compliant", d: "If you make robots, the 5-step path to a public listing.", href: "/compliance", icon: "shield" },
 ];
 
 const rejectCode = `<span class="c"># attempt-1.urml.yaml</span>
@@ -48,7 +48,7 @@ const acceptCode = `<span class="c"># attempt-2.urml.yaml</span>
 ---
 
 <Base
-  title="What is URML — one vocabulary humans, LLMs, and robots can agree on"
+  title="What is URML: one vocabulary humans, LLMs, and robots can agree on"
   description="URML is a small, public spec for describing what a robot should do, independent of the motors, joints, or frames that carry it out. Every program is statically verified before any actuator moves."
   active="What is URML"
 >
@@ -56,7 +56,7 @@ const acceptCode = `<span class="c"># attempt-2.urml.yaml</span>
     <div class="eyebrow" style="margin-bottom:28px">↳ The explainer · 4 min read</div>
     <h1 style="max-width:980px">One vocabulary humans, LLMs, and robots can agree on.</h1>
     <p class="lead" style="max-width:720px;margin-top:32px">
-      URML is a small, public spec for describing what a robot should do — independent of which
+      URML is a small, public spec for describing what a robot should do, independent of which
       motors, joints, or frames carry it out. It's a draft today (v0.1, phase 0), and the working
       group is open. Every program is statically verified against the robot's declared
       capabilities, the active safety envelope, and a compliance policy
@@ -117,7 +117,7 @@ const acceptCode = `<span class="c"># attempt-2.urml.yaml</span>
         <h3 style="font-size:32px;margin-bottom:18px">The boundary matters.</h3>
         <p class="body" style="margin-bottom:16px">
           URML is intentionally <em>not</em> a robot operating system. It sits above whatever you
-          already run — ROS 2, PX4, OPC UA, a vendor SDK — and gives those substrates one consistent
+          already run (ROS 2, PX4, OPC UA, a vendor SDK) and gives those substrates one consistent
           vocabulary for intent.
         </p>
         <p class="body" style="margin-bottom:24px">
@@ -127,10 +127,10 @@ const acceptCode = `<span class="c"># attempt-2.urml.yaml</span>
         <div class="hi-card tint" style="padding:20px">
           <div class="eyebrow" style="margin-bottom:10px">What URML is not</div>
           <ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px;font-size:14px;color:var(--ink-2)">
-            <li>— Not a robot operating system</li>
-            <li>— Not a low-level motion controller</li>
-            <li>— Not a certification mark (yet — that's Phase 4)</li>
-            <li>— Not a replacement for ROS, PX4, or OPC UA</li>
+            <li>Not a robot operating system</li>
+            <li>Not a low-level motion controller</li>
+            <li>Not a certification mark yet (that's Phase 4)</li>
+            <li>Not a replacement for ROS, PX4, or OPC UA</li>
           </ul>
         </div>
       </div>
@@ -187,7 +187,7 @@ const acceptCode = `<span class="c"># attempt-2.urml.yaml</span>
       </div>
     </div>
     <div class="body-sm" style="margin-top:24px;color:var(--ink-faint);max-width:820px">
-      The LLM revision loop is part of the spec, not an afterthought — policy errors short-circuit
+      The LLM revision loop is part of the spec, not an afterthought. Policy errors short-circuit
       back to the model with a structured reason, and the prompt contract is what the model is
       allowed to assume.
     </div>

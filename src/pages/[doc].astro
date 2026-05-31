@@ -15,10 +15,10 @@ export async function getStaticPaths() {
 
 const { entry } = Astro.props;
 const { Content } = await entry.render();
-const desc = `${entry.data.title} — canonical content rendered from the URML core repository.`;
+const desc = `${entry.data.title}: canonical content rendered from the URML core repository.`;
 ---
 
-<Base title={`${entry.data.title} — URML`} description={desc} active="">
+<Base title={`${entry.data.title} · URML`} description={desc} active="">
   <section class="hi-section" style="padding:64px 56px">
     <div class="hi-prose">
       <div class="caption" style="margin-bottom:20px">
