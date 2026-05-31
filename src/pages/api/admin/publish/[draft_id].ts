@@ -32,7 +32,22 @@ export const POST: APIRoute = async ({ params, request, locals }) => {
   const draft = await getDraft(id);
   if (!draft) return json({ error: "draft not found" }, 404);
   if (draft.status === "published") {
-    return json({ error: "draft is already published" }, 409);
+    // Idempotent re-publish: the post is already live, so return its
+    // existing slug as success rather than a 409. Handles stale editors,
+    // a second tab, or a retry after a dropped response. (Editing a
+    // published draft is disabled in the UI, so there is nothing to
+    // re-commit.)
+    if (draft.published_slug) {
+      return json({
+        ok: true,
+        slug: draft.published_slug,
+        public_url: publicUrlFor(draft.published_slug),
+        already_published: true,
+      });
+    }
+    // Marked published but no slug recorded: a genuinely inconsistent
+    // state we should not paper over by re-committing.
+    return json({ error: "draft is marked published but has no slug; inspect the draft record" }, 409);
   }
   if (draft.status === "discarded") {
     return json({ error: "cannot publish a discarded draft" }, 409);
@@ -104,24 +119,32 @@ export const POST: APIRoute = async ({ params, request, locals }) => {
 
   const publishedAt = new Date().toISOString();
 
-  // Post-commit Blob updates. Wrapped individually so that if any one
-  // fails (Blob outage, key issue, schema mismatch), the response still
-  // reports the GitHub commit success — the post is live, just the
-  // admin index may be slightly out of sync. Each failure is logged.
-  await updateDraft(id, {
-    status: "published",
-    published_slug: commit.slug,
-    published_at: publishedAt,
-    title: toPublish.title,
-    summary: toPublish.summary,
-    body_markdown: toPublish.body_markdown,
-    suggested_tags: toPublish.suggested_tags,
-    suggested_category: toPublish.suggested_category,
-    urml_angle: toPublish.urml_angle,
-  }).catch((err) =>
-    console.warn(`[publish] updateDraft failed (post-commit) for ${id}:`, err),
+  // Reconcile the draft store with the committed post. This is the
+  // load-bearing post-commit write: its silent failure used to leave the
+  // draft as "edited" while the post was live, so a re-click re-committed
+  // a duplicate -N file. Retry it; if it still fails we flag the response
+  // `degraded` (below) instead of pretending a clean success. (Even if it
+  // fails, the draft_id marker in the committed file now stops a re-click
+  // from duplicating — see commitPostToGitHub.)
+  const draftReconciled = await tryWithRetry(() =>
+    updateDraft(id, {
+      status: "published",
+      published_slug: commit.slug,
+      published_at: publishedAt,
+      title: toPublish.title,
+      summary: toPublish.summary,
+      body_markdown: toPublish.body_markdown,
+      suggested_tags: toPublish.suggested_tags,
+      suggested_category: toPublish.suggested_category,
+      urml_angle: toPublish.urml_angle,
+    }),
   );
+  if (!draftReconciled) {
+    console.warn(`[publish] updateDraft failed after retries (post-commit) for ${id}`);
+  }
 
+  // Queue + published-index are best-effort: they only feed admin views,
+  // and the marker guard no longer depends on them for dedup.
   await updateQueueItem(draft.queue_id, {
     status: "published",
     published_slug: commit.slug,
@@ -154,18 +177,47 @@ export const POST: APIRoute = async ({ params, request, locals }) => {
       slug: commit.slug,
       filename: commit.filename,
       commit_url: commit.commit_url,
+      already_existed: commit.already_existed ?? false,
+      degraded: !draftReconciled,
     },
   }).catch((err) => console.warn(`[publish] writeAudit failed:`, err));
 
-  return json({
+  const response: Record<string, unknown> = {
     ok: true,
     slug: commit.slug,
     filename: commit.filename,
     commit_url: commit.commit_url,
     html_url: commit.html_url,
-    public_url: `/blog/${commit.slug.replace(/^\d{4}-\d{2}-\d{2}-/, "")}/`,
-  });
+    public_url: publicUrlFor(commit.slug),
+  };
+  if (commit.already_existed) response.already_existed = true;
+  if (!draftReconciled) {
+    response.degraded = true;
+    response.warning = `Post committed to git as ${commit.slug} and is going live, but the admin draft record did not update. Refresh in a moment; do not re-publish.`;
+  }
+  return json(response);
 };
+
+// Public blog URL from a dated slug: strip the YYYY-MM-DD- prefix.
+function publicUrlFor(slug: string): string {
+  return `/blog/${slug.replace(/^\d{4}-\d{2}-\d{2}-/, "")}/`;
+}
+
+// Run an async write up to `attempts` times, swallowing throws. Returns
+// true on the first success, false if every attempt threw. Used for the
+// load-bearing draft-store reconciliation after a successful git commit.
+async function tryWithRetry(fn: () => Promise<unknown>, attempts = 3): Promise<boolean> {
+  for (let i = 0; i < attempts; i++) {
+    try {
+      await fn();
+      return true;
+    } catch (err) {
+      console.warn(`[publish] write attempt ${i + 1}/${attempts} failed:`, err);
+      if (i < attempts - 1) await new Promise((r) => setTimeout(r, 150 * (i + 1)));
+    }
+  }
+  return false;
+}
 
 function json(payload: unknown, status = 200): Response {
   return new Response(JSON.stringify(payload), {

@@ -275,6 +275,12 @@ export function serializeMarkdown(args: SerializeArgs): string {
   }
   lines.push(`urml_angle: ${draft.urml_angle}`);
   lines.push(`author: ${yamlString(author)}`);
+  // Internal provenance marker. Lets a re-publish recognise a file this
+  // exact draft already committed (vs. a different draft that happens to
+  // share a title+date) so it never creates a duplicate -N file. Not in
+  // the content-collection schema (content/config.ts), so zod strips it
+  // before render/RSS; it survives only in the raw .md for matching.
+  lines.push(`draft_id: ${yamlString(draft.id)}`);
   lines.push("draft: false");
   lines.push("---");
   lines.push("");
@@ -297,6 +303,10 @@ export interface CommitResult {
   filename: string;
   commit_url: string;
   html_url: string;
+  // True when the file this draft would create already existed in git
+  // with a matching draft_id marker, so no new commit was made. Signals
+  // the caller to reconcile the draft store (the post is already live).
+  already_existed?: boolean;
 }
 
 export interface CommitError {
@@ -352,11 +362,27 @@ export async function commitPostToGitHub(args: SerializeArgs): Promise<CommitRes
     });
 
     if (resp.status === 422 || resp.status === 409) {
-      // File exists. Try the next suffix.
+      // File exists. Two cases:
+      //   - it's THIS draft already committed here (desync recovery:
+      //     a prior publish committed to git but the draft-store status
+      //     write failed) -> return the existing file, do not duplicate.
+      //   - it's a DIFFERENT draft that happens to share title+date
+      //     -> fall through to the next -N suffix (genuine collision).
       const text = await resp.text().catch(() => "");
       if (!/sha/i.test(text) && !/already exists/i.test(text)) {
         // 422 might be for a different reason; bail.
         return { ok: false, status: resp.status, error: `GitHub ${resp.status}: ${text.slice(0, 400)}` };
+      }
+      const existing = await getExistingFile(repo, filename, branch, token);
+      if (existing && existingDraftId(existing.content) === args.draft.id) {
+        return {
+          ok: true,
+          slug: `${date}-${slug}`,
+          filename,
+          commit_url: "",
+          html_url: existing.html_url,
+          already_existed: true,
+        };
       }
       continue;
     }
@@ -384,6 +410,44 @@ export async function commitPostToGitHub(args: SerializeArgs): Promise<CommitRes
     ok: false,
     error: "Slug collision after 10 attempts. Pick a different title.",
   };
+}
+
+// GET an existing blog file via the GitHub Contents API, returning its
+// decoded text and html_url. Returns null on any non-200 or decode error
+// (caller then treats the path as an unrelated collision and moves on).
+async function getExistingFile(
+  repo: string,
+  filename: string,
+  branch: string,
+  token: string,
+): Promise<{ content: string; html_url: string } | null> {
+  try {
+    const url = `https://api.github.com/repos/${repo}/contents/${filename}?ref=${encodeURIComponent(branch)}`;
+    const resp = await fetch(url, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: "application/vnd.github+json",
+        "X-GitHub-Api-Version": "2022-11-28",
+        "User-Agent": "urml-admin",
+      },
+    });
+    if (!resp.ok) return null;
+    const json = (await resp.json()) as { content?: string; encoding?: string; html_url?: string };
+    if (!json.content || json.encoding !== "base64") return null;
+    const content = Buffer.from(json.content, "base64").toString("utf8");
+    return { content, html_url: json.html_url ?? "" };
+  } catch {
+    return null;
+  }
+}
+
+// Read the internal `draft_id` frontmatter marker (written by
+// serializeMarkdown) from a committed file's raw text. Returns null if
+// the file predates the marker or was hand-authored.
+function existingDraftId(fileContent: string): string | null {
+  const m = fileContent.match(/^draft_id:\s*"((?:[^"\\]|\\.)*)"\s*$/m);
+  if (!m) return null;
+  return m[1].replace(/\\"/g, '"').replace(/\\\\/g, "\\");
 }
 
 export async function recordPublishedIndex(entry: PublishedIndexEntry): Promise<void> {
