@@ -21,19 +21,37 @@ const wgs = [
   { name: "Profiles WG", scope: "home · drone · industrial · educational · research." },
 ];
 
+// Spec RFCs only (states from docs/rfcs/README.md). The Outreach RFCs
+// (0023-0331+) are per-target request-for-comment docs tracked in the
+// outreach ledgers, not the spec decision history shown here.
 const rfcs = [
   { id: "RFC-0001", t: "RFC process", st: "accepted" },
-  { id: "RFC-0002", t: "Initial primitive vocabulary", st: "accepted" },
+  { id: "RFC-0002", t: "Initial Layer-2 primitive vocabulary", st: "implemented" },
   { id: "RFC-0003", t: "US federal alignment as the default", st: "accepted" },
-  { id: "RFC-0004", t: "Compliance policy as a DSL", st: "accepted" },
-  { id: "RFC-0005", t: "HBOM parsing", st: "accepted" },
-  { id: "RFC-0006", t: "Connectivity & link-loss", st: "accepted" },
-  { id: "RFC-0007", t: "Manufacturer go-to-market", st: "accepted" },
-  { id: "RFC-0008", t: "Community discussions", st: "accepted" },
-  { id: "RFC-0009", t: "Legged & humanoid mobility", st: "accepted" },
+  { id: "RFC-0004", t: "Compliance policy enforcement", st: "accepted" },
+  { id: "RFC-0005", t: "Structured HBOM parsing (Pass 5)", st: "draft" },
+  { id: "RFC-0006", t: "Connectivity & link-loss safety contract", st: "implemented" },
+  { id: "RFC-0007", t: "Manufacturer go-to-market", st: "implemented" },
+  { id: "RFC-0008", t: "Community discussions", st: "implemented" },
+  { id: "RFC-0009", t: "Legged & humanoid mobility", st: "implemented" },
   { id: "RFC-0010", t: "Whole-body / bimanual manipulation", st: "draft" },
-  { id: "RFC-0011", t: "Educational profile", st: "draft" },
-  { id: "RFC-0012", t: "Research profile", st: "draft" },
+  { id: "RFC-0011", t: "Educational profile", st: "accepted" },
+  { id: "RFC-0012", t: "Research profile", st: "accepted" },
+  { id: "RFC-0013", t: "Industrial Layer-2 primitives (pick_from / place_at / swap_tool)", st: "implemented" },
+  { id: "RFC-0014", t: "Substrate conformance contract", st: "draft" },
+  { id: "RFC-0015", t: "Control-program invocation (call_program)", st: "open" },
+  { id: "RFC-0016", t: "Real-time / cyclic manifest block", st: "draft" },
+  { id: "RFC-0017", t: "Digital-I/O actuation", st: "draft" },
+  { id: "RFC-0018", t: "Minimal-MCU capability subset", st: "draft" },
+  { id: "RFC-0019", t: "AUTOSAR Adaptive substrate", st: "draft" },
+  { id: "RFC-0020", t: "Autoware AV substrate", st: "draft" },
+  { id: "RFC-0021", t: "On-device LLM bridge", st: "draft" },
+  { id: "RFC-0022", t: "Warehouse domain profile", st: "draft" },
+  { id: "RFC-0039", t: "Sensor schema v0.2 iteration", st: "draft" },
+  { id: "RFC-0286", t: "Multi-robot fleet addressing & synchronized execution", st: "accepted" },
+  { id: "RFC-0290", t: "Frame-transform graph (SE(3))", st: "accepted" },
+  { id: "RFC-0291", t: "UTM-style geometric cross-robot deconfliction", st: "accepted" },
+  { id: "RFC-0304", t: "Permissive translation alternative", st: "draft" },
 ];
 ---
 
@@ -165,7 +183,7 @@ const rfcs = [
       <div class="eyebrow">§3 · RFC index</div>
       <div style="display:grid;grid-template-columns:1.5fr 1fr;gap:40px;align-items:end">
         <h2 class="s">Every decision, in the open, with rationale.</h2>
-        <p class="body-sm" style="max-width:460px">Nine RFCs accepted, three under active drafting. Every RFC has an author, a state, and a public comment period.</p>
+        <p class="body-sm" style="max-width:460px">Fourteen spec RFCs accepted or implemented, thirteen in draft or open review. Every RFC has an author, a state, and a public comment period. The per-target Outreach RFCs (0023 onward) are tracked separately in the outreach ledgers.</p>
       </div>
     </div>
     <div class="hi-card" style="padding:0;overflow:hidden">
@@ -176,7 +194,7 @@ const rfcs = [
         <a href="https://github.com/URML-MARS/URML/tree/main/docs/rfcs" rel="noopener noreferrer" style="display:grid;grid-template-columns:110px 1fr 120px;gap:16px;padding:18px 24px;border-bottom:1px solid var(--rule);text-decoration:none;color:inherit;align-items:center">
           <span class="mono" style="font-size:13px;color:var(--accent);font-weight:600">{r.id}</span>
           <span style="font-weight:500;font-size:15px">{r.t}</span>
-          <span class="hi-chip" style={"font-size:10px;padding:3px 10px;width:fit-content;justify-self:end;color:" + (r.st === "accepted" ? "var(--accent)" : "var(--ink-faint)") + ";border-color:" + (r.st === "accepted" ? "var(--accent)" : "var(--ink-faint)") + ";background:" + (r.st === "accepted" ? "var(--accent-soft)" : "var(--bone)")}>{r.st}</span>
+          <span class="hi-chip" style={"font-size:10px;padding:3px 10px;width:fit-content;justify-self:end;color:" + (r.st === "accepted" || r.st === "implemented" ? "var(--accent)" : "var(--ink-faint)") + ";border-color:" + (r.st === "accepted" || r.st === "implemented" ? "var(--accent)" : "var(--ink-faint)") + ";background:" + (r.st === "accepted" || r.st === "implemented" ? "var(--accent-soft)" : "var(--bone)")}>{r.st}</span>
         </a>
       ))}
     </div>

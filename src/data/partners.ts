@@ -34,7 +34,7 @@ export const reference: ReferenceRuntime[] = [
   { org: "urml-mujoco-runtime", sub: "MuJoCo physics simulator · zero ROS · pure Protocol proof", profiles: ["home"], note: "First-party reference adapter · hermetic conformance" },
   { org: "urml-isaac-runtime", sub: "NVIDIA Isaac Sim/Lab · zero ROS · local RTX/Omniverse (not cloud)", profiles: ["home"], note: "First-party reference adapter · hermetic conformance" },
   { org: "urml-embedded-runtime", sub: "micro:bit/Arduino over pyserial · zero ROS · RFC-0011 educational", profiles: ["home"], note: "First-party reference adapter · hermetic conformance" },
-  { org: "urml-edu-runtime", sub: "VEX V5 · LEGO SPIKE (Pybricks BLE) · Thymio (Aseba TDM) · zero ROS · RFC-0011 educational (3 platforms)", profiles: ["home"], note: "First-party reference adapter · hermetic conformance" },
+  { org: "urml-edu-runtime", sub: "VEX V5 · LEGO SPIKE (Pybricks BLE) · Thymio (Aseba TDM) · Robotical Marty (martypy) · zero ROS · RFC-0011 educational (4 platforms)", profiles: ["home"], note: "First-party reference adapter · hermetic conformance" },
   { org: "urml-autosar-runtime", sub: "AUTOSAR Adaptive ara::com scaffold · zero ROS · RFC-0019 Draft binding", profiles: ["industrial"], note: "First-party reference adapter · hermetic conformance · scaffold only" },
 ];
 
@@ -69,8 +69,9 @@ export const manufacturersCount = 0;
 // a maintainer answered URML's mapping-RFC questions AND URML shipped a
 // reference adapter (or spec binding) in response. Described by category, not
 // by brand: the org is identifiable only via the linked public thread, and a
-// listing reflects a public exchange, not an endorsement. Adapter-shipped only
-// (the highest-confidence subset of the wider `engaged` ledger in the core repo).
+// listing reflects a public exchange, not an endorsement. Limited to threads
+// where URML shipped a reference adapter or a spec binding in response (the
+// highest-confidence subset of the wider `engaged` ledger in the core repo).
 export interface EngagedStory {
   category: string; // headline, e.g. "Tier-1 industrial-arm OEM"
   outcome: string; // one sentence: what the maintainer did (no org name)
@@ -116,5 +117,23 @@ export const engaged: EngagedStory[] = [
     rfc: "0043",
     rfcSlug: "boston-dynamics-spot-integration",
     thread: "https://github.com/rai-opensource/spot_ros2/discussions/805",
+  },
+  {
+    category: "Open multilingual translation model",
+    outcome:
+      "A maintainer of an open multilingual-translation research project answered all four mapping-RFC questions, confirmed the non-commercial license modeling, and pointed the commercial path toward permissive open LLMs.",
+    shipped: "RFC-0304 permissive-translation-alternative · spec binding",
+    rfc: "0304",
+    rfcSlug: "permissive-translation-alternative",
+    thread: "https://github.com/facebookresearch/seamless_communication/issues/578",
+  },
+  {
+    category: "Zero-copy IPC middleware",
+    outcome:
+      "A middleware maintainer engaged on the IPC mapping RFC and invited URML to the project's developer meetup; the active line is the Rust successor, so the binding was retargeted to it.",
+    shipped: "RFC-0305 iceoryx2 · IPC substrate binding",
+    rfc: "0305",
+    rfcSlug: "iceoryx2-outreach",
+    thread: "https://github.com/eclipse-iceoryx/iceoryx/issues/2530",
   },
 ];
