@@ -39,10 +39,35 @@ export default function DraftsIsland() {
   const [busy, setBusy] = useState(false);
   const [publishedMessage, setPublishedMessage] = useState<{ slug: string; url: string } | null>(null);
   const [filter, setFilter] = useState<"active" | "all">("active");
+  // queue_id → topic, so each draft card can name the topic it came from.
+  // A draft's Gemini title rarely matches its source topic, which makes
+  // drafts hard to recognize from the Queue.
+  const [topics, setTopics] = useState<Record<string, string>>({});
+  // Optional ?draft=<id> deep-link target (from the Queue's "View draft →").
+  const [targetId] = useState<string | null>(() => {
+    if (typeof window === "undefined") return null;
+    return new URLSearchParams(window.location.search).get("draft");
+  });
 
   useEffect(() => {
     void load();
+    void loadTopics();
   }, []);
+
+  // Jump to the deep-linked draft once drafts are loaded: switch to "All"
+  // (it may be published/edited and hidden by the default Active filter),
+  // open its editor, and scroll it into view.
+  useEffect(() => {
+    if (!drafts || !targetId) return;
+    if (!drafts.some((d) => d.id === targetId)) return;
+    setFilter("all");
+    setEditingId(targetId);
+    requestAnimationFrame(() => {
+      document
+        .getElementById(`draft-${targetId}`)
+        ?.scrollIntoView({ behavior: "smooth", block: "center" });
+    });
+  }, [drafts, targetId]);
 
   async function load() {
     try {
@@ -53,6 +78,19 @@ export default function DraftsIsland() {
       setError(null);
     } catch (e) {
       setError(e instanceof Error ? e.message : String(e));
+    }
+  }
+
+  async function loadTopics() {
+    try {
+      const r = await fetch("/api/admin/queue", { credentials: "same-origin" });
+      if (!r.ok) return;
+      const data = (await r.json()) as { items: { id: string; topic: string }[] };
+      const map: Record<string, string> = {};
+      for (const it of data.items) map[it.id] = it.topic;
+      setTopics(map);
+    } catch {
+      // Topic labels are a nicety; a failure here just omits them.
     }
   }
 
@@ -194,6 +232,7 @@ export default function DraftsIsland() {
               <DraftEditor
                 key={d.id}
                 draft={d}
+                topic={topics[d.queue_id]}
                 busy={busy}
                 onSave={(patch) => save(d.id, patch)}
                 onPublish={(edits) => publish(d.id, edits)}
@@ -201,7 +240,7 @@ export default function DraftsIsland() {
                 onCancel={() => setEditingId(null)}
               />
             ) : (
-              <DraftCard key={d.id} draft={d} onEdit={() => setEditingId(d.id)} />
+              <DraftCard key={d.id} draft={d} topic={topics[d.queue_id]} onEdit={() => setEditingId(d.id)} />
             ),
           )}
         </div>
@@ -210,15 +249,16 @@ export default function DraftsIsland() {
   );
 }
 
-function DraftCard(props: { draft: Draft; onEdit: () => void }) {
-  const { draft } = props;
+function DraftCard(props: { draft: Draft; topic?: string; onEdit: () => void }) {
+  const { draft, topic } = props;
   const created = useMemo(() => fmt(draft.created_at), [draft.created_at]);
   return (
-    <article class="draft-card">
+    <article class="draft-card" id={`draft-${draft.id}`}>
       <div class="draft-card-head">
         <h3>{draft.title}</h3>
         <span class={`draft-pill draft-pill-${draft.status}`}>{draft.status}</span>
       </div>
+      {topic && <p class="draft-from">from topic: {topic}</p>}
       <p class="draft-summary">{draft.summary}</p>
       <div class="draft-meta">
         <span class="draft-cat">{draft.suggested_category}</span>
@@ -249,13 +289,14 @@ function DraftCard(props: { draft: Draft; onEdit: () => void }) {
 
 function DraftEditor(props: {
   draft: Draft;
+  topic?: string;
   busy: boolean;
   onSave: (patch: Partial<Draft>) => void;
   onPublish: (edits: Partial<Draft>) => void;
   onDiscard: () => void;
   onCancel: () => void;
 }) {
-  const { draft } = props;
+  const { draft, topic } = props;
   const isPublished = draft.status === "published";
   const [title, setTitle] = useState(draft.title);
   const [summary, setSummary] = useState(draft.summary);
@@ -280,13 +321,14 @@ function DraftEditor(props: {
   }
 
   return (
-    <article class="draft-editor">
+    <article class="draft-editor" id={`draft-${draft.id}`}>
       <div class="draft-editor-head">
         <span class={`draft-pill draft-pill-${draft.status}`}>{draft.status}</span>
         <span class="draft-editor-meta">
           {draft.model} · {fmt(draft.created_at)}
         </span>
       </div>
+      {topic && <p class="draft-from">from topic: {topic}</p>}
 
       <label class="draft-field">
         <span class="draft-label">Title</span>
