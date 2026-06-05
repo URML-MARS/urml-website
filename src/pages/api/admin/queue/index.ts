@@ -1,18 +1,66 @@
 import type { APIRoute } from "astro";
 import { writeAudit } from "../../../../lib/audit";
+import { getDraft } from "../../../../lib/drafts";
 import {
   createQueueItem,
   listQueue,
   sanitizeRefs,
   sanitizeVideos,
+  updateQueueItem,
+  type QueueItem,
+  type UpdatePatch,
 } from "../../../../lib/queue";
 
 export const prerender = false;
 
-// GET /api/admin/queue → list all queue items.
+// A queue item's status + draft_id is denormalized from the drafts store
+// and written in a separate step on generate / discard / publish. Any
+// partial failure (a dropped Blob write, the best-effort post-commit queue
+// update on publish, a throw between deleteDraft and the queue reset on
+// discard) strands the queue item as "drafted" while its draft is gone,
+// discarded, or already published. The result is a topic that shows a
+// "View draft →" link to a draft that the Drafts list does not contain.
+//
+// Treat the drafts store as the source of truth on read: for any "drafted"
+// item, look up its draft and correct the queue item to match. The write
+// is best-effort — even if it fails we hand the corrected view to the
+// client so the UI is honest this request, and the next load retries.
+async function reconcileDrafted(item: QueueItem): Promise<QueueItem> {
+  if (item.status !== "drafted") return item;
+
+  const draft = item.draft_id ? await getDraft(item.draft_id) : null;
+
+  // Draft exists and is still reviewable: the "drafted" status is correct.
+  if (draft && (draft.status === "fresh" || draft.status === "edited")) {
+    return item;
+  }
+
+  let patch: UpdatePatch;
+  if (draft && draft.status === "published") {
+    // Publish committed the post and flipped the draft, but the queue
+    // update was lost. A published draft with no slug is a genuinely
+    // inconsistent record we should surface, not mask, so leave it.
+    if (!draft.published_slug) return item;
+    patch = { status: "published", published_slug: draft.published_slug };
+  } else {
+    // Draft missing or discarded: there is nothing to approve. Return the
+    // topic to pending so the card offers "Generate draft" instead of a
+    // dead "View draft →" link.
+    patch = { status: "pending", draft_id: undefined };
+  }
+
+  const updated = await updateQueueItem(item.id, patch).catch((err) => {
+    console.warn(`[queue] reconcile persist failed for ${item.id}:`, err);
+    return null;
+  });
+  return updated ?? { ...item, ...patch };
+}
+
+// GET /api/admin/queue → list all queue items (reconciled against drafts).
 export const GET: APIRoute = async () => {
   const items = await listQueue();
-  return new Response(JSON.stringify({ items }), {
+  const reconciled = await Promise.all(items.map(reconcileDrafted));
+  return new Response(JSON.stringify({ items: reconciled }), {
     status: 200,
     headers: {
       "Content-Type": "application/json",
