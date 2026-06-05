@@ -391,7 +391,10 @@ function QueueCard(props: {
         <button type="button" class="queue-secondary" onClick={props.onEdit}>Edit</button>
         <button type="button" class="queue-secondary danger" onClick={props.onDelete}>Delete</button>
         {item.status === "drafted" && (
-          <a class="queue-secondary" href="/admin/drafts">View draft →</a>
+          <a
+            class="queue-secondary"
+            href={item.draft_id ? `/admin/drafts?draft=${encodeURIComponent(item.draft_id)}` : "/admin/drafts"}
+          >View draft →</a>
         )}
         <button
           type="button"
