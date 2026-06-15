@@ -32,6 +32,7 @@ export const reference: ReferenceRuntime[] = [
   { org: "urml-marine-runtime", sub: "BlueROV2 / ArduSub via MAVLink · no ROS dependency", profiles: ["drone"], note: "First-party reference adapter · hermetic conformance" },
   { org: "urml-opcua-runtime", sub: "OPC UA Robotics companion spec via asyncua · zero ROS · RFC-0015/0016 spec-gaps filed", profiles: ["industrial"], note: "First-party reference adapter · hermetic conformance" },
   { org: "urml-mujoco-runtime", sub: "MuJoCo physics simulator · zero ROS · pure Protocol proof", profiles: ["home"], note: "First-party reference adapter · hermetic conformance" },
+  { org: "urml-chrono-runtime", sub: "Project Chrono multibody physics / terramechanics · zero ROS · high-fidelity validation", profiles: ["home"], note: "First-party reference adapter · hermetic conformance" },
   { org: "urml-isaac-runtime", sub: "NVIDIA Isaac Sim/Lab · zero ROS · local RTX/Omniverse (not cloud)", profiles: ["home"], note: "First-party reference adapter · hermetic conformance" },
   { org: "urml-embedded-runtime", sub: "micro:bit/Arduino over pyserial · zero ROS · RFC-0011 educational", profiles: ["home"], note: "First-party reference adapter · hermetic conformance" },
   { org: "urml-edu-runtime", sub: "VEX V5 · LEGO SPIKE (Pybricks BLE) · Thymio (Aseba TDM) · Robotical Marty (martypy) · zero ROS · RFC-0011 educational (4 platforms)", profiles: ["home"], note: "First-party reference adapter · hermetic conformance" },
@@ -135,5 +136,14 @@ export const engaged: EngagedStory[] = [
     rfc: "0305",
     rfcSlug: "iceoryx2-outreach",
     thread: "https://github.com/eclipse-iceoryx/iceoryx/issues/2530",
+  },
+  {
+    category: "3D lidar SDK",
+    outcome:
+      "An engineer at the sensor vendor answered all five mapping-RFC questions within hours; their guidance on beam count, point-cloud units, and time-sync methods became a sensor-schema iteration.",
+    shipped: "RFC-0039 sensor-schema v0.2 · Layer-1 binding",
+    rfc: "0039",
+    rfcSlug: "sensor-schema-v0-2-iteration",
+    thread: "https://github.com/ouster-lidar/ouster-sdk/issues/711",
   },
 ];

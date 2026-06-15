@@ -5,15 +5,15 @@ import Icon from "../components/Icon.astro";
 // HiChrome dropped; Nav/Footer in Base.
 
 const audience = [
-  { who: "DEVELOPERS", t: "Write once, target any substrate.", d: "Stop translating intent into ROS topics, MAVLink commands, and vendor APIs. URML is one language above all of them.", bullets: ["20 intent primitives", "14 reference runtimes (ROS 2, PX4, OPC UA, cobots, sim, MCU…)", "LLM bridge included"], cta: "Quickstart →", href: "/spec" },
-  { who: "MANUFACTURERS", t: "A self-served path to federal readiness.", d: "Run the conformance suite, publish a manifest, get listed. Free, opt-in, de-listable any time.", bullets: ["101 conformance fixtures", "Public directory", "Provenance schema"], cta: "Compliance path →", href: "/compliance" },
+  { who: "DEVELOPERS", t: "Write once, target any substrate.", d: "Stop translating intent into ROS topics, MAVLink commands, and vendor APIs. URML is one language above all of them.", bullets: ["24 intent primitives", "15 reference runtimes (ROS 2, PX4, OPC UA, cobots, sim, MCU…)", "LLM bridge included"], cta: "Quickstart →", href: "/spec" },
+  { who: "MANUFACTURERS", t: "A self-served path to federal readiness.", d: "Run the conformance suite, publish a manifest, get listed. Free, opt-in, de-listable any time.", bullets: ["175 conformance fixtures", "Public directory", "Provenance schema"], cta: "Compliance path →", href: "/compliance" },
   { who: "GOVERNMENTS & REGULATORS", t: "A machine-checkable lens on policy.", d: "The validator's policy pass is a regulation-neutral mechanism with a US-federal default. Add your jurisdiction's file.", bullets: ["NDAA · FCC · EO 14307", "Policy DSL (YAML)", "Override per deployment"], cta: "Read the policy spec →", href: "/spec" },
 ];
 
 const layers = [
   { tag: "L4", name: "Natural language", sub: "An LLM turns English into URML. URML stays the contract.", in: true },
-  { tag: "L3", name: "Behavior composition", sub: "sequence · branch · parallel · retry · on_error", in: true },
-  { tag: "L2", name: "Intent primitives", sub: "20 verbs · move_to · grasp · detect · scan · pick_from · place_at · …", in: true },
+  { tag: "L3", name: "Behavior composition", sub: "sequence · branch · parallel · retry · on_error · on · barrier", in: true },
+  { tag: "L2", name: "Intent primitives", sub: "24 verbs · move_to · grasp · detect · scan · pick_from · place_at · …", in: true },
   { tag: "L1", name: "Hardware abstraction", sub: "capability manifest · provenance · safety envelope", in: true },
   { tag: "L0", name: "Substrate", sub: "ROS 2 · PX4 · OPC UA · KUKA · ABB · IEC 61131-3", in: false },
 ];
@@ -27,7 +27,7 @@ const passes = [
 ];
 
 const next = [
-  { t: "Read the spec", d: "v0.1 normative reference. Mirrors the GitHub source of truth.", href: "/spec", icon: "spec" },
+  { t: "Read the spec", d: "v0.2.0 normative reference. Mirrors the GitHub source of truth.", href: "/spec", icon: "spec" },
   { t: "Run the demo", d: "Three commands, hermetic, no robot needed. URML in your terminal.", href: "/spec", icon: "cpu" },
   { t: "Get compliant", d: "If you make robots, the 5-step path to a public listing.", href: "/compliance", icon: "shield" },
 ];
@@ -57,7 +57,7 @@ const acceptCode = `<span class="c"># attempt-2.urml.yaml</span>
     <h1 style="max-width:980px">One vocabulary humans, LLMs, and robots can agree on.</h1>
     <p class="lead" style="max-width:720px;margin-top:32px">
       URML is a small, public spec for describing what a robot should do, independent of which
-      motors, joints, or frames carry it out. It's a draft today (v0.1, phase 0), and the working
+      motors, joints, or frames carry it out. It's a draft today (v0.2.0, phase 1), and the working
       group is open. Every program is statically verified against the robot's declared
       capabilities, the active safety envelope, and a compliance policy
       <em> before a single actuator moves.</em>
