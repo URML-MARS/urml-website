@@ -21,37 +21,53 @@ const wgs = [
   { name: "Profiles WG", scope: "home · drone · industrial · educational · research." },
 ];
 
-// Spec RFCs only (states from docs/rfcs/README.md). The Outreach RFCs
-// (0023-0331+) are per-target request-for-comment docs tracked in the
-// outreach ledgers, not the spec decision history shown here.
+// Spec RFCs only (states from docs/rfcs/README.md, the authoritative index).
+// The Outreach RFCs (the large remainder of ~609 docs) are per-target
+// request-for-comment documents tracked in the outreach ledgers, not the
+// spec decision history shown here. 41 Spec RFCs: 5 accepted, 35 implemented,
+// 1 open (as of 2026-06-15).
 const rfcs = [
   { id: "RFC-0001", t: "RFC process", st: "accepted" },
   { id: "RFC-0002", t: "Initial Layer-2 primitive vocabulary", st: "implemented" },
   { id: "RFC-0003", t: "US federal alignment as the default", st: "accepted" },
   { id: "RFC-0004", t: "Compliance policy enforcement", st: "accepted" },
-  { id: "RFC-0005", t: "Structured HBOM parsing (Pass 5)", st: "draft" },
+  { id: "RFC-0005", t: "Structured HBOM parsing (Pass 5)", st: "implemented" },
   { id: "RFC-0006", t: "Connectivity & link-loss safety contract", st: "implemented" },
   { id: "RFC-0007", t: "Manufacturer go-to-market", st: "implemented" },
   { id: "RFC-0008", t: "Community discussions", st: "implemented" },
   { id: "RFC-0009", t: "Legged & humanoid mobility", st: "implemented" },
-  { id: "RFC-0010", t: "Whole-body / bimanual manipulation", st: "draft" },
+  { id: "RFC-0010", t: "Whole-body / bimanual manipulation", st: "implemented" },
   { id: "RFC-0011", t: "Educational profile", st: "accepted" },
   { id: "RFC-0012", t: "Research profile", st: "accepted" },
   { id: "RFC-0013", t: "Industrial Layer-2 primitives (pick_from / place_at / swap_tool)", st: "implemented" },
-  { id: "RFC-0014", t: "Substrate conformance contract", st: "draft" },
+  { id: "RFC-0014", t: "Substrate conformance contract", st: "implemented" },
   { id: "RFC-0015", t: "Control-program invocation (call_program)", st: "open" },
-  { id: "RFC-0016", t: "Real-time / cyclic manifest block", st: "draft" },
-  { id: "RFC-0017", t: "Digital-I/O actuation", st: "draft" },
-  { id: "RFC-0018", t: "Minimal-MCU capability subset", st: "draft" },
-  { id: "RFC-0019", t: "AUTOSAR Adaptive substrate", st: "draft" },
-  { id: "RFC-0020", t: "Autoware AV substrate", st: "draft" },
-  { id: "RFC-0021", t: "On-device LLM bridge", st: "draft" },
-  { id: "RFC-0022", t: "Warehouse domain profile", st: "draft" },
-  { id: "RFC-0039", t: "Sensor schema v0.2 iteration", st: "draft" },
-  { id: "RFC-0286", t: "Multi-robot fleet addressing & synchronized execution", st: "accepted" },
-  { id: "RFC-0290", t: "Frame-transform graph (SE(3))", st: "accepted" },
-  { id: "RFC-0291", t: "UTM-style geometric cross-robot deconfliction", st: "accepted" },
-  { id: "RFC-0304", t: "Permissive translation alternative", st: "draft" },
+  { id: "RFC-0016", t: "Real-time / cyclic manifest block", st: "implemented" },
+  { id: "RFC-0017", t: "Digital-I/O actuation (set_output)", st: "implemented" },
+  { id: "RFC-0018", t: "Minimal-MCU capability subset", st: "implemented" },
+  { id: "RFC-0019", t: "AUTOSAR Adaptive substrate", st: "implemented" },
+  { id: "RFC-0020", t: "Autoware AV substrate (plan_path / follow_trajectory)", st: "implemented" },
+  { id: "RFC-0021", t: "On-device LLM bridge", st: "implemented" },
+  { id: "RFC-0022", t: "Warehouse domain profile", st: "implemented" },
+  { id: "RFC-0039", t: "Sensor schema v0.2 iteration", st: "implemented" },
+  { id: "RFC-0260", t: "language block — Layer-4 NL infrastructure", st: "implemented" },
+  { id: "RFC-0262", t: "licensing block — per-component license + boundary", st: "implemented" },
+  { id: "RFC-0268", t: "deployment block — commercial-use gate", st: "implemented" },
+  { id: "RFC-0286", t: "Multi-robot fleet addressing & synchronized execution", st: "implemented" },
+  { id: "RFC-0290", t: "Frame-transform graph (SE(3))", st: "implemented" },
+  { id: "RFC-0291", t: "UTM-style geometric cross-robot deconfliction", st: "implemented" },
+  { id: "RFC-0304", t: "Permissive translation alternative", st: "implemented" },
+  { id: "RFC-0381", t: "validation block — simulation-fidelity hints", st: "implemented" },
+  { id: "RFC-0382", t: "monitorable_properties — temporal-logic safety core", st: "implemented" },
+  { id: "RFC-0383", t: "learned_policy — training-envelope declaration", st: "implemented" },
+  { id: "RFC-0384", t: "whole_body — structure + stability limits", st: "implemented" },
+  { id: "RFC-0385", t: "substrate.ipc — zero-copy IPC sub-substrate", st: "implemented" },
+  { id: "RFC-0469", t: "realtime.acyclic — SDO / mailbox regime", st: "implemented" },
+  { id: "RFC-0477", t: "substrate.clock — time-sync regime", st: "implemented" },
+  { id: "RFC-0478", t: "substrate.bringup — ordered init / recovery", st: "implemented" },
+  { id: "RFC-0518", t: "base-level mobility bounds (velocity-controlled base)", st: "implemented" },
+  { id: "RFC-0586", t: "dexterous (multi-fingered) hand declaration", st: "implemented" },
+  { id: "RFC-0615", t: "declared_areas + perception.object_detection", st: "implemented" },
 ];
 ---
 
@@ -183,7 +199,7 @@ const rfcs = [
       <div class="eyebrow">§3 · RFC index</div>
       <div style="display:grid;grid-template-columns:1.5fr 1fr;gap:40px;align-items:end">
         <h2 class="s">Every decision, in the open, with rationale.</h2>
-        <p class="body-sm" style="max-width:460px">Fourteen spec RFCs accepted or implemented, thirteen in draft or open review. Every RFC has an author, a state, and a public comment period. The per-target Outreach RFCs (0023 onward) are tracked separately in the outreach ledgers.</p>
+        <p class="body-sm" style="max-width:460px">Forty spec RFCs accepted or implemented, one open. Every RFC has an author, a state, and a public comment period. The per-target Outreach RFCs (the large remainder of ~609 docs) are tracked separately in the outreach ledgers.</p>
       </div>
     </div>
     <div class="hi-card" style="padding:0;overflow:hidden">

@@ -36,21 +36,30 @@ const PRIMITIVES = [
   { n: "take_off", profile: "drone", sig: "{ altitude }", d: "Transition from grounded to flight." },
   { n: "land", profile: "drone", sig: "{ pad? }", d: "Transition from flight to grounded." },
   { n: "return_to_home", profile: "drone", sig: "{}", d: "Return to the take-off frame. Substrate-implemented." },
+  { n: "pick_from", profile: "industrial", sig: "{ source, object }", d: "Pick a part from a declared source (RFC-0013)." },
+  { n: "place_at", profile: "industrial", sig: "{ target, held }", d: "Place a held part at a declared target (RFC-0013)." },
+  { n: "swap_tool", profile: "industrial", sig: "{ tool }", d: "Change end-effector at a tool station (RFC-0013)." },
+  { n: "bimanual", profile: "manipulation", sig: "{ left, right }", d: "Coordinate two arms in one bound action (RFC-0010)." },
+  { n: "set_output", profile: "actuation", sig: "{ line, value }", d: "Drive a declared digital/analog output line (RFC-0017)." },
+  { n: "plan_path", profile: "av", sig: "{ goal, constraints? } -> bind", d: "Compute a trajectory under the AV profile (RFC-0020)." },
+  { n: "follow_trajectory", profile: "av", sig: "{ trajectory }", d: "Execute a bound trajectory (RFC-0020)." },
 ];
 
+// A highlights subset of the 41 Spec RFCs (full index + states on /governance,
+// authoritative source docs/rfcs/README.md). States mirror that index.
 const RFCS = [
-  { id: "RFC-0001", t: "RFC process", s: "accepted" },
-  { id: "RFC-0002", t: "Initial primitive vocabulary", s: "accepted" },
-  { id: "RFC-0003", t: "US federal alignment as the default", s: "accepted" },
+  { id: "RFC-0002", t: "Initial Layer-2 primitive vocabulary", s: "implemented" },
   { id: "RFC-0004", t: "Compliance policy as a DSL", s: "accepted" },
-  { id: "RFC-0005", t: "HBOM parsing", s: "accepted" },
-  { id: "RFC-0006", t: "Connectivity & link-loss", s: "accepted" },
-  { id: "RFC-0007", t: "Manufacturer go-to-market", s: "accepted" },
-  { id: "RFC-0008", t: "Community discussions", s: "accepted" },
-  { id: "RFC-0009", t: "Legged & humanoid mobility", s: "accepted" },
-  { id: "RFC-0010", t: "Whole-body / bimanual manipulation", s: "draft" },
-  { id: "RFC-0011", t: "Educational profile", s: "draft" },
-  { id: "RFC-0012", t: "Research profile", s: "draft" },
+  { id: "RFC-0006", t: "Connectivity & link-loss", s: "implemented" },
+  { id: "RFC-0009", t: "Legged & humanoid mobility", s: "implemented" },
+  { id: "RFC-0010", t: "Whole-body / bimanual manipulation", s: "implemented" },
+  { id: "RFC-0013", t: "Industrial primitives (pick_from / place_at / swap_tool)", s: "implemented" },
+  { id: "RFC-0016", t: "Real-time / cyclic manifest block", s: "implemented" },
+  { id: "RFC-0020", t: "Autoware AV substrate (plan_path / follow_trajectory)", s: "implemented" },
+  { id: "RFC-0286", t: "Multi-robot fleet addressing", s: "implemented" },
+  { id: "RFC-0290", t: "Frame-transform graph", s: "implemented" },
+  { id: "RFC-0291", t: "UTM cross-robot deconfliction", s: "implemented" },
+  { id: "RFC-0384", t: "Whole-body capability declaration", s: "implemented" },
 ];
 
 const codeBlocks: Record<string, string> = {
@@ -121,7 +130,7 @@ const tabs = [
       <div class="hi-card" style="padding:22px">
         <div class="eyebrow" style="margin-bottom:10px">Spec version</div>
         <div style="display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border:1px solid var(--ink);border-radius:4px;font-family:var(--mono);font-size:14px;background:var(--bone)">
-          <span><strong style="font-family:var(--mono)">v0.1</strong> · DRAFT</span>
+          <span><strong style="font-family:var(--mono)">v0.2.0</strong> · DRAFT</span>
           <span style="color:var(--ink-faint)">▾</span>
         </div>
         <hr class="hi-rule" style="margin:14px 0" />
@@ -150,7 +159,8 @@ const tabs = [
         <p class="body" style="margin-top:18px;max-width:720px">
           URML programs are YAML, a tree of intent primitives composed with
           <span class="mono"> sequence</span>, <span class="mono">branch</span>, <span class="mono">parallel</span>,
-          <span class="mono"> retry</span>, and <span class="mono">on_error</span>. The runtime translates
+          <span class="mono"> retry</span>, and <span class="mono">on_error</span> (plus <span class="mono">on</span> /
+          <span class="mono">barrier</span> for multi-robot fleets). The runtime translates
           intent into substrate calls; the validator refuses any program that cannot satisfy all five passes.
         </p>
       </div>
@@ -161,10 +171,14 @@ const tabs = [
             <div class="caption" style="margin-bottom:12px">§2 · INTENT PRIMITIVES</div>
             <h2 class="s">The verb vocabulary.</h2>
           </div>
-          <div style="display:flex;gap:8px">
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
             <span class="hi-chip">core · 12</span>
             <span class="hi-chip">home · 2</span>
             <span class="hi-chip">drone · 3</span>
+            <span class="hi-chip">industrial · 3</span>
+            <span class="hi-chip">manipulation · 1</span>
+            <span class="hi-chip">actuation · 1</span>
+            <span class="hi-chip">av · 2</span>
           </div>
         </div>
         <p class="body" style="max-width:720px;margin-top:8px;margin-bottom:28px">
@@ -215,7 +229,7 @@ const tabs = [
         <div style="display:flex;justify-content:space-between;align-items:end;margin-bottom:8px">
           <div>
             <div class="caption" style="margin-bottom:12px">§4 · RFCs</div>
-            <h2 class="s">Nine accepted, three open.</h2>
+            <h2 class="s">Forty accepted or implemented, one open.</h2>
           </div>
           <a class="hi-btn outline" href="https://github.com/URML-MARS/URML/tree/main/docs/rfcs" rel="noopener noreferrer"><Icon name="git" size={14} /> RFC repo →</a>
         </div>
@@ -224,7 +238,7 @@ const tabs = [
             <a href="https://github.com/URML-MARS/URML/tree/main/docs/rfcs" rel="noopener noreferrer" style="display:grid;grid-template-columns:120px 1fr 100px 24px;gap:20px;align-items:center;padding:16px 0;border-bottom:1px solid var(--rule);text-decoration:none;color:inherit">
               <span class="mono" style="font-size:13px;color:var(--accent);font-weight:600">{r.id}</span>
               <span style="font-size:15px;color:var(--ink)">{r.t}</span>
-              <span class="mono" style={"font-size:10px;letter-spacing:0.08em;text-transform:uppercase;text-align:right;color:" + (r.s === "accepted" ? "var(--accent)" : r.s === "review" ? "#a64321" : "var(--ink-faint)")}>{r.s}</span>
+              <span class="mono" style={"font-size:10px;letter-spacing:0.08em;text-transform:uppercase;text-align:right;color:" + (r.s === "accepted" || r.s === "implemented" ? "var(--accent)" : r.s === "review" ? "#a64321" : "var(--ink-faint)")}>{r.s}</span>
               <span style="color:var(--ink-faint);text-align:right">↗</span>
             </a>
           ))}
