@@ -12,7 +12,7 @@ sources:
   - { title: "Lyrical-Dave (the robot in this post)", url: "https://github.com/slowrunner/LyricalDave", accessed: 2026-06-23 }
 urml_angle: explicit
 author: "Ido Yahalomi"
-draft: true
+draft: false
 ---
 
 A community member who goes by [@slowrunner](https://github.com/slowrunner) spent a few days running URML on a Raspberry Pi 5, translating plain English into validated robot programs with a local model through Ollama. No cloud, no subscription, everything on the robot. The whole exchange happened in the open on our discussion board, and it taught us more than a month of planning would have.
