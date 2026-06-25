@@ -43,7 +43,25 @@ The lesson is the project's own, turned back on itself: a validated-safe program
 
 ## What the robot was actually told
 
-The "validated safe" program Dave ran was a short patrol: announce, drive a meter, turn, drive, return home. Every step had been checked against Dave's declared capabilities, a frameless two-wheel buggy with wheel encoders, before a single wheel turned. The validator did its job. The demo's invocation did not. Now both do.
+The "validated safe" program Dave ran was a short patrol: turn ninety degrees, drive half a meter, turn back ninety degrees, drive another half a meter, announce "Patrol complete," and write a log line. Here it is in full, because the shape of a URML program is worth seeing once:
+
+```yaml
+profile: [educational]
+behavior:
+  type: sequence
+  on_error: abort_and_report
+  steps:
+    - turn:  { angle: 90 }
+    - drive: { distance: 0.5 }
+    - turn:  { angle: -90 }
+    - drive: { distance: 0.5 }
+    - speak: { utterance: Patrol complete }
+    - report: { to: run_log, facts: { patrol: done }, status: success }
+```
+
+Every step was checked against Dave's declared capabilities, a frameless two-wheel buggy with wheel encoders, before a single wheel turned: each `drive` is within his declared per-move distance, `turn` is allowed because he declares odometric motion, and `speak` resolves to his speech output. The validator did its job. The demo's invocation did not. Now both do.
+
+(With thanks to @slowrunner for correcting an earlier, looser description of this program.)
 
 One footnote: Dave moved but stayed silent. The example's default speech path is espeak, and on Dave it produced no sound and, worse, no error. That was a gap too, so the adapter now says on its log when it cannot speak, and a robot with its own voice, like Dave's ROS say node, can be wired straight in.
 
