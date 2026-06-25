@@ -9,13 +9,15 @@ sources:
   - { title: "examples/gopigo3: the GoPiGo3 example runtime", url: "https://github.com/URML-MARS/URML/tree/main/examples/gopigo3", accessed: 2026-06-25 }
   - { title: "PR #543: dry-run by default, --execute to actuate", url: "https://github.com/URML-MARS/URML/pull/543", accessed: 2026-06-25 }
   - { title: "@slowrunner's account on Mastodon", url: "https://fosstodon.org/@cyclical_obsessive/116811057601974296", accessed: 2026-06-25 }
+  - { title: "Discussion #523: the GoPiGo3 runtime thread (where the full circle closed)", url: "https://github.com/URML-MARS/URML/discussions/523", accessed: 2026-06-25 }
   - { title: "Lyrical-Dave (the robot in this post)", url: "https://github.com/slowrunner/LyricalDave", accessed: 2026-06-25 }
 urml_angle: explicit
 author: "Ido Yahalomi"
 draft: false
+updated: 2026-06-25
 ---
 
-This week a community member who goes by [@slowrunner](https://github.com/slowrunner) closed the loop the whole project is built around. An English sentence, validated into a robot program, executed on real hardware. His GoPiGo3, Lyrical-Dave, drove across the room. Then it drove under a chair.
+This week a community member who goes by [@slowrunner](https://github.com/slowrunner) closed the loop the whole project is built around. A validated robot program, executed on real hardware, with the safety gate in front of the motor. His GoPiGo3, Lyrical-Dave, drove across the room. Then it drove under a chair. A day later he closed the rest of the loop, the English sentence and the language model included, fully offline.
 
 ![Lyrical-Dave, a GoPiGo3 ROS 2 robot](/blog/lyrical-dave.jpg)
 
@@ -44,6 +46,14 @@ The lesson is the project's own, turned back on itself: a validated-safe program
 The "validated safe" program Dave ran was a short patrol: announce, drive a meter, turn, drive, return home. Every step had been checked against Dave's declared capabilities, a frameless two-wheel buggy with wheel encoders, before a single wheel turned. The validator did its job. The demo's invocation did not. Now both do.
 
 One footnote: Dave moved but stayed silent. The example's default speech path is espeak, and on Dave it produced no sound and, worse, no error. That was a gap too, so the adapter now says on its log when it cannot speak, and a robot with its own voice, like Dave's ROS say node, can be wired straight in.
+
+## The full circle
+
+That first run executed a program we had written. Within a day, @slowrunner closed the rest of the loop. He typed an English sentence, "drive forward ten centimeters," and a language model running on his own hardware through Ollama translated it into a URML program. The validator checked that program against Dave's manifest. A new option to run a program from a file sent the validated result to the wheels.
+
+Sentence to motion, with the model on the edge and no cloud anywhere in the path: the model proposes, the validator gates, and the robot moves only what was declared possible and checked safe. That is the whole thesis of the project, demonstrated by someone who is not us, on a robot that is not ours.
+
+The first translation timed out while the model loaded into memory, and a retry succeeded once it was warm. That was the last small gap, and it closed the same day: the bridge's OpenAI-compatible path now honors a configurable request timeout, so a cold model load has room to finish.
 
 ## Why we are writing this down
 
