@@ -24,8 +24,8 @@ const wgs = [
 // Spec RFCs only (states from docs/rfcs/README.md, the authoritative index).
 // The Outreach RFCs (the large remainder of ~609 docs) are per-target
 // request-for-comment documents tracked in the outreach ledgers, not the
-// spec decision history shown here. 41 Spec RFCs: 5 accepted, 35 implemented,
-// 1 open (as of 2026-06-15).
+// spec decision history shown here. 51 Spec RFCs: 8 accepted, 37 implemented,
+// 5 draft, 1 open (as of 2026-07-17).
 const rfcs = [
   { id: "RFC-0001", t: "RFC process", st: "accepted" },
   { id: "RFC-0002", t: "Initial Layer-2 primitive vocabulary", st: "implemented" },
@@ -68,6 +68,16 @@ const rfcs = [
   { id: "RFC-0518", t: "base-level mobility bounds (velocity-controlled base)", st: "implemented" },
   { id: "RFC-0586", t: "dexterous (multi-fingered) hand declaration", st: "implemented" },
   { id: "RFC-0615", t: "declared_areas + perception.object_detection", st: "implemented" },
+  { id: "RFC-0616", t: "Program.declared_intent — attested call_program primitives", st: "implemented" },
+  { id: "RFC-0617", t: "learned_policies — multiple per-domain policies", st: "implemented" },
+  { id: "RFC-0630", t: "relative-motion primitives drive + turn (educational)", st: "accepted" },
+  { id: "RFC-0631", t: "per-capability evidence tag", st: "accepted" },
+  { id: "RFC-0638", t: "substrate-neutral execution contract (lifecycle / progress / report)", st: "draft" },
+  { id: "RFC-0639", t: "parameterized, reusable Layer-3 behaviors", st: "draft" },
+  { id: "RFC-0665", t: "drive radius field (arc without arc-length arithmetic)", st: "accepted" },
+  { id: "RFC-0666", t: "urml-model — validator-oracle dataset synthesis", st: "draft" },
+  { id: "RFC-0667", t: "envelope enforcement — temporal-logic monitor + shield", st: "draft" },
+  { id: "RFC-0668", t: "rehearsal — simulated pre-execution gate", st: "draft" },
 ];
 ---
 
@@ -199,7 +209,7 @@ const rfcs = [
       <div class="eyebrow">§3 · RFC index</div>
       <div style="display:grid;grid-template-columns:1.5fr 1fr;gap:40px;align-items:end">
         <h2 class="s">Every decision, in the open, with rationale.</h2>
-        <p class="body-sm" style="max-width:460px">Forty spec RFCs accepted or implemented, one open. Every RFC has an author, a state, and a public comment period. The per-target Outreach RFCs (the large remainder of ~609 docs) are tracked separately in the outreach ledgers.</p>
+        <p class="body-sm" style="max-width:460px">Forty-five spec RFCs accepted or implemented, five in draft, one open. Every RFC has an author, a state, and a public comment period. The per-target Outreach RFCs (the large remainder of ~662 docs) are tracked separately in the outreach ledgers.</p>
       </div>
     </div>
     <div class="hi-card" style="padding:0;overflow:hidden">
