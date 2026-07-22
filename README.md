@@ -12,7 +12,7 @@ Per [CLAUDE.md](https://github.com/URML-MARS/URML/blob/main/CLAUDE.md) in the co
 
 The site is deliberately minimal.
 
-- No analytics, no telemetry, no third-party trackers.
+- No third-party analytics, no telemetry, no trackers. Page views are counted by a self-hosted, cookieless Umami instance on our own subdomain, described in full at [urml.dev/privacy](https://urml.dev/privacy).
 - No newsletter signup, no contact form, no email collection.
 - No JavaScript beyond what the Material theme ships natively (client-side search index, dark-mode toggle, both stay on-device).
 - No blog, no team page, no customer logos, no marketing copy.

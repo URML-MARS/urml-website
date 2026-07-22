@@ -3,8 +3,8 @@
    Instrument Serif (display) · IBM Plex Sans (body) · IBM Plex Mono (data).
 
    Two deliberate deviations from the handoff, both required by this
-   repo's hard "zero third-party network requests at runtime" rule
-   (mkdocs.yml + the netlify.toml CSP):
+   repo's hard first-party-only network rule (netlify.toml CSP; the
+   sole exception is our self-hosted analytics subdomain):
      1. Fonts are SELF-HOSTED (see @font-face below + public/fonts/),
         not loaded from Google Fonts as the handoff suggested.
      2. The prototype's `.hi` scope wrapper and its canvas-only
