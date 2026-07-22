@@ -30,9 +30,17 @@
 [build.environment]
   NODE_VERSION = "20"
 
-# Same "zero third-party network requests at runtime" property the
-# MkDocs config enforced, carried into the Astro build and, where
-# possible, tightened.
+# The runtime network property: every request goes to this origin, with
+# ONE deliberate exception. analytics.urml.dev is our own self-hosted
+# Umami instance (first-party operated, cookieless, described on
+# /privacy). It is allowlisted explicitly in script-src and connect-src
+# rather than proxied through this origin, so it is visible in any
+# browser's Network tab; hiding it behind a rewrite would defeat the
+# "verify it yourself" stance on the privacy page. The tag itself only
+# renders when the PUBLIC_UMAMI_* env vars are set (see Base.astro), so
+# a build without them ships zero analytics and this allowlist entry
+# sits unused. Everything below this exception is unchanged from the
+# original "zero third-party network requests at runtime" posture.
 #
 # script-src is 'self' WITHOUT 'unsafe-inline': unlike Material for
 # MkDocs (which ships inline bootstrap scripts), this Astro foundation
@@ -44,16 +52,16 @@
 # element-level inline styles (the prototype's style props), and Astro
 # may inline small scoped styles. 'unsafe-inline' permits only inline
 # CSS already in the HTML we built; it permits nothing cross-origin.
-# default-src/connect-src/font-src/img-src 'self' still block every
-# cross-origin request, so the no-third-party-network property holds.
-# Fonts are self-hosted (font-src 'self'); there is no Google Fonts.
+# default-src/font-src/img-src 'self' still block every other
+# cross-origin request. Fonts are self-hosted (font-src 'self'); there
+# is no Google Fonts.
 #
 # form-action 'self': the Join/Contact forms post to the Netlify Forms
 # endpoint on this same origin. No third-party form service.
 [[headers]]
   for = "/*"
   [headers.values]
-    Content-Security-Policy = "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self'; connect-src 'self'; worker-src 'self' blob:; frame-src 'self' https://www.youtube.com https://www.youtube-nocookie.com https://player.vimeo.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
+    Content-Security-Policy = "default-src 'self'; script-src 'self' https://analytics.urml.dev; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self'; connect-src 'self' https://analytics.urml.dev; worker-src 'self' blob:; frame-src 'self' https://www.youtube.com https://www.youtube-nocookie.com https://player.vimeo.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "no-referrer"
     X-Frame-Options = "DENY"

@@ -13,7 +13,9 @@ copyright: "URML is an open specification under Apache 2.0. Stewarded by MARS du
 # constraint in the plan §A9. The GitHub link lives in the page content
 # instead (see docs/index.md).
 #
-# No analytics, no telemetry, no third-party trackers.
+# No third-party analytics, no telemetry, no trackers. (Legacy MkDocs
+# config; the live Astro site counts page views with self-hosted Umami,
+# see /privacy.)
 # The site is a rendering layer for canonical content in URML-MARS/URML.
 # See README.md in this repository for the design constraint.
 
@@ -79,7 +81,6 @@ nav:
   - Manifesto: manifesto.md
   - Contact: contact.md
   - Trademark: trademark.md
-  - Privacy: privacy.md
 
 # contact-sent.md is the post-submit landing for the Netlify form. It is
 # intentionally not a nav entry. Listing it here keeps `mkdocs build
