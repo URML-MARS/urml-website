@@ -105,6 +105,23 @@ const tabs = [
   { id: "manifest", label: "manifest.yaml" },
   { id: "policy", label: "policy.yaml" },
 ];
+
+const installBlocks: Record<string, string> = {
+  tools: `<span class="c"># Install the URML tools (Apache-2.0, on PyPI)</span>
+pip install urml-validator urml-llm-bridge
+
+<span class="c"># One English sentence -> a validated program, fully offline</span>
+urml translate "Bring me the red mug from the kitchen." \\
+    -m robot.manifest.yaml --provider echo
+urml validate program.urml.yaml -m robot.manifest.yaml
+urml execute program.urml.yaml -m robot.manifest.yaml --adapter mock`,
+  agent: `<span class="c"># MCP server: validate-before-actuate tools for any MCP agent</span>
+pip install urml-mcp-server
+urml-mcp        <span class="c"># stdio · registry: io.github.urml-mars/urml</span>
+
+<span class="c"># Agent Skill: install into any skills-compatible agent</span>
+npx skills add urml-robot-intent`,
+};
 ---
 
 <Base
@@ -135,6 +152,29 @@ const tabs = [
         </div>
         <hr class="hi-rule" style="margin:14px 0" />
         <div class="body-sm">Spec is versioned per-commit. The v1.0 freeze is targeted later; see GOVERNANCE.md.</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="hi-section" style="padding:8px 56px 56px;border-top:1px solid var(--rule)">
+    <div class="eyebrow" style="margin-bottom:20px">↳ Install &amp; use</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start">
+      <div>
+        <h2 class="s">Install the tools.</h2>
+        <p class="body" style="margin-top:16px;max-width:520px">
+          The validator, LLM bridge, and reference runtimes are on PyPI, Apache-2.0.
+          A validated program runs fully offline.
+        </p>
+        <div class="hi-code" style="margin-top:20px"><Fragment set:html={installBlocks.tools} /></div>
+      </div>
+      <div>
+        <h2 class="s">Or drive it from your AI agent.</h2>
+        <p class="body" style="margin-top:16px;max-width:520px">
+          URML ships as an Agent Skill and an MCP server, so any agent can turn a plain-language
+          goal into a validated robot program before an actuator moves. The server never calls an
+          LLM: your agent emits URML, the server checks and runs it.
+        </p>
+        <div class="hi-code" style="margin-top:20px"><Fragment set:html={installBlocks.agent} /></div>
       </div>
     </div>
   </section>
