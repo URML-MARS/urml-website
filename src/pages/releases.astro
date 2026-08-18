@@ -1,0 +1,78 @@
+---
+import Base from "../layouts/Base.astro";
+import Icon from "../components/Icon.astro";
+import { stats } from "../data/stats";
+import { releases } from "../data/changelog";
+// Releases — the version history, generated from the core CHANGELOG.md at
+// build time (scripts/gen-stats.mjs -> src/data/changelog.ts). Newest
+// first; the top entry is the current release train.
+const GH = "https://github.com/URML-MARS/URML";
+---
+
+<Base
+  title="URML releases"
+  description="Every URML release, in the open. The reference packages ship as one lockstep family; the normative spec docs version per-artifact. Generated from the core CHANGELOG."
+  active="Releases"
+>
+  <section class="hi-section" style="padding:72px 56px 56px">
+    <div class="eyebrow" style="margin-bottom:24px">↳ Release history</div>
+    <div style="display:grid;grid-template-columns:1.4fr 1fr;gap:56px;align-items:end">
+      <div>
+        <h1 class="s" style="max-width:720px">Every release, in the open.</h1>
+        <p class="lead" style="margin-top:24px;max-width:620px">
+          The reference packages ship as one lockstep family. The latest is
+          <span class="mono">v{stats.releaseVersion}</span> (<span class="mono">pip install urml-validator</span>);
+          the normative spec documents version per-artifact and are at
+          <span class="mono">v{stats.specVersion}</span>. The full history is below, generated from
+          the canonical <span class="mono">CHANGELOG.md</span> in the core repo.
+        </p>
+        <div style="display:flex;gap:12px;margin-top:28px;flex-wrap:wrap">
+          <a class="hi-btn primary" href={`${GH}/blob/main/CHANGELOG.md`} rel="noopener noreferrer"><Icon name="git" size={16} /> CHANGELOG on GitHub ↗</a>
+          <a class="hi-btn outline" href="/spec">Read the spec</a>
+        </div>
+      </div>
+      <div class="hi-card tint" style="padding:24px">
+        <div class="eyebrow" style="margin-bottom:14px">Latest release</div>
+        <div style="display:flex;align-items:baseline;gap:16px;margin-bottom:12px">
+          <span style="font-size:52px;font-family:var(--serif);color:var(--accent);line-height:1">v{stats.releaseVersion}</span>
+          {releases[0] && <span class="mono" style="font-size:12px;color:var(--ink-soft)">{releases[0].date}</span>}
+        </div>
+        <hr class="hi-rule" style="margin:12px 0" />
+        <div class="body-sm" style="color:var(--ink-2)">
+          {releases.length} released versions since 2026-05-22. Spec docs at <span class="mono">v{stats.specVersion}</span>; the v1.0 freeze is targeted later, see <a href="/governance" style="color:var(--accent)">governance</a>.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="hi-section" style="padding-top:8px">
+    {releases.map((r, i) => (
+      <article style={"display:grid;grid-template-columns:160px 1fr;gap:40px;padding:40px 0;border-top:1px solid var(--rule);" + (i === 0 ? "" : "")}>
+        <div>
+          <div style="display:flex;flex-direction:column;gap:8px;position:sticky;top:24px">
+            <span style="font-size:34px;font-family:var(--serif);line-height:1">v{r.version}</span>
+            <span class="mono" style="font-size:12px;color:var(--ink-faint)">{r.date}</span>
+            {i === 0 && <span class="hi-chip accent" style="width:fit-content;margin-top:4px"><span class="dot"></span>Latest</span>}
+          </div>
+        </div>
+        <div>
+          {r.summary && <p class="body" style="max-width:760px;margin-bottom:24px">{r.summary}</p>}
+          <div style="display:grid;gap:22px">
+            {r.sections.map((s) => (
+              <div>
+                <div class="caption" style="color:var(--accent);margin-bottom:10px">{s.heading}</div>
+                <ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px">
+                  {s.items.map((it) => (
+                    <li class="body-sm" style="max-width:760px;padding-left:16px;position:relative;color:var(--ink-2)">
+                      <span style="position:absolute;left:0;color:var(--accent)">·</span>{it}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </div>
+      </article>
+    ))}
+  </section>
+</Base>

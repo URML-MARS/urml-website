@@ -1,0 +1,150 @@
+---
+import Base from "../layouts/Base.astro";
+import Icon from "../components/Icon.astro";
+import { stats } from "../data/stats";
+// Capabilities — what a robot declares in its Layer-1 capability manifest,
+// so the validator can check a program against reality before any actuator
+// moves. Content transcribed from spec/layer-1-hal/v0.2.0.md; grouped by
+// theme. RFC numbers are informational (the full spec + RFC index are
+// linked once, to avoid per-file 404s as filenames evolve).
+const GH = "https://github.com/URML-MARS/URML";
+const L1 = `${GH}/blob/main/spec/layer-1-hal/v${stats.specVersion}.md`;
+
+type Block = { name: string; desc: string; rfc: string };
+type Group = { title: string; blurb: string; blocks: Block[] };
+
+const groups: Group[] = [
+  {
+    title: "Motion",
+    blurb: "How the robot moves through space, and the geometry it moves in.",
+    blocks: [
+      { name: "mobility", desc: "Drive type, velocity and acceleration bounds, traversable slope, and an operational clearance volume for cross-robot deconfliction.", rfc: "0009 · 0291 · 0518" },
+      { name: "frames", desc: "Declared coordinate frames and their SE(3) transforms, so a pose in any frame resolves into any other.", rfc: "0290" },
+      { name: "whole_body", desc: "Kinematic chains and static-stability limits (center of mass within the support polygon) for legged and humanoid platforms.", rfc: "0384" },
+    ],
+  },
+  {
+    title: "Manipulation",
+    blurb: "Grippers, arms, and the objects they can act on.",
+    blocks: [
+      { name: "manipulation", desc: "Grippers with force ranges and accepted object classes, plus optional arms for whole-body and bimanual work.", rfc: "0010" },
+      { name: "dexterous", desc: "Multi-fingered hands: degrees of freedom, finger count, and the grasp types a program may request.", rfc: "0586" },
+    ],
+  },
+  {
+    title: "Perception & world model",
+    blurb: "What the robot can sense, and the finite set of places and things it knows.",
+    blocks: [
+      { name: "perception", desc: "Cameras and sensors with capability fields (beam count, channels, timestamp methods, rate) and which sensor detects which object class.", rfc: "0039 · 0615" },
+      { name: "declared_locations / areas", desc: "Named places and regions a primitive may target by name, resolved against declared frames.", rfc: "0615" },
+      { name: "declared_events", desc: "Event identifiers that wait_for and link-loss rules may name.", rfc: "0006" },
+    ],
+  },
+  {
+    title: "Safety & compliance",
+    blurb: "The provenance, connectivity, and licensing the policy pass checks before anything runs.",
+    blocks: [
+      { name: "provenance", desc: "Hardware bill of materials and attestation, checked against the active compliance policy (US-federal by default).", rfc: "0004" },
+      { name: "connectivity", desc: "Abstract link roles and the link-loss safety contract, validated against the deployment envelope.", rfc: "0006" },
+      { name: "licensing / deployment", desc: "Per-component licenses and integration boundaries, plus a commercial-use gate that refuses a CC-BY-NC component in a commercial deployment.", rfc: "0262 · 0268" },
+      { name: "evidence", desc: "How each capability claim was established (declared, derived, verified, inferred), with an opt-in policy hook.", rfc: "0631" },
+    ],
+  },
+  {
+    title: "Substrate & timing",
+    blurb: "The layers beneath the language: outputs, programs, real-time timing, and the runtime substrate.",
+    blocks: [
+      { name: "outputs / programs", desc: "Digital and analog output lines for set_output, and substrate-declared programs for call_program.", rfc: "0015 · 0017" },
+      { name: "realtime", desc: "A cyclic timing contract (period, watchdog, guarantee) with an acyclic sub-block for the SDO / mailbox regime.", rfc: "0016 · 0469" },
+      { name: "substrate", desc: "Zero-copy IPC (iceoryx generation), the clock-synchronization regime, and ordered bring-up and recovery.", rfc: "0385 · 0477 · 0478" },
+      { name: "minimal_node / firmware", desc: "Non-mobile sensor and actuator nodes, and a firmware declaration.", rfc: "0018 · 0669" },
+    ],
+  },
+  {
+    title: "Language, learning & simulation",
+    blurb: "Speech and translation, learned controllers, and simulation fidelity.",
+    blocks: [
+      { name: "language", desc: "Speech-to-text, text-to-speech, and translation engine classes, with a permissive commercial-eligible translation alternative.", rfc: "0260 · 0304" },
+      { name: "learned_policy", desc: "The training envelope of a learned controller (command ranges, terrain, payload); a program is refused outside it. Multiple named per-domain policies are supported.", rfc: "0383 · 0617" },
+      { name: "validation / av", desc: "Simulation-fidelity hints, and an autonomous-vehicle block (HD map, operational design domain, minimal-risk maneuver).", rfc: "0020 · 0381" },
+    ],
+  },
+  {
+    title: "Fleet",
+    blurb: "Several robots, addressed and validated as one.",
+    blocks: [
+      { name: "roster", desc: "Binds N per-robot manifests by handle, with a shared world frame and per-member anchors, so validate_fleet can catch cross-robot collisions statically.", rfc: "0286 · 0290 · 0291" },
+    ],
+  },
+];
+---
+
+<Base
+  title="URML capabilities"
+  description="What a robot declares in its capability manifest, so the validator can check a program against reality before any actuator moves. The expanded v0.2.0 manifest surface, grouped by theme."
+  active="Capabilities"
+>
+  <section class="hi-section" style="padding:72px 56px 56px">
+    <div class="eyebrow" style="margin-bottom:24px">↳ Layer 1 · the capability manifest</div>
+    <div style="display:grid;grid-template-columns:1.4fr 1fr;gap:56px;align-items:end">
+      <div>
+        <h1 class="s" style="max-width:760px">What a robot declares.</h1>
+        <p class="lead" style="margin-top:24px;max-width:640px">
+          A URML-compatible robot ships one capability manifest: a small, machine-readable document
+          that says what it can do. The validator reads it to decide, before a single actuator moves,
+          whether a program is within reach. The manifest is additive and opt-in, every block below is
+          optional, and a bare v0.1 manifest still validates unchanged.
+        </p>
+        <div style="display:flex;gap:12px;margin-top:28px;flex-wrap:wrap">
+          <a class="hi-btn primary" href={L1} rel="noopener noreferrer"><Icon name="git" size={16} /> Read the Layer-1 spec ↗</a>
+          <a class="hi-btn outline" href={`${GH}/tree/main/docs/rfcs`} rel="noopener noreferrer">RFC index ↗</a>
+        </div>
+      </div>
+      <div class="hi-card tint" style="padding:24px">
+        <div class="eyebrow" style="margin-bottom:14px">The bar</div>
+        <div class="body-sm" style="color:var(--ink-2)">
+          A primitive that uses a capability the manifest does not declare is rejected at Pass 2, with a
+          structured error naming the primitive, the missing field, and the suggested addition. No capability,
+          no motion.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {groups.map((g) => (
+    <section class="hi-section" style="padding:44px 56px">
+      <div class="head" style="margin-bottom:24px">
+        <div class="eyebrow">{g.title}</div>
+        <h2 class="s" style="max-width:720px">{g.blurb}</h2>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px">
+        {g.blocks.map((b) => (
+          <div class="hi-card" style="padding:22px;display:flex;flex-direction:column;gap:10px">
+            <div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px">
+              <span class="mono" style="font-size:15px;font-weight:500;color:var(--ink)">{b.name}</span>
+              <span class="caption" style="color:var(--ink-faint);white-space:nowrap">RFC-{b.rfc}</span>
+            </div>
+            <div class="body-sm" style="color:var(--ink-2)">{b.desc}</div>
+          </div>
+        ))}
+      </div>
+    </section>
+  ))}
+
+  <section class="hi-section dark" style="padding:64px 56px">
+    <div style="display:grid;grid-template-columns:1.4fr 1fr;gap:56px;align-items:center">
+      <div>
+        <div class="eyebrow" style="color:rgba(250,247,241,0.6)">One manifest, every substrate</div>
+        <h2 style="margin-top:14px;color:var(--bone)">Declare it once. Validate everywhere.</h2>
+        <p class="lead" style="color:rgba(250,247,241,0.8);margin-top:16px;max-width:600px">
+          The same manifest describes a robot running ROS 2, PX4, a vendor SDK, or a simulator. The
+          validator checks the program against it before the runtime ever sees a command.
+        </p>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:12px;align-items:flex-start">
+        <a class="hi-btn primary lg" href="/spec">Read the spec →</a>
+        <a class="hi-btn outline-on-dark lg" href="/fleet">See fleet validation →</a>
+      </div>
+    </div>
+  </section>
+</Base>
