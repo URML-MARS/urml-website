@@ -1,5 +1,6 @@
 ---
 import Logo from "./Logo.astro";
+import { stats } from "../data/stats";
 // Top navigation. Ported from the handoff (HiNav). Links now point at
 // real routes; pages other than Home land in follow-up passes.
 interface Props {
@@ -27,7 +28,7 @@ const items: [string, string][] = [
     </nav>
   </div>
   <div class="right">
-    <span class="hi-chip"><span class="dot"></span>v0.2.0 · Draft</span>
+    <span class="hi-chip"><span class="dot"></span>v{stats.releaseVersion} · Draft</span>
     <a
       href="https://github.com/URML-MARS/URML"
       class="hi-btn ghost"

@@ -1,5 +1,6 @@
 ---
 import Logo from "./Logo.astro";
+import { stats } from "../data/stats";
 // Dark footer. Every item is a real link: internal where the page
 // exists, the canonical GitHub artifact otherwise. No dead links.
 // External links carry rel=noopener; same-origin links keep CSP tight.
@@ -9,9 +10,9 @@ const cols = [
   {
     h: "Spec",
     l: [
-      ["v0.2.0 draft", "/spec"],
+      [`v${stats.releaseVersion} draft`, "/spec"],
       ["Changelog", `${GH}/blob/main/CHANGELOG.md`],
-      ["RFCs (663)", `${GH}/tree/main/docs/rfcs`],
+      [`RFCs (${stats.rfcs})`, `${GH}/tree/main/docs/rfcs`],
       ["Conformance suite", `${GH}/blob/main/conformance/CONFORMANCE_KIT.md`],
       ["Glossary", "/spec#glossary"],
     ],
