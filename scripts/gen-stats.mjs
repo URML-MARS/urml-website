@@ -115,3 +115,66 @@ const banner =
 const body = `${banner}\nexport const stats = ${JSON.stringify(stats, null, 2)} as const;\n`;
 writeFileSync(outFile, body, "utf8");
 console.log(`gen-stats: wrote src/data/stats.ts (release ${releaseVersion}, spec ${specVersion}, ${rfcs} RFCs, ${fixtures} fixtures, ${tests} tests)`);
+
+// --- CHANGELOG.md -> src/data/changelog.ts ------------------------------
+// Newest-first list of released versions for the /releases page. Skips the
+// [Unreleased] header, the top banner, and the trailing footer line.
+const stripMd = (s) =>
+  s
+    .replace(/\[([^\]]+)\]\([^)]*\)/g, "$1") // [text](url) -> text
+    .replace(/\*\*([^*]+)\*\*/g, "$1") // **bold** -> bold
+    .replace(/`([^`]+)`/g, "$1") // `code` -> code
+    .replace(/\s+/g, " ")
+    .trim();
+
+function parseChangelog(md) {
+  const releases = [];
+  let cur = null;
+  let section = null;
+  for (const line of md.split("\n")) {
+    const vh = line.match(/^##\s+\[([^\]]+)\](?:\s+[—-]\s+(.+))?\s*$/);
+    if (vh) {
+      section = null;
+      if (vh[1].trim().toLowerCase() === "unreleased") {
+        cur = null;
+        continue;
+      }
+      cur = { version: vh[1].trim(), date: (vh[2] || "").trim(), summary: "", sections: [] };
+      releases.push(cur);
+      continue;
+    }
+    if (!cur) continue;
+    const sh = line.match(/^###\s+(.+?)\s*$/);
+    if (sh) {
+      section = { heading: stripMd(sh[1]), items: [] };
+      cur.sections.push(section);
+      continue;
+    }
+    const li = line.match(/^\s*[-*]\s+(.+)$/);
+    if (li) {
+      if (section) section.items.push(stripMd(li[1]));
+      continue;
+    }
+    if (line.trim() && !line.startsWith("#") && !section) {
+      cur.summary = `${cur.summary} ${stripMd(line)}`.trim();
+    }
+  }
+  for (const r of releases) r.sections = r.sections.filter((s) => s.items.length);
+  return releases;
+}
+
+const changelogFile = resolve(here, "..", "src", "data", "changelog.ts");
+const changelogMd = read("CHANGELOG.md");
+if (changelogMd) {
+  const releases = parseChangelog(changelogMd);
+  if (releases.length) {
+    writeFileSync(changelogFile, `${banner}\nexport const releases = ${JSON.stringify(releases, null, 2)} as const;\n`, "utf8");
+    console.log(`gen-stats: wrote src/data/changelog.ts (${releases.length} releases, latest ${releases[0].version})`);
+  } else if (!existsSync(changelogFile)) {
+    console.error("gen-stats: CHANGELOG parsed to zero releases AND no snapshot");
+    process.exit(1);
+  }
+} else if (!existsSync(changelogFile)) {
+  console.error("gen-stats: CHANGELOG.md missing in core AND no changelog snapshot");
+  process.exit(1);
+}
