@@ -2,7 +2,7 @@
 import Base from "../layouts/Base.astro";
 import Stat from "../components/Stat.astro";
 import Icon from "../components/Icon.astro";
-import { reference, parts, manufacturersCount } from "../data/partners";
+import { reference, parts, manufacturersCount, engaged } from "../data/partners";
 import { stats } from "../data/stats";
 
 // Home — the compliance-funnel direction from the handoff
@@ -220,6 +220,35 @@ const codeHtml = `<span class="c"># program.urml.yaml</span>
     </div>
   </section>
 
+  {/* ── NEW IN v0.4.0 ────────────────────────────────────────────── */}
+  <section class="hi-section tint">
+    <div class="head" style="align-items:end">
+      <div class="eyebrow">New in v{stats.releaseVersion}</div>
+      <div style="display:flex;justify-content:space-between;align-items:end;gap:40px">
+        <h2 class="s" style="max-width:620px">The gate got deeper.</h2>
+        <a class="hi-btn outline" href="/releases">All releases →</a>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px">
+      {[
+        ["Speak the request", "urml run --audio adds an on-device speech front-end that feeds the same validator. The safety boundary is untouched.", "RFC-0670"],
+        ["Rehearse before you run", "urml run rolls a validated program out on a simulator, checks the trace, and blocks real execution on any critical violation.", "RFC-0668"],
+        ["Enforce the envelope", "A temporal-logic monitor and a runtime shield guard any driver, a VLA policy included, against the declared safety envelope.", "RFC-0667"],
+      ].map(([t, d, rfc]) => (
+        <a href="/releases" class="hi-card" style="padding:24px;display:flex;flex-direction:column;gap:10px;text-decoration:none;color:inherit">
+          <div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px">
+            <h3 style="font-size:22px">{t}</h3>
+            <span class="caption" style="color:var(--ink-faint);white-space:nowrap">{rfc}</span>
+          </div>
+          <div class="body-sm" style="color:var(--ink-2)">{d}</div>
+        </a>
+      ))}
+    </div>
+    <div class="body-sm" style="margin-top:16px;color:var(--ink-faint)">
+      The manifest grew too: whole-body structure, real-time timing, zero-copy IPC, and learned-policy envelopes. Explore <a href="/capabilities" style="color:var(--accent)">what a robot declares</a> or <a href="/fleet" style="color:var(--accent)">multi-robot fleet validation</a> →
+    </div>
+  </section>
+
   {/* ── STATS ────────────────────────────────────────────────────── */}
   <section class="hi-section s">
     <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:40px">
@@ -250,6 +279,22 @@ const codeHtml = `<span class="c"># program.urml.yaml</span>
     </div>
     <div class="body-sm" style="margin-top:16px;color:var(--ink-faint)">
       Phase 1 · {reference.length} reference runtimes + {parts.length} compliant parts listed · {manufacturersCount} manufacturers. Yours could be next.
+    </div>
+
+    <div style="margin-top:36px;border-top:1px solid var(--rule);padding-top:28px">
+      <div style="display:flex;justify-content:space-between;align-items:end;gap:40px;margin-bottom:16px">
+        <div class="eyebrow">Maintainers are already engaging</div>
+        <a class="hi-btn ghost" href="/partners" style="padding:0">All engaged threads →</a>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px">
+        {engaged.slice(0, 3).map((e) => (
+          <a href={e.thread} rel="noopener noreferrer" class="hi-card" style="padding:20px;display:flex;flex-direction:column;gap:8px;text-decoration:none;color:inherit">
+            <div class="caption" style="color:var(--accent)">{e.category}</div>
+            <div class="body-sm" style="color:var(--ink-2)">{e.outcome}</div>
+            <div class="mono" style="font-size:11px;color:var(--ink-faint);margin-top:6px">{e.shipped}</div>
+          </a>
+        ))}
+      </div>
     </div>
   </section>
 
