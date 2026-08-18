@@ -1,6 +1,7 @@
 ---
 import Base from "../layouts/Base.astro";
 import Icon from "../components/Icon.astro";
+import { stats } from "../data/stats";
 // Spec — ported from the handoff (source/hifi-spec.jsx). HiCodeTabs is
 // a real island here, implemented as a bundled (CSP-safe, script-src
 // 'self') vanilla script, not React. The RFC list is corrected to the
@@ -147,11 +148,11 @@ npx skills add urml-robot-intent`,
       <div class="hi-card" style="padding:22px">
         <div class="eyebrow" style="margin-bottom:10px">Spec version</div>
         <div style="display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border:1px solid var(--ink);border-radius:4px;font-family:var(--mono);font-size:14px;background:var(--bone)">
-          <span><strong style="font-family:var(--mono)">v0.2.0</strong> · DRAFT</span>
+          <span><strong style="font-family:var(--mono)">v{stats.specVersion}</strong> · DRAFT</span>
           <span style="color:var(--ink-faint)">▾</span>
         </div>
         <hr class="hi-rule" style="margin:14px 0" />
-        <div class="body-sm">Spec is versioned per-commit. The v1.0 freeze is targeted later; see GOVERNANCE.md.</div>
+        <div class="body-sm">The normative spec docs are at <span class="mono">v{stats.specVersion}</span>; the shipped release train is <span class="mono">v{stats.releaseVersion}</span> (<span class="mono">pip install urml-validator</span>). Versioned per-artifact; the v1.0 freeze is targeted later, see GOVERNANCE.md.</div>
       </div>
     </div>
   </section>

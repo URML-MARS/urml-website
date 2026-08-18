@@ -25,7 +25,7 @@
   # fail "destination already exists" (same idiom as the MkDocs config
   # on main). If core is unreachable the committed src/content/core/
   # snapshot is what builds (sync-from-core keeps it on missing source).
-  command = "rm -rf urml-core && git clone --depth 1 https://github.com/URML-MARS/URML.git urml-core && node scripts/sync-from-core.mjs urml-core && (npm ci || npm install) && npm run build"
+  command = "rm -rf urml-core && git clone --depth 1 https://github.com/URML-MARS/URML.git urml-core && node scripts/sync-from-core.mjs urml-core && node scripts/gen-stats.mjs urml-core && (npm ci || npm install) && npm run build"
 
 [build.environment]
   NODE_VERSION = "20"

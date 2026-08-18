@@ -1,6 +1,7 @@
 ---
 import Base from "../layouts/Base.astro";
 import Icon from "../components/Icon.astro";
+import { stats } from "../data/stats";
 // Governance — design shell from hifi-governance.jsx, reconciled with
 // reality: real RFC index (0001-0012, not the prototype's wrong list);
 // no fabricated WG-waitlist counts (measure-first); no fake charter
@@ -209,7 +210,7 @@ const rfcs = [
       <div class="eyebrow">§3 · RFC index</div>
       <div style="display:grid;grid-template-columns:1.5fr 1fr;gap:40px;align-items:end">
         <h2 class="s">Every decision, in the open, with rationale.</h2>
-        <p class="body-sm" style="max-width:460px">Forty-five spec RFCs accepted or implemented, five in draft, one open. Every RFC has an author, a state, and a public comment period. The per-target Outreach RFCs (the large remainder of ~663 docs) are tracked separately in the outreach ledgers.</p>
+        <p class="body-sm" style="max-width:460px">{stats.specRfcAccepted + stats.specRfcImplemented} spec RFCs accepted or implemented, {stats.specRfcDraft} in draft, {stats.specRfcOpen} open. Every RFC has an author, a state, and a public comment period. The per-target Outreach RFCs (the large remainder of ~{stats.rfcs} docs) are tracked separately in the outreach ledgers.</p>
       </div>
     </div>
     <div class="hi-card" style="padding:0;overflow:hidden">
