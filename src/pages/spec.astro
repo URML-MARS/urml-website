@@ -46,8 +46,8 @@ const PRIMITIVES = [
   { n: "follow_trajectory", profile: "av", sig: "{ trajectory }", d: "Execute a bound trajectory (RFC-0020)." },
 ];
 
-// A highlights subset of the 41 Spec RFCs (full index + states on /governance,
-// authoritative source docs/rfcs/README.md). States mirror that index.
+// A highlights subset of the Spec RFCs (live counts via `stats`; full index +
+// states on /governance; authoritative source docs/rfcs/README.md).
 const RFCS = [
   { id: "RFC-0002", t: "Initial Layer-2 primitive vocabulary", s: "implemented" },
   { id: "RFC-0004", t: "Compliance policy as a DSL", s: "accepted" },
@@ -270,7 +270,7 @@ npx skills add urml-robot-intent`,
         <div style="display:flex;justify-content:space-between;align-items:end;margin-bottom:8px">
           <div>
             <div class="caption" style="margin-bottom:12px">§4 · RFCs</div>
-            <h2 class="s">Forty accepted or implemented, one open.</h2>
+            <h2 class="s">{stats.specRfcAccepted + stats.specRfcImplemented} accepted or implemented, {stats.specRfcOpen} open.</h2>
           </div>
           <a class="hi-btn outline" href="https://github.com/URML-MARS/URML/tree/main/docs/rfcs" rel="noopener noreferrer"><Icon name="git" size={14} /> RFC repo →</a>
         </div>
