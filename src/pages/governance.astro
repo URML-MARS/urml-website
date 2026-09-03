@@ -8,8 +8,8 @@ import { stats } from "../data/stats";
 // PDF or subscribe backend; Phase-1 line drops the dropped-PyPI claim.
 
 const phases = [
-  { n: "0", t: "Pre-public draft", date: "now", desc: "Solo author in public. Spec + reference implementation under review. Discussions open.", active: true },
-  { n: "1", t: "Public draft", date: "next", desc: "Direct code contributions open. CONTRIBUTING.md in force; DCO enforced in CI.", active: false },
+  { n: "0", t: "Pre-public draft", date: "done", desc: "Solo author in public. Spec + reference implementation under review. Discussions open.", active: false },
+  { n: "1", t: "Public draft", date: "now", desc: "Direct code contributions open. CONTRIBUTING.md in force; DCO enforced in CI.", active: true },
   { n: "2", t: "Working group formed", date: "later", desc: "Charter ratified. WG chairs seated. First externally-authored RFC merged.", active: false },
   { n: "3", t: "v1.0 spec frozen", date: "later", desc: "Breaking changes require RFC + WG supermajority. Conformance suite frozen with the spec.", active: false },
   { n: "4", t: "Certification program", date: "later", desc: "“URML-Certified” mark introduced. Independent labs run conformance. Trademark policy ratified.", active: false },
@@ -23,10 +23,11 @@ const wgs = [
 ];
 
 // Spec RFCs only (states from docs/rfcs/README.md, the authoritative index).
-// The Outreach RFCs (the large remainder of ~663 docs) are per-target
+// The Outreach RFCs (the large remainder of the RFC corpus) are per-target
 // request-for-comment documents tracked in the outreach ledgers, not the
-// spec decision history shown here. 51 Spec RFCs: 8 accepted, 37 implemented,
-// 5 draft, 1 open (as of 2026-07-17).
+// spec decision history shown here. The table below is a curated selection;
+// the live totals come from `stats` (the §3 intro line), and the full index
+// lives on GitHub. Add newly-landed spec RFCs here so it stays representative.
 const rfcs = [
   { id: "RFC-0001", t: "RFC process", st: "accepted" },
   { id: "RFC-0002", t: "Initial Layer-2 primitive vocabulary", st: "implemented" },
@@ -79,6 +80,12 @@ const rfcs = [
   { id: "RFC-0666", t: "urml-model — validator-oracle dataset synthesis", st: "draft" },
   { id: "RFC-0667", t: "envelope enforcement — temporal-logic monitor + shield", st: "draft" },
   { id: "RFC-0668", t: "rehearsal — simulated pre-execution gate", st: "draft" },
+  { id: "RFC-0669", t: "firmware descriptor for MCU nodes", st: "implemented" },
+  { id: "RFC-0670", t: "speech front-end (urml translate / run --audio)", st: "implemented" },
+  { id: "RFC-0671", t: "dynamic-target grasping (target_motion + interception)", st: "draft" },
+  { id: "RFC-0672", t: "open/commercial boundary (COMMERCIAL.md)", st: "accepted" },
+  { id: "RFC-0682", t: "3D-camera declaration (point_cloud + hand-eye mount)", st: "implemented" },
+  { id: "RFC-0684", t: "aerial-delivery extension (release winch / latch)", st: "draft" },
 ];
 ---
 
@@ -105,14 +112,14 @@ const rfcs = [
       <div class="hi-card tint" style="padding:24px">
         <div class="eyebrow" style="margin-bottom:14px">Where we are</div>
         <div style="display:flex;align-items:baseline;gap:16px;margin-bottom:14px">
-          <span style="font-size:56px;font-family:var(--serif);color:var(--accent);line-height:1">0</span>
+          <span style="font-size:56px;font-family:var(--serif);color:var(--accent);line-height:1">1</span>
           <div>
-            <div style="font-weight:500;font-size:18px">Pre-public draft</div>
+            <div style="font-weight:500;font-size:18px">Public draft</div>
             <div class="mono" style="font-size:12px;color:var(--ink-soft)">ACTIVE</div>
           </div>
         </div>
         <hr class="hi-rule" style="margin:12px 0" />
-        <div class="body-sm" style="color:var(--ink-2)">Single-author spec + reference implementation under public review. WG chairs and direct code contributions open in Phase 1.</div>
+        <div class="body-sm" style="color:var(--ink-2)">Direct code contributions are open (CONTRIBUTING.md in force, DCO enforced in CI). The author remains the sole maintainer; WG chair seats open at the end of Phase 0. Phase 2 seats the working group.</div>
       </div>
     </div>
   </section>
