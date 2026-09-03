@@ -24,6 +24,7 @@ export interface CompliantPart {
 export const reference: ReferenceRuntime[] = [
   { org: "urml-ros2-runtime", sub: "ROS 2 · Nav2 / MoveIt 2 / vision_msgs", profiles: ["home", "industrial"], note: "First-party reference adapter · hermetic conformance" },
   { org: "urml-px4-runtime", sub: "PX4 / MAVLink via pymavlink · no ROS dependency", profiles: ["drone"], note: "First-party reference adapter · hermetic conformance" },
+  { org: "urml-ardupilot-runtime", sub: "ArduPilot (ArduCopter / ArduSub) via MAVLink · no ROS dependency · SITL + Pixhawk bench-verified", profiles: ["drone"], note: "First-party reference adapter · hermetic conformance" },
   { org: "urml-industrial-arm-runtime", sub: "ROS-Industrial / MoveIt 2 · ABB · FANUC · KUKA · YASKAWA · UR · Franka · Kawasaki · Stäubli · Comau · Mitsubishi Electric · Denso · Hyundai · Nachi · Epson · Omron · Hanwha (16 brands)", profiles: ["industrial"], note: "First-party reference adapter · hermetic conformance" },
   { org: "urml-cobot-runtime", sub: "Native zero-ROS cobot SDKs · UR RTDE · Franka FCI · Doosan DRFL · Techman TMflow · Kinova Kortex · Mecademic · Neura · Kassow (8 brands)", profiles: ["industrial"], note: "First-party reference adapter · hermetic conformance" },
   { org: "urml-legged-runtime", sub: "Boston Dynamics Spot (bosdyn) · ANYbotics ANYmal (ROS 2)", profiles: ["industrial"], note: "First-party reference adapter · hermetic conformance" },
@@ -35,7 +36,7 @@ export const reference: ReferenceRuntime[] = [
   { org: "urml-chrono-runtime", sub: "Project Chrono multibody physics / terramechanics · zero ROS · high-fidelity validation", profiles: ["home"], note: "First-party reference adapter · hermetic conformance" },
   { org: "urml-isaac-runtime", sub: "NVIDIA Isaac Sim/Lab · zero ROS · local RTX/Omniverse (not cloud)", profiles: ["home"], note: "First-party reference adapter · hermetic conformance" },
   { org: "urml-embedded-runtime", sub: "micro:bit/Arduino over pyserial · zero ROS · RFC-0011 educational", profiles: ["home"], note: "First-party reference adapter · hermetic conformance" },
-  { org: "urml-edu-runtime", sub: "VEX V5 · LEGO SPIKE (Pybricks BLE) · Thymio (Aseba TDM) · Robotical Marty (martypy) · zero ROS · RFC-0011 educational (4 platforms)", profiles: ["home"], note: "First-party reference adapter · hermetic conformance" },
+  { org: "urml-edu-runtime", sub: "VEX V5 · LEGO SPIKE (Pybricks BLE) · Thymio (Aseba TDM) · Robotical Marty (martypy) · Microduck (JSON-RPC) · zero ROS · RFC-0011 educational (5 platforms)", profiles: ["home"], note: "First-party reference adapter · hermetic conformance" },
   { org: "urml-autosar-runtime", sub: "AUTOSAR Adaptive ara::com scaffold · zero ROS · RFC-0019 Draft binding", profiles: ["industrial"], note: "First-party reference adapter · hermetic conformance · scaffold only" },
 ];
 
@@ -84,6 +85,69 @@ export interface EngagedStory {
 
 export const engaged: EngagedStory[] = [
   {
+    category: "Robot-simulation platform",
+    outcome:
+      "A platform engineer gave an expert review and closed the thread positively; their question about where a manifest claim comes from became a per-capability evidence tag the validator records.",
+    shipped: "RFC-0631 capability-evidence traceability · examples/isaac USD-derived manifest",
+    rfc: "0631",
+    rfcSlug: "capability-evidence-traceability",
+    thread: "https://github.com/isaac-sim/IsaacSim/issues/649",
+  },
+  {
+    category: "On-device ML runtime",
+    outcome:
+      "A core maintainer answered all three mapping-RFC questions; the result was the first example to run a learned policy behind URML's runtime safety shield.",
+    shipped: "examples/executorch-policy · RFC-0667 shield + RFC-0383 amendment",
+    rfc: "0516",
+    rfcSlug: "executorch-outreach",
+    thread: "https://github.com/pytorch/executorch/issues/20268",
+  },
+  {
+    category: "Quadruped mobility platform (community ROS 2 driver)",
+    outcome:
+      "The open-source ROS 2 driver maintainer (explicitly the community driver, not the manufacturer) validated URML's substrate cut for the platform, then for its arm.",
+    shipped: "Reference adapter + arm grasp/release · legged-runtime",
+    rfc: "0043",
+    rfcSlug: "boston-dynamics-spot-integration",
+    thread: "https://github.com/rai-opensource/spot_ros2/discussions/805",
+  },
+  {
+    category: "Cognitive-robotics research lab",
+    outcome:
+      "A maintainer took a live video call, URML's first, to walk the mapping through against the lab's cognitive architecture; the thread closed positively.",
+    shipped: "examples/cram · worked mapping",
+    rfc: "0635",
+    rfcSlug: "cram-outreach",
+    thread: "https://github.com/cram2/cognitive_robot_abstract_machine/issues/391",
+  },
+  {
+    category: "Manipulation simulation benchmark",
+    outcome:
+      "A benchmark contributor engaged once URML was reframed as an eval lens; the result flags out-of-distribution instructions per subtask before a rollout runs.",
+    shipped: "examples/robocasa · per-subtask eval lens",
+    rfc: "0452",
+    rfcSlug: "robocasa-outreach",
+    thread: "https://github.com/robocasa/robocasa/issues/200",
+  },
+  {
+    category: "Power-electronics research lab",
+    outcome:
+      "The lab engaged on gating a high-power actuator; URML's minimal-node declaration bounds the motor's torque and velocity before a command is sent.",
+    shipped: "examples/epically-powerful · minimal_node motor gating",
+    rfc: "0620",
+    rfcSlug: "epically-powerful-outreach",
+    thread: "https://github.com/gatech-epic-power/epically-powerful/issues/32",
+  },
+  {
+    category: "Tier-1 industrial-arm OEM",
+    outcome:
+      "An OEM org member answered all four mapping-RFC questions and endorsed the AS-language program-call binding.",
+    shipped: "RFC-0015 call_program AS-language binding · industrial-arm-runtime",
+    rfc: "0029",
+    rfcSlug: "kawasaki-integration",
+    thread: "https://github.com/Kawasaki-Robotics/khi_ros2/issues/9",
+  },
+  {
     category: "Educational bipedal robot",
     outcome:
       "A driver-library contributor engaged over five rounds, then ran URML's validation script on real hardware over WiFi and returned a live execution trace.",
@@ -100,24 +164,6 @@ export const engaged: EngagedStory[] = [
     rfc: "0062",
     rfcSlug: "petoi-bittle-outreach",
     thread: "https://github.com/PetoiCamp/OpenCat-Quadruped-Robot/issues/113",
-  },
-  {
-    category: "Tier-1 industrial-arm OEM",
-    outcome:
-      "An OEM org member answered all four mapping-RFC questions and endorsed the AS-language program-call binding.",
-    shipped: "RFC-0015 call_program AS-language binding · industrial-arm-runtime",
-    rfc: "0029",
-    rfcSlug: "kawasaki-integration",
-    thread: "https://github.com/Kawasaki-Robotics/khi_ros2/issues/9",
-  },
-  {
-    category: "Quadruped mobility platform (community ROS 2 driver)",
-    outcome:
-      "The open-source ROS 2 driver maintainer (explicitly the community driver, not the manufacturer) validated URML's substrate cut for the platform.",
-    shipped: "Reference adapter · legged-runtime",
-    rfc: "0043",
-    rfcSlug: "boston-dynamics-spot-integration",
-    thread: "https://github.com/rai-opensource/spot_ros2/discussions/805",
   },
   {
     category: "Open multilingual translation model",
